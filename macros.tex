@@ -1,0 +1,80 @@
+% !TEX root = editor-tfp16.tex
+
+% HTyp and HExp
+\newcommand{\hcomplete}[1]{#1~\mathsf{complete}}
+
+% HTyp
+\newcommand{\htau}{\dot{\tau}}
+\newcommand{\tarr}[2]{#1 \rightarrow #2}
+\newcommand{\tnum}{\texttt{num}}
+\newcommand{\tehole}{\llparenthesis\rrparenthesis}
+
+\newcommand{\tcompat}[2]{#1 \sim #2}
+\newcommand{\tincompat}[2]{#1 \nsim #2}
+
+% HExp
+\newcommand{\hexp}{\dot{e}}
+\newcommand{\hlam}[2]{\lambda #1.#2}
+\newcommand{\hap}[2]{#1(#2)}
+\newcommand{\hapP}[2]{(#1)~(#2)} % Extra paren around function term
+\newcommand{\hnum}[1]{\underline{#1}}
+\newcommand{\hadd}[2]{#1 + #2}
+\newcommand{\hehole}{\llparenthesis\rrparenthesis}
+\newcommand{\hhole}[1]{\llparenthesis#1\rrparenthesis}
+
+\newcommand{\hGamma}{\dot{\Gamma}}
+\newcommand{\domof}[1]{\text{dom}(#1)}
+\newcommand{\hsyn}[3]{#1 \vdash #2 \Rightarrow #3}
+\newcommand{\hana}[3]{#1 \vdash #2 \Leftarrow #3}
+
+% ZTyp and ZExp
+\newcommand{\zlsel}[1]{{\bowtie}{#1}}
+\newcommand{\zrsel}[1]{{#1}{\bowtie}}
+\newcommand{\zwsel}[1]{{\triangleright}{#1}{\triangleleft}}
+
+\newcommand{\removeSel}[1]{#1^{\diamond}}
+
+% ZTyp
+\newcommand{\ztau}{\hat{\tau}}
+
+% ZExp
+\newcommand{\zexp}{\hat{e}}
+
+% Direction
+\newcommand{\dParent}{\mathtt{parent}}
+\newcommand{\dChild}{\mathtt{firstChild}}
+\newcommand{\dNext}{\mathtt{nextSib}}
+\newcommand{\dPrev}{\mathtt{prevSib}}
+
+% Action
+\newcommand{\aMove}[1]{\mathtt{move}~#1}
+	\newcommand{\zrightmost}[1]{\mathsf{rightmost}(#1)}
+	\newcommand{\zleftmost}[1]{\mathsf{leftmost}(#1)}
+\newcommand{\aSelect}[1]{\mathtt{sel}~#1}
+\newcommand{\aDel}{\mathtt{del}}
+\newcommand{\aReplace}[1]{\mathtt{replace}~#1}
+\newcommand{\aConstruct}[1]{\mathtt{construct}~#1}
+\newcommand{\aFinish}{\mathtt{finish}}
+
+\newcommand{\performAna}[5]{#1 \vdash #2 \xlongrightarrow{#4} #5 \Leftarrow #3}
+\newcommand{\performSyn}[6]{#1 \vdash #2 \Rightarrow #3 \xlongrightarrow{#4} #5 \Rightarrow #6}
+\newcommand{\performTyp}[3]{#1 \xlongrightarrow{#2} #3}
+
+\newcommand{\performMove}[3]{#1 \xlongrightarrow{#2} #3}
+\newcommand{\performDel}[2]{#1 \xlongrightarrow{\aDel} #2}
+
+% Form
+\newcommand{\farr}{\mathtt{arrow}}
+\newcommand{\fnum}{\mathtt{num}}
+
+\newcommand{\fasc}{\mathtt{asc}}
+\newcommand{\fvar}[1]{\mathtt{var}~#1}
+\newcommand{\flam}[1]{\mathtt{lam}~#1}
+\newcommand{\fap}{\mathtt{ap}}
+\newcommand{\farg}{\mathtt{arg}}
+\newcommand{\fnumlit}[1]{\mathtt{numlit}~#1}
+\newcommand{\fplus}{\mathtt{plus}}
+\newcommand{\fhole}{\mathtt{hole}}
+
+% Talk about formal rules in example
+\newcommand{\refrule}[1]{\textrm{Rule~(#1)}}

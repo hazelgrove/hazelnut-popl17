@@ -1,0 +1,81 @@
+% !TEX root = hazelnut-popl17.tex
+
+%% Programs (and, by the Curry-Howard correspondence, proofs) are rich
+%% inductive structures. This fact is well understood amongst researchers
+%% and experienced programmers, but still somewhat obscure amongst
+%% programmers at large because programmers normally construct and interact
+%% with programs only indirectly, e.g. using a text editor composed with a
+%% parser.
+
+%% There are some benefits to this approach, to be sure, but the structural
+%% mismatch between programs and their textual representations also imposes
+%% various burdens.  For example, the primitive edit actions available in a
+%% text editor (e.g. inserting or deleting a character or word) do not
+%% always correspond to sensible structural transformations.
+
+% spj: describe the problem; state our contributions; STOP. one page max.
+
+% When constructing a program or proof in a language with rich type
+% structure, skilled programmers generally follow a \emph{type discipline}
+% where they first determine the type of the expression that they are
+% constructing in order to constrain the mental search space that they are
+% operating within.
+
+% For example, if the programmer knows that an expression of type
+% $\tarr{\tnum}{\tnum}$ is needed, then it is often the case (though, of course, not
+% necessarily the case) that the expression will take the form $$\hlam{\mathit{x}}{e}$$
+% for some variable $x$ and function body $e$. If the programmer chooses this
+% form, then after picking a suitable variable name, her focus will be on
+% constructing a suitable body, $e$. Following the type discipline, $e$ must
+% be of type $\tnum$, and so this process can begin anew.
+
+% The problem is that when using a text
+% editor to construct a program, it is easy, and indeed necessary, to deviate from this disciplined process.  Rather, text editors operate on sequences of
+% characters (i.e. \emph{text}.) 
+
+%Although all programs can be represented as text, most text does not correspond to a syntactically well-formed and semantically well-defined program. 
+Programmers and the tools that they use are often presented with text that does not correspond to a well-defined program. This may be because the programmer is in the midst of a sequence of
+text edit actions that leave the program ``temporarily'' malformed or ill-defined, or because the programmer has made a mistake. This complicates the programming process, both because the language definition provides no reasoning principles relevant to such text, and, relatedly, because the editor can no longer provide useful services (e.g. syntax highlighting, or semantics-aware code completion.) %Tool designers often develop \emph{ad hoc} heuristic methods that allow one to 
+Source code editors sometimes develop \emph{ad hoc} workarounds for this problem, e.g. they might use whitespace to guess where a construct is likely to end, or recover from a type error by pretending that the type was as expected (if, indeed, an expected type can be determined.)
+
+% stuck editing a representation of the program instead of the structures
+% themselves. The editor does not restrict what the programmer may do: you
+% can delete characters that belong, insert ones that don't, forget things
+% that were needed, and so. There's nothing stopping us from accidentally
+% writing $$\lambda \mathit{x:num}.\mathit{(x,x)}$$ even though it's obvious
+% that building a pair can't hope to form a natural number.
+
+% The type structure of the language makes this sort of error obvious: it's
+% not that you're adding characters that make your program incorrect, or even
+% malformed; you're adding characters that can't possibly create a structure
+% you want because of the type. Simply put, the primitive operations
+% available in text editors do not always correspond to sensible
+% transformations on the structure of the program.
+
+\emph{Structure editors} have made some progress toward addressing this
+problem by allowing programmers to edit the tree structure of a program
+directly. Each edit action leaves the program being constructed in a
+structurally well-formed state.\footnote{In addition to eliminating malformed edit states, it is also generally the case that programs can be written more quickly using a structure editor. However, we will not talk about ``edit costs'' here, because we would like to abstract away from details like whether a keyboard or a mouse (or some other input device) is being used.} We give examples of notable structure editors in Sec. \ref{sec:rw}.  
+
+The problem is that it is still possible to leave the program in a semantically meaningless (i.e. undefined) state, because language definitions generally only give meaning to complete, well-typed terms. This makes it difficult for humans and tools to reason about types and binding during the development process.  %More sophisticated semantic reasoning principles thus remain .
+
+%% TODO: some sort of transition that talks about how you still don't have
+%% semantic reasoning principles because you can be left in a semantically
+%% ill-defined state
+
+In this paper, we present our ongoing work on a minimal structure editor, Hazelnut,  defined in the type-theoretic style (i.e. Hazelnut is a \emph{structure editor calculus}.) In Hazelnut, expressions and types with \emph{holes} have a well-defined static semantics. Edit actions are type-aware and leave the program in both a structurally and semantically well-defined state. In fact, edit actions maintain an even stronger invariant -- when acting on an expression whose type is determined by its surroundings (e.g. an expression in function argument position), only edit actions consistent with that type are permitted (we will formally state this invariant in Sec. \ref{sec:actions}.) This does not imply that programs need to be constructed in a strictly outside-in manner, however, because an expression that has a type that is not yet consistent with its surroundings will automatically be put into a {hole} that defers consistency analysis until the hole is \emph{finished}.
+
+The remainder of the paper is organized as follows:
+\begin{itemize}
+  \item We begin with an example to develop the reader's intuitions in Section
+    \ref{sec:example}.
+
+  \item We then formally define Hazelnut in Section \ref{sec:hazel} and state the important metatheoretic properties.
+
+  \item In Section \ref{sec:mech}, we describe our ongoing effort to formalize the semantics and metatheory of Hazelnut in Agda.
+
+  \item In Section \ref{sec:impl}, we describe our ongoing effort to implement Hazelnut in a web browser, using a functional reactive model for user interaction.
+  \item In Section \ref{sec:rw}, we give an overview of related work.
+  \item We conclude in Section \ref{sec:future} by describing our vision for this work going 
+    forward.
+\end{itemize}

@@ -1,0 +1,231 @@
+% !TEX root = hazelnut-popl17.tex
+\begin{figure*}[t!]
+\[
+\begin{array}{|c||c|c||l|l|}
+\hline
+\# & \textbf{H-Expression} & \textbf{Z-Expression} & \textbf{Next Action} & \textbf{Semantics}
+\\
+\hline
+1 &
+\hhole{} &
+\zwsel{\hhole{}}
+&
+\aConstruct{\flam{x}} & \refrule{\ref{r:conelamhole}}
+\\ 2 &
+\hlam{x}{\hhole{}} : \tarr{\hhole{}}{\hhole{}} &
+\hlam{x}{\hhole{}} : \tarr{\zwsel{\hhole{}}}{\hhole{}}
+&
+\aConstruct{\fnum{}} & \refrule{\ref{r:contnum}}
+\\ 3 &
+\hlam{x}{\hhole{}} : \tarr{\tnum{}}{\hhole{}} &
+\hlam{x}{\hhole{}} : \tarr{\zwsel{\tnum{}}}{\hhole{}}
+&
+\aMove{\dNext{}} & \refrule{\ref{r:movenextsib}}
+\\ 4 &
+&
+\hlam{x}{\hhole{}} : \tarr{\tnum}{\zwsel{\hhole{}}}
+&
+\aConstruct{\fnum{}} & \refrule{\ref{r:contnum}}
+\\ 5 &
+\hlam{x}{\hhole{}} : \tarr{\tnum{}}{\tnum{}} &
+\hlam{x}{\hhole{}} : \tarr{\tnum{}}{\zwsel{\tnum{}}}
+&
+\aMove{\dParent{}} & \refrule{\ref{r:moveparent}}
+\\ 6 &
+&
+\hlam{x}{\hhole{}} : \zwsel{\tarr{\tnum{}}{\tnum{}}}
+&
+\aMove{\dPrev{}} & \refrule{\ref{r:moveprevsib}}
+\\ 7 &
+&
+\zwsel{\hlam{x}{\hhole{}}} : \tarr{\tnum{}}{\tnum{}}
+&
+\aMove{\dChild{}} & \refrule{\ref{r:movefirstchild-lam}}
+\\ 8 &
+&
+\hlam{x}{\zwsel{\hhole{}}} : \tarr{\tnum{}}{\tnum{}}
+&
+\aConstruct{\fvar{x}} & \refrule{\ref{r:conevar}}
+\\ 9 &
+\hlam{x}{{x}} : \tarr{\tnum{}}{\tnum{}}
+&
+\hlam{x}{\zwsel{{x}}} : \tarr{\tnum{}}{\tnum{}}
+&
+\quad\textrm{---{}---}
+&
+\quad\textrm{---{}---}
+\\
+\hline
+\multicolumn{5}{c}{\text{... now assume a context where $id : \tarr{\tnum}{\tnum}$ ...}}\\
+\hline
+10 &
+\hhole{} &
+\zwsel{\hhole{}}
+&
+\aConstruct{\fasc} & \refrule{\ref{r:constructasc}}
+\\
+11 &
+\hhole{} : \hhole{} &
+\hhole{} : \zwsel{ \hhole{}}
+&
+\aConstruct{\fnum{}} & \refrule{\ref{r:contnum}}
+\\
+12 &
+\hhole{} :\tnum{} &
+\hhole{} : \zwsel{\tnum{}}
+&
+\aMove{\dPrev{}} & \refrule{\ref{r:moveprevsib}}
+\\
+%13 &
+%\hhole{} :\tnum{} &
+%\zwsel{\hhole{}} : \tnum{}
+%&
+%\aMove{\dPrev{}} & \refrule{\ref{r:moveprevsib}}
+%\\
+13 &
+%\hhole{} :\tnum{}
+ &
+\zwsel{\hhole{}} : \tnum{}
+&
+\aConstruct{ \fvar{id}} & \refrule{\ref{r:conevar2}}
+\\
+14 &
+\hhole{\textrm{$id$}} : \tnum{} &
+\hhole{\zwsel{{\textrm{$id$}}}} : \tnum{}
+&
+\aConstruct{\fap{}} & \refrule{\ref{r:coneapfn}}
+\\
+15 &
+\hhole{\hap{{{\textrm{$id$}}}}{{\hhole{}}}} : \tnum{}
+&
+\hhole{\hap{{{\textrm{$id$}}}}{\zwsel{\hhole{}}}} : \tnum{}
+&
+\aConstruct{\fnumlit{3}} &  \refrule{\ref{r:conenumnum}}
+\\
+16 &
+\hhole{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}} : \tnum{}
+&
+\hhole{\hap{{{\textrm{$id$}}}}{\zwsel{\hnum{3}}}} : \tnum{}
+&
+\aMove{\dParent{}} &  \refrule{\ref{r:moveparent-ap2}}
+\\
+17 &
+%\hhole{\hap{{{\textrm{id}}}}{{\hnum{3}}}} : \tnum{}
+&
+\hhole{\zwsel{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}} : \tnum{}
+&
+\aMove{\dParent{}} &  \refrule{\ref{r:moveparent-hole}}
+\\
+18 &
+%\hhole{\hap{{{\textrm{id}}}}{{\hnum{3}}}} : \tnum{}
+&
+\zwsel{\hhole{{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}}} : \tnum{}
+&
+\aFinish &  \refrule{\ref{r:finishana}}
+\\
+19 &
+{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}} : \tnum{}
+&
+\zwsel{{{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}}} : \tnum{}
+&
+\quad\textrm{---{}---} & \quad\textrm{---{}---}
+\\
+\hline
+
+%% 11 &
+%% {\textrm{id}} : \tarr{\tnum{}}{\tnum{}}
+%% &
+%% \hlam{x}{\zwsel{{x}}} : \tarr{\tnum{}}{\tnum{}}
+%% &
+%% \aMove{\dParent{}} & ?
+%% \\ 12 &
+%% %{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}
+%% &
+%% \zwsel{\hlam{x}{{{x}}}} : \tarr{\tnum{}}{\tnum{}}
+%% &
+%% \aMove{\dParent{}} & \refrule{15b} bad
+%% \\ 13 &
+%% %{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}
+%% &
+%% \zwsel{\hlam{x}{{{x}}} : \tarr{\tnum{}}{\tnum{}}}
+%% &
+%% \aConstruct{\fap{}} & \refrule{20h} bad
+%% \\ 14 &
+%% \hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\hhole{}}
+%% &
+%% \hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\zwsel{\hhole{}}}
+%% &
+%% \aConstruct{\fnumlit{3}} & \refrule{20l} bad
+%% \\ 15 &
+%% %\hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\hhole{3}}
+%% %&
+%% %\hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\zwsel{\hhole{3}}}
+%% %&
+%% %\aFinish{} & ?
+%% %\\
+%% \hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{{\hnum{3}}}
+%% &
+%% \hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\zwsel{{\hnum{3}}}}
+%% &
+%% \quad\textrm{---{}---}
+%% &
+%% \quad\textrm{---{}---}
+%% \\
+%% \hline
+\end{array}
+\]
+\caption{Constructing an identity function in Hazelnut (Lines~1--9), then  applying this function (assumed bound to $id$, not shown) to an argument~(Lines 10--19). The formal syntax and referenced rules in the final column are described in Section \ref{sec:hazel}.}
+\label{fig:first-example}
+\end{figure*}
+%
+Figure~\ref{fig:first-example} gives an example of the Hazelnut user
+performing two simple programming tasks.
+The syntactic forms in this figure will be formally defined in Sec. \ref{sec:hazel}. For now, we will develop only the necessary intuitions. In the first task (Lines 1-9), the user constructs the identity function over numbers. In the second task (Lines 10-19), the user applies this function (assumed to be bound to a variable, $id$), to the number expression $\hnum{3}$.
+Each of these tasks is carried out interactively, through the sequence of \emph{actions} shown in the  column labeled \textbf{Next Action}. For reference, we cite the relevant rules from Sec. \ref{sec:hazel} in the final column.
+
+The second and third columns of the
+table show the program as it is being constructed in two forms. The second column shows it as an \textbf{H-expression}, which is an expression that can contain \emph{holes}, delimited by $\llparenthesis$ and $\rrparenthesis$. The third column shows a corresponding \textbf{Z-expression}. Z-expressions are H-expressions with a single focus on some sub-term, delimited by $\triangleright$ and $\triangleleft$. The focus need not be on a hole.
+% on working on filling just one of the holes.
+Each action produces a new Z-expression, but this may or may not correspond to a new H-expression (in particular, some actions only move the focus, without changing the structure of the term.)
+% to the hole in
+%focus in the Z-Expression to produce the next line, which may or may not
+%produce a substantively different H-Expression.
+
+Line~1 begins with the simplest initial expression: an H-expression
+consisting of a single hole. The corresponding Z-Expression has that hole in focus,
+indicated by the syntax~$\zwsel{\hehole}$. Focus determines the locus of action. The first action the user performs is $\aConstruct{\flam{x}}$, which replaces the hole with a lambda abstraction binding the variable $x$. This results in the program on line
+2, consisting of a lambda abstraction ascribed an arrow type with holes in all positions. The argument type hole is in focus. The
+user proceeds to fill these holes using construction and movement actions, resulting in the final expression on Line 9. With no holes remaining, this expression is \emph{complete}.% (though it could, of course, undergo further actions nevertheless.)
+
+So far, editing has proceeded in an essentially type-directed, outside-in fashion -- the user first specified the type of the function, then produced a body of that type by the action on Line 8. Lines 10-12 similarly begin in a type-directed manner with the user giving an explicit type ascription, indicating that the expression that they are constructing will have type $\tnum$. 
+
+However, on Line 13, the user performs the $\aConstruct{\fvar{id}}$ action. Notice that $id$ has type $\tarr{\tnum}{\tnum}$, which is not consistent with the type $\tnum$ given in the ascription. Na\"ively, this would produce a type error, leaving the program in a well-formed but semantically undefined state. One way to avoid this state is to simply not make this action available in the program configuration on Line 12. This is inflexible, forcing an outside-in approach to program construction (i.e. the user would need to construct the function application form before constructing the variable $id$.) Instead, Hazelnut permits this action, but places the variable $id$ inside a hole. This defers the consistency check that would normally occur: a hole can be checked against any type, as long as its contents have some type. The cursor is placed inside the hole. The user then proceeds to apply $id$ to the number expression $\hnum{3}$. At this point, the expression inside the hole has a type consistent with the ascription, so the user can \emph{finish} the hole. In our simple formalism, this requires moving the cursor to the hole (in practice, the system might find the nearest parent of hole form.) The result is the complete, well-typed program shown on Line 19 (notice that \emph{complete} is distinct from \emph{closed} -- the variable $id$ is free on Line 19, so this is not a closed program.)
+
+%% The third column~(\textbf{Next Action}) lists the first user action:
+%% Constructing a lambda abstraction using variable~$x$.
+%% %
+%% The final column~(\textbf{Semantics}) indicates the semantic rule for this
+%% action, Rule (\ref{r:conelamhole}), which gives general semantics for
+%% introducing lambda terms into holes.
+%% %
+%% In Section~\ref{sec:hazel}, we list this rule, and the other rules used in
+%% this final column. In total, these rules give a formal semantics to the
+%% user actions, which relate each line's Z-Expression to the Z-Expression on
+%% the subsequent line.
+
+%% In addition to introducing the lambda term, and its variable, the
+%% first user action~$\aConstruct{\flam{x}}$ also introduces a type
+%% ascription for this function, as an arrow type, with holes for the
+%% type of its domain and codomain.
+%% %
+%% The actions for Lines~2--5 consist of the user filling these holes
+%% with the basetype $\tnum{}$.
+%% %
+%% To do so, the user constructs the type constructor twice (Lines 2 and
+%% 4), and navigates between the holes with a move action (Line~3).
+%% %
+%% Generally, the move action~$\dNext$ moves the focus from one
+%% sub-structure to the next sibling sub-structure of the (common) parent
+%% structure; in this case, it moves from the domain type of the arrow
+%% type to the codomain of the arrow type.
+%% %

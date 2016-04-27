@@ -1,0 +1,42 @@
+% !TEX root = hazelnut-popl17.tex
+In the previous section, we gave an overview of the most important rules in
+the semantics of Hazelnut, and stated the important theorems. In a few
+cases, we sketched out why these theorems will hold.
+
+In order to formally verify that our design meets the stated objectives, we
+are preparing a formalization of the grammar, the judgements given above
+and the metatheory in the proof assistant Agda \cite{norell:thesis}. We
+refer readers unfamiliar with Agda to the Agda Wiki, hosted
+at \url{http://wiki.portal.chalmers.se/agda/}.
+
+Our formalization of Hazelnut is under development at
+\url{http://github.com/hazelgrove/agda-tfp16}. At the time of submission, we 
+have completed much of the initial groundwork, but the proofs of 
+Theorem \ref{thrm:actsafe} and Theorem \ref{thrm:actdet} (and a few  
+lemmas that we elided here) are under construction.  
+
+The documentation 
+includes a more detailed discussion of the technical representation
+decisions made. The core idea of our formalization is to encode each judgement as a
+dependent type. The rules of the judgements become the constructors of the
+type, and derivations of theorems values of the type. This is a rich
+setting that allows proofs to take advantage of pattern matching on the
+shape of derivations, closely matching on-paper proofs of similar
+properties.
+
+The formalization differs from the calculus defined here in a few small 
+ways. Most interestingly, instead of giving separate movement rules for each 
+form of Z-expression, we abstract
+over different corresponding forms that happen to have the same arity, e.g. 
+additions and applications. Formalizing this intuition
+reduces the number of cases we need to consider 
+somewhat, but more importantly allows us to write a slightly more
+general calculus -- it will be easier to extend Hazelnut with more 
+interesting language features with this generic infrastructure in place.
+
+Because the metatheory in this paper is largely concerned with the statics
+of Hazelnut rather than its dynamics, we adopt Barendregt's convention for
+bound variables and avoid substitution entirely \cite{urban}. Future
+iterations will need a more mature technique for reasoning about
+binding---likely de Bruijn indices or abstract binding
+trees \cite{lh09unibind,Pouillard11}. 
