@@ -69,23 +69,20 @@
 \title{Hazelnut: A Bidirectionally Typed \\ Structure Editor Calculus}
 %\subtitle{Modular Type Constructors}
 
-\authorinfo{\vspace{-2px}}{}{}
-%\authorinfo{~}{~}{~}
+%\authorinfo{\vspace{-2px}}{}{}
+\authorinfo{~}{~}{~}
 %\authorinfo{Cyrus Omar \and Jonathan Aldrich}
 %         {Carnegie Mellon University}
 %         {\{comar, aldrich\}@cs.cmu.edu}   
 
 \maketitle
 \begin{abstract}
-Programs are rich inductive structures, but programmers typically construct and manipulate them indirectly, through flat textual representations. This indirection  comes at a cost: programmers must understand the  subtleties of parsing, and it can require several text editor actions to make a single syntactically and semantically well-defined change. 
-During these sequences of edit actions, or when the programmer makes a mistake, programmers and programming tools must contend with malformed text or semantically ill-defined programs.
+Programmers typically construct and manipulate well-typed programs indirectly, as text that must pass through a parser and typechecker. Not all text survives this journey. In particular, text that arises transiently during the editing process, or when the programmer makes a mistake, is commonly found to be malformed or ill-typed. Contending with (i.e. reasoning about) malformed text or well-formed but meaningless syntax trees is a difficult task, for programmers and  tools alike.
 
-\emph{Structure editors} promise to alleviate these burdens by exposing only edit actions that  produce sensible changes to the program structure.
-Existing designs for structure editors, however, are complex and somewhat \emph{ad hoc}. They also focus primarily on syntactic well-formedness, so programs can still be left semantically ill-defined as they are being constructed.
-In this paper, we report on our ongoing efforts to develop Hazelnut, a minimal  structure editor defined in a principled type-theoretic style where all edit actions leave the program in both a syntactically and semantically well-defined state. Uniquely, Hazelnut does not force the programmer to construct the program in a strictly ``outside-in'' fashion.
-Formally, Hazelnut is a bidirectionally typed lambda calculus extended with
-1) \emph{holes} (which mark subterms that are being  constructed from the inside out);
-2) a \emph{focus model}; and 3) a bidirectional \emph{action model} equipped with a useful \emph{action sensibility} theorem.
+%  \emph{Structure editors} have long promised to alleviate these burdens by exposing only edit actions that  cause sensible changes to the program structure.
+% Existing designs for structure editors, however, are complex and somewhat \emph{ad hoc}. They also focus primarily on syntactic well-formedness, so programs can still be left semantically meaningless as they are being constructed.
+
+We introduce Hazelnut, a minimal \emph{structure editor} where every edit action leaves the program in both a statically and dynamically meaningful state (with the latter implying that Hazelnut is particularly suitable as a foundation for \emph{live programming environments}.) Uniquely, 1) Hazelnut is defined in a principled type-theoretic style, with a rich metatheory mechanized in Agda; and 2) users need not construct outer forms before they construct inner forms. Instead, Hazelnut's \emph{action semantics} automatically places terms that have a type that is inconsistent with the expected type into a \emph{hole}, which safely defers the type consistency check until the hole is \emph{finished}. Interestingly, this mechanism is related to a mechanism that arises in the semantics of gradual type systems. %Formally, Hazelnut is a bidirectionally typed lambda calculus extended with \emph{holes}, a \emph{focus model} (based on Huet's zipper) and an \emph{action model}.
 \end{abstract}
 
 %\category{D.3.2}{Programming Languages}{Language Classifications}[Extensible Languages]
@@ -302,7 +299,7 @@ The hole type behaves much like the type $?$ in prior work by Siek and Taha on g
   \hhole{\zexp}
 \end{array}$
 %\textbf{Sort} & & & \textbf{Operational Form} & \textbf{Stylized Form} & \textbf{Description}\\
-\caption{Syntax of Z-types and Z-expressions, i.e. types and expressions with holes and a single cursor.}
+\caption{Syntax of Z-types and Z-expressions, i.e. types and expressions with holes and a single focus.}
 \label{fig:zexp-syntax}
 \end{figure}
 
