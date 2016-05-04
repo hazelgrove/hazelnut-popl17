@@ -77,7 +77,7 @@
 
 \maketitle
 \begin{abstract}
-Well-typed expressions are meaningful inductive structures, but programmers typically construct and manipulate them indirectly, as text that must pass through a parser and typechecker. Not all text survives this journey. In particular, text that arises transiently during the editing process, or when the programmer has made a mistake, is often malformed or ill-typed. Contending with (i.e. reasoning about) malformed text or well-formed but meaningless expressions is a difficult task, for programmers and their tools alike.
+Well-typed expressions are rich inductive structures, but programmers typically construct and manipulate them only indirectly, as text that must pass through a parser and typechecker. Not all text survives this journey. In particular, text that arises transiently during the editing process, or when the programmer has made a mistake, is often malformed or ill-typed. Contending with (i.e. reasoning about) malformed text or well-formed but meaningless expressions is a difficult task, for programmers and their tools alike.
 
 %  \emph{Structure editors} have long promised to alleviate these burdens by exposing only edit actions that  cause sensible changes to the program structure.
 % Existing designs for structure editors, however, are complex and somewhat \emph{ad hoc}. They also focus primarily on syntactic well-formedness, so programs can still be left semantically meaningless as they are being constructed.
@@ -1294,10 +1294,7 @@ Perhaps the systems most similar in spirit to Hazelnut are Lamdu~\cite{lamdu} an
 
 Our work differs from all of these in that we begin with a formal editor calculus and build from there, rather than starting with an implementation and leaving many of the formal details formally unspecified. For example, while Lamdu has many interesting features, there is no theoretical basis presented for their work -- it is a rather large body of Haskell code with an unclear (and indeed, often somewhat perplexing, in our experience) action model. Unison is also a rather large body of Haskell code, though its action model appears superficially more similar to ours. We maintain what we believe to be a stronger action sensibility invariant than Unison (i.e. in Unison, one must construct expressions from the outside-in.) These systems are rich sources of interesting ideas, however -- there is room enough for many different approaches in this (re-)emerging space.
 
-
-
-
-
+TODO: cite http://cseweb.ucsd.edu/~lerner/pb.html
 
 %Drag-and-drop / for novices: lots of examples, e.g. Alice and others
 %
