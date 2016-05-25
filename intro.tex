@@ -34,10 +34,10 @@
 % characters (i.e. \emph{text}.) 
 
 %Although all programs can be represented as text, most text does not correspond to a syntactically well-formed and semantically well-defined program. 
-Programmers and the tools that they use are often presented with text that does not correspond to a well-defined program. This may be because the programmer is in the midst of a sequence of
-text edit actions that leave the program ``temporarily'' malformed or ill-defined, or because the programmer has made a mistake. This complicates the programming process, both because the language definition provides no reasoning principles relevant to such text, and, relatedly, because the editor can no longer provide useful services (e.g. syntax highlighting, or semantics-aware code completion.) %Tool designers often develop \emph{ad hoc} heuristic methods that allow one to 
+Programmers and the tools that they use often encounter text that does not correspond to a meaningful program. This may be because the programmer is in the midst of a sequence of 
+edit actions that leaves the text temporarily malformed or ill-typed, or because the programmer has made a mistake. It is difficult for tools to help programmers execute a corrective course of action in such situations (e.g. by providing syntax highlighting and semantics-aware code completion.) %because the language definition is necessarily silent about the structure or meaning of such text. %For example, a code editor cannot assist the programmer in these situations.
 
-Source code editors sometimes develop \emph{ad hoc} workarounds for this problem, e.g. they might use whitespace to guess where a construct is likely to end, or recover from a type error by pretending that the type was as expected (if, indeed, an expected type can be determined.)
+Some editors have developed \emph{ad hoc} workarounds for this problem, e.g. they might use whitespace to guess where a construct is likely to end, attempt to insert closing delimiters automatically, or recover from a type error by pretending that the type was as expected (if, indeed, an expected type can be determined.\todo{citations?}) These heuristic methods are quite complex and sometimes misleading.
 
 % stuck editing a representation of the program instead of the structures
 % themselves. The editor does not restrict what the programmer may do: you
