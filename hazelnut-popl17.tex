@@ -1,3 +1,4 @@
+\def\OPTIONConf{0}%
 %\documentclass[12pt]{article}
 \documentclass[preprint,9pt]{sigplanconf}
 % The following \documentclass options may be useful:
@@ -21,6 +22,10 @@
 \sloppy
 \def \TirNameStyle #1{\small\rulename{#1}}
 \renewcommand{\MathparLineskip}{\lineskiplimit=.3\baselineskip\lineskip=.3\baselineskip plus .2\baselineskip}
+
+\usepackage{joshuadunfield}
+\usepackage{llproof}
+\usepackage{rulelinks}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
@@ -1260,6 +1265,14 @@ Finally, if the focus is inside a non-empty hole, we special case the situation 
 \end{equation}
 
 \end{subequations}
+
+\clearpage
+
+\section{Dynamics of Hazelnut}
+\label{sec:dynamics}
+\input{dynamics}
+
+\clearpage
 
 \section{Mechanization}
 \label{sec:mech}\label{sec:mt}
