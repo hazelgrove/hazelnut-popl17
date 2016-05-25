@@ -1,0 +1,121 @@
+
+
+\begin{figure}[htbp]
+  \centering
+
+  \judgbox{e~\textsf{value}}{Expression $e$ is a closed value}
+  \begin{mathpar}
+    \Infer{V-num}
+          { }
+          {\hnum{n}~\textsf{value}}
+    \and
+    \Infer{V-lam}
+        {}
+        {\hlam{x}{e}~\textsf{value}}
+  \end{mathpar}
+  
+  \caption{Value forms}
+  \label{fig:judg-value}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+
+  \judgbox{e~\textsf{final}}{Expression $e$ is final}
+  \begin{mathpar}
+    \Infer{F-val}
+          {e~\textsf{value}}
+          {e~\textsf{final}}
+    \and
+    \Infer{F-filled}
+          {e~\textsf{final}}
+          {\hhole{e}~\textsf{final}}
+    \and
+    \Infer{F-unfilled}
+          { }
+          {\hhole{}~\textsf{final}}
+    \and
+    \Infer{F-indet}
+        {e~\textsf{indet}}
+        {\hindet{e}~\textsf{final}}
+  \end{mathpar}
+  
+  \caption{Value forms}
+  \label{fig:judg-value}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+
+  \judgbox{e~\textsf{indet}}{Expression $e$ is indeterminate}
+  \begin{mathpar}
+    \Infer{I-plus}
+          { e_1~\textsf{final} ~~ ~~ ~~
+            e_2~\textsf{final} \\\\
+            \left(e_1 \ne \hnum{n_1} \vee e_2 \ne \hnum{n_2}\right)
+          }
+          {\hadd{e_1}{e_2}~\textsf{indet}}
+    \and
+    \Infer{I-app}
+          { e_1~\textsf{final} ~~ ~~ ~~
+            e_2~\textsf{final} \\\\
+            e_1 \ne \hlam{x}{e_1'}
+          }
+          {\hap{e_1}{e_2}~\textsf{indet}}
+    \and
+  \end{mathpar}
+  
+  \caption{Value forms}
+  \label{fig:judg-value}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+
+  \judgbox{e_1 \longrightarrow e_2}{Expression $e_1$ steps to~$e_2$}
+  \begin{mathpar}
+    \Infer{S-plus$_1$}
+          { e_1 \longrightarrow e_1' }
+          { \hadd{e_1}{e_2} \longrightarrow \hadd{e_1'}{e_2} }
+
+    \Infer{S-plus$_2$}
+          { e_2 \longrightarrow e_2' }
+          { \hadd{e_1}{e_2} \longrightarrow \hadd{e_1}{e_2'} }
+
+    \Infer{S-plus$_3$}
+          { n_1 + n_2 = n_3 }
+          { \hadd{\hnum{n_1}}{\hnum{n_2}} \longrightarrow \hnum{n_3} }
+
+   \Infer{S-plus$_4$}
+          { e_1~\textsf{final} ~~ ~~ ~~
+            e_2~\textsf{final} 
+            \\\\
+            \left(e_1 \ne \hnum{n_1} \vee e_2 \ne \hnum{n_2}\right)
+          }
+          { \hadd{e_1}{e_2} \longrightarrow \hindet{\hadd{e_1}{e_2}} }
+
+    \Infer{S-ap$_1$}
+          { e_1 \longrightarrow e_1' }
+          { \hap{e_1}{e_2} \longrightarrow \hap{e_1'}{e_2} }
+
+    \Infer{S-ap$_2$}
+          { e_2 \longrightarrow e_2' }
+          { \hap{e_1}{e_2} \longrightarrow \hap{e_1}{e_2'} }
+
+    \Infer{S-ap$_3$}
+          { e_2~\textsf{final} }
+          { \hap{\hlam{x}{e_1}}{e_2} \longrightarrow [e_2/x]e_1 }
+
+   \Infer{S-ap$_4$}
+          { e_1~\textsf{final} ~~ ~~ ~~
+            e_2~\textsf{final}
+            \\\\
+            e_1 \ne \hlam{x}{e_1'} ~~ ~~ ~~ ~~ ~~ ~~ ~~ { }
+          }
+          { \hap{e_1}{e_2} \longrightarrow \hindet{\hap{e_1}{e_2}} }
+
+  \end{mathpar}
+  
+  \caption{Value forms}
+  \label{fig:judg-value}
+\end{figure}
