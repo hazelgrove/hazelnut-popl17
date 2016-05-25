@@ -100,22 +100,23 @@
   \begin{mathpar}
     \Infer{S-ap$_1$}
           { e_1 \longrightarrow e_1' }
-          { \hadd{e_1}{e_2} \longrightarrow \hadd{e_1'}{e_2} }
+          { \hap{e_1}{e_2} \longrightarrow \hap{e_1'}{e_2} }
 
     \Infer{S-ap$_2$}
           { e_2 \longrightarrow e_2' }
-          { \hadd{e_1}{e_2} \longrightarrow \hadd{e_1}{e_2'} }
+          { \hap{e_1}{e_2} \longrightarrow \hap{e_1}{e_2'} }
 
     \Infer{S-ap$_3$}
           { e_2~\textsf{final} }
           { \hap{\hlam{x}{e_1}}{e_2} \longrightarrow [e_2/x]e_1 }
 
    \Infer{S-ap$_4$}
-          { e_1~\textsf{final}
-            \\
+          { e_1~\textsf{final} ~~ ~~ ~~
+            e_1~\textsf{final}
+            \\\\
             \left(e_1 \ne \hlam{x}{e_1'} \right)
           }
-          { \hap{\hlam{x}{e_1}}{e_2} \longrightarrow \hindet{\hap{\hlam{x}{e_1}}{e_2}} }
+          { \hap{e_1}{e_2} \longrightarrow \hindet{\hap{e_1}{e_2}} }
 
   \end{mathpar}
   
