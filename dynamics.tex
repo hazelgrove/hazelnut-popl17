@@ -185,12 +185,36 @@ We extend the syntax of H-Expressions as follows:
 
 Here are some things that we want to prove:
 
-\textbf{Conjecture}(Canonical forms)
+\textbf{Def}~(Ascription erasure). 
+\\
+$\herase{\hexp}$ is the same as $\hexp$, but without its type ascriptions.
+
+\textbf{Conjecture}~(Bidirectional implies declarative).
+\\
+(i) If $\hsyn{\hGamma}{\hexp}{\htau}$ then $\hGamma \vdash \herase{\hexp} : \htau$.
+\\
+(ii) If $\hana{\hGamma}{\hexp}{\htau}$ then $\hGamma \vdash \herase{\hexp} : \htau$.
+
+\textbf{Conjecture}~(Substitution).
+\\
+If $\hGamma, x : \tau_x \vdash \hexp : \htau$
+\\
+and $\hexp'~\textsf{final}$
+\\
+and $\hGamma \vdash \hexp' : \htau_x$
+\\
+then $\hGamma \vdash \hexp[\hexp' / x] : \htau$
+
+% Q: Do we need to enforce that hexp' is final?
+
+\textbf{Conjecture}~(Canonical forms)
 \\
 If $\cdot \vdash \hexp : \htau$
+\\
 and $\hexp~\textsf{final}$ then
 \begin{itemize}
 \item if $\hexp = \hindet{\hexp'}$ then $\hexp'~\textsf{indet}$ and $\cdot \vdash \hexp' : \htau$
+%\marginnote{Since $\hexp'~\textsf{indet}$, the conjecture applies to $\hexp'$.}
 \item else:
 \begin{itemize}
 \item if $\htau = \tnum$ then exists $\hnum{n}$ such that $\hexp = \hnum{n}$.
@@ -203,12 +227,18 @@ and $\hexp~\textsf{final}$ then
 \end{itemize}
 \end{itemize}
 
-\textbf{Conjecture}(Progresss)
+\textbf{Conjecture}~(Progresss).
+\\
 If $\cdot \vdash \hexp_1 : \htau$
+\\
 then either $\hexp_1~\textsf{final}$
+\\
 or exists $\hexp_2$ such that $\hexp_1 \longrightarrow \hexp_2$.
 
-\textbf{Conjecture}(Preservation)
+\textbf{Conjecture}~(Preservation).
+\\
 If $\cdot\vdash \hexp_1 : \htau$ 
+\\
 and $\hexp_1 \longrightarrow \hexp_2$
+\\
 then $\cdot \vdash \hexp_2 : \htau$
