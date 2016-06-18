@@ -188,6 +188,17 @@ Here are some things that we want to prove:
 \textbf{Def}~(Ascription erasure). 
 \\
 $\herase{\hexp}$ is the same as $\hexp$, but without its type ascriptions.
+%
+All cases are congruences, except for the ascription case, where $\herase{\hexp : \htau} = \hexp$.
+
+\textbf{Def}~(Declarative typing).
+\\
+The judgement $\hGamma \vdash \hexp : \htau$ is a type assignment
+system for erased terms.  It is declarative, and unlike the
+bidirectional rules, is not algorithmic.
+%
+We employ it to relate bidirectionally-typed terms to (erased) terms
+that enjoy type soundness with respect to the dynamics.
 
 \textbf{Conjecture}~(Bidirectional implies declarative).
 \\
