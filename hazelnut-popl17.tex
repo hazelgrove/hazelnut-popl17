@@ -121,7 +121,7 @@ We intend Hazelnut as a minimal foundational calculus, rather than as an end-use
 
 \section{Hazelnut, Formally}
 \label{sec:hazel}
-\todo{revise text}\todo{add let and ifz}Hazelnut is based on the simply-typed lambda calculus extended with a single base type, $\tnum$. Its major constituents, introduced by example in the previous section, are:
+\todo{revise text}\todo{add let and ifz}\todo{make eqn numbering work better}Hazelnut is based on the simply-typed lambda calculus extended with a single base type, $\tnum$. Its major constituents, introduced by example in the previous section, are:
 \begin{itemize}
 \item \textbf{H-types} and \textbf{H-expressions} (Sec. \ref{sec:holes}), which are terms with \emph{holes}. Holes mark subterms that are ``under construction.'' H-types classify H-expressions according to a {bidirectionally typed} static semantics.
 \item \textbf{Z-types} and \textbf{Z-expressions} (Sec. \ref{sec:cursors}), which superimpose a single \emph{focus} onto H-types and H-expressions (using Huet's \emph{zipper pattern} \cite{JFP::Huet1997}.)
@@ -385,7 +385,7 @@ Similarly, we write $\removeSel{\zexp}$ for the H-expression constructed by remo
 \vspace{-8px}
 \end{figure}
 
-The syntax of \emph{actions}, $\alpha$, some of which involve \emph{directions}, $\delta$, or \emph{shapes}, $\varphi$, is given in Figure \ref{fig:action-syntax}. Actions are performed on Z-types and Z-expressions according to the \emph{action semantics} of Hazelnut, which is organized around three judgements:
+The syntax of \emph{actions}, $\alpha$, some of which involve \emph{directions}, $\delta$, or \emph{shapes}, $\varphi$, is given in Figure \ref{fig:action-syntax}. Actions are performed on Z-types and Z-expressions according to the \emph{action semantics} of Hazelnut, which is organized around three judgements:\todo{fix spacing}
 \[\arraycolsep=10pt\begin{array}{ll}
 %\textbf{Judgement Form} & \textbf{Description}\\
 \performTyp{\ztau}{\alpha}{\ztau'} & \text{Performing $\alpha$ on $\ztau$ produces $\ztau'$}\\
@@ -1443,7 +1443,7 @@ systems, for we will not forever stay confined to mere strings of symbols.
 
 % The bibliography should be embedded for final submission.
 
-\bibliography{../research}}
+\bibliography{bibliography}
 %\softraggedright
 %P. Q. Smith, and X. Y. Jones. ...reference text...
 
