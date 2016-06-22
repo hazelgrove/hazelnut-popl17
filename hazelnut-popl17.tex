@@ -21,6 +21,8 @@
 \usepackage{url}
 \usepackage{todonotes}
 \usepackage{listings}
+\lstset{tabsize=2, 
+basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 \usepackage{microtype}
 \sloppy
 \def \TirNameStyle #1{\small\rulename{#1}}
@@ -119,7 +121,7 @@ We intend Hazelnut as a minimal foundational calculus, rather than as an end-use
 
 \section{Hazelnut, Formally}
 \label{sec:hazel}
-Hazelnut is based on the simply-typed lambda calculus extended with a single base type, $\tnum$. Its major constituents, introduced by example in the previous section, are:
+\todo{revise text}\todo{add let and ifz}Hazelnut is based on the simply-typed lambda calculus extended with a single base type, $\tnum$. Its major constituents, introduced by example in the previous section, are:
 \begin{itemize}
 \item \textbf{H-types} and \textbf{H-expressions} (Sec. \ref{sec:holes}), which are terms with \emph{holes}. Holes mark subterms that are ``under construction.'' H-types classify H-expressions according to a {bidirectionally typed} static semantics.
 \item \textbf{Z-types} and \textbf{Z-expressions} (Sec. \ref{sec:cursors}), which superimpose a single \emph{focus} onto H-types and H-expressions (using Huet's \emph{zipper pattern} \cite{JFP::Huet1997}.)
@@ -154,7 +156,7 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 The syntax of H-types and H-expressions is given in Figure \ref{fig:hexp-syntax}. Most of the forms correspond directly to those of the simply-typed lambda calculus extended with type $\tnum$. The number expression corresponding to the number $n$ is drawn $\hnum{n}$, and for simplicity, we define only a single arithmetic operation, $\hadd{\hexp}{\hexp}$.
 In addition to these standard forms, \emph{empty holes} are drawn $\hehole$ and \emph{non-empty H-expression holes} are drawn $\hhole{\hexp}$. In our simple calculus, all well-formed type expressions are valid types, so we do not need non-empty H-type holes.%Holes mark subterms that are, notionally, ``under construction.'' We will see what this formally corresponds to in a moment.
 
-We refer to terms that do not contain subterms of hole form as \emph{complete}. Informally, we will use metavariables $\tau$ and $e$ rather than $\htau$ and $\hexp$ for complete H-types and H-expressions, respectively. Formally, we can derive $\hcomplete{\tau}$ when $\tau$ is a complete H-type, and $\hcomplete{e}$ when $e$ is a complete H-expression. We omit the straightforward definitions of these judgements for concision. The dynamics of Hazelnut, which we need not detail here, is defined only  over complete H-expressions (i.e. we can only ``run'' a complete program, though see Sec. \ref{sec:future}.)
+We refer to terms that do not contain subterms of hole form as \emph{complete}. Informally, we will use metavariables $\tau$ and $e$ rather than $\htau$ and $\hexp$ for complete H-types and H-expressions, respectively. Formally, we can derive $\hcomplete{\tau}$ when $\tau$ is a complete H-type, and $\hcomplete{e}$ when $e$ is a complete H-expression. We omit the straightforward definitions of these judgements for concision. The dynamics of Hazelnut, which we need not detail here, is defined only  over complete H-expressions (i.e. we can only ``run'' a complete program, though see Sec. \ref{sec:future}.)\todo{get rid of e/edot distinction}\todo{change this to refer to dynamics section}
 
 The statics of Hazelnut is organized as a \emph{bidirectional type system} \cite{Pierce:2000:LTI:345099.345100}, i.e. around the following mutually defined typing judgements:
 \[\arraycolsep=15pt\begin{array}{ll}
@@ -580,7 +582,7 @@ The rules for relative movement within Z-types are given below and should be sel
 \end{subequations}
 % The final two rules above recurse into the zipper structure.
 
-The rules for relative movement within Z-expressions are similar. Movement is type-independent, so we defer to an auxiliary judgement for both the analytic and synthetic judgements:
+The rules for relative movement within Z-expressions are similar. Movement is type-independent, so we defer to an auxiliary judgement for both the analytic and synthetic judgements:\todo{remove prevSib}
 \begin{subequations}
 \begin{equation}
 \inferrule{
@@ -696,7 +698,7 @@ For concision, we show only the rules for ascription here:
     }
   }
 \end{equation}
-and this for the example
+and this for the example\todo{revise}
 \begin{equation}\label{r:movefirstchild-lam}
 \inferrule{ }{
   \performMove{
@@ -732,6 +734,8 @@ and this for the example
     }
   }
 \end{equation}
+
+Reachability\todo{state reachability theorem}
 
 \end{subequations}
 \subsubsection{Deletion} The $\aDel$ action replaces the selected subterm with an empty hole.
@@ -1316,15 +1320,36 @@ Finally, if the focus is inside a non-empty hole, we special case the situation 
   }
 \end{equation}
 
+Constructibility\todo{state constructibility theorem}
 \end{subequations}
 
 \clearpage
 
-\section{Dynamics of Hazelnut}
-\label{sec:dynamics}
+\section{Dynamics of Hazelnut}\label{sec:dynamics}
+
+\subsection{Complete Expressions}
+... canonical forms and type safety with e complete in it ...
+
+\subsection{Holes as TODOs}
+... add an e err and define new type safety ...
+
+\subsection{Indeterminate Expressions}
 \input{dynamics}
 
 \clearpage
+
+\section{Extending Hazelnut}\label{sec:extending}
+\todo{write this section} Add sum types.
+
+H-expression
+
+Z-expression + Erasure rules
+
+Statics
+
+Movement actions
+
+Construct actions
 
 \section{Mechanization}
 \label{sec:mech}\label{sec:mt}
@@ -1382,7 +1407,7 @@ TODO: cite \url{http://delivery.acm.org/10.1145/1060000/1056965/p1557-ko.pdf?ip=
 
 \section{Discussion \& Conclusion}
 \label{sec:future}
-This paper presented Hazelnut, a type theoretic structure editor calculus. Our aim is to take a principled approach to its design by formally specifying its semantics, providing strong metatheoretic guarantees, mechanizing its semantics and metatheory in Agda and implementing it using the concepts of  functional reactive programming. As of this submission, we have achieved reasonable confidence in the formal system presented above, and have transitioned our focus toward the mechanization and implementation efforts. By the time of presentation, we anticipate having complete or nearly complete versions of these.
+\todo{revise}This paper presented Hazelnut, a type theoretic structure editor calculus. Our aim is to take a principled approach to its design by formally specifying its semantics, providing strong metatheoretic guarantees, mechanizing its semantics and metatheory in Agda and implementing it using the concepts of  functional reactive programming. As of this submission, we have achieved reasonable confidence in the formal system presented above, and have transitioned our focus toward the mechanization and implementation efforts. By the time of presentation, we anticipate having complete or nearly complete versions of these.
 
 \subsection{Future Work}
 Hazelnut is, obviously, a very limited language at its core. So the most obvious avenue for future work is to increase the expressive power of this language. Our plan is to simultaneously maintain a mechanization and implementation (following, for example, Standard ML) as we proceed, ultimately producing the first large-scale, formally verified bidirectionally typed language codesigned with a type-aware editor. It may be that certain language features are unnecessary given a sufficiently advanced type-aware structure editor (e.g. SML's \texttt{open}?), while other features may only be practical with editor support. We intend to use Hazelnut and derivative systems thereof as a platform for rigorously exploring such questions.
@@ -1405,7 +1430,7 @@ We already discussed a connection to gradual typing \cite{Siek06a}. We hope to e
 It may also be possible to give a dynamics to incomplete expressions. Prior work on staged evaluation suggests that there may be a connection to modal logic, viewing holes as quantifying over all possible terms that may fill them \cite{DBLP:journals/jacm/DaviesP01}. In developing a dynamic semantics, we will also need to handle terms like $\hhole{\hehole}$ and
 $\hhole{\hhole{\hexp}}$. In our semantics given here, we eliminated them as they came up in a somewhat \emph{ad hoc} manner. We have not yet
 explored an equational theory for terms with holes, but intend to once our
-formalization effort is more mature.
+formalization effort is more mature.\todo{fix bib}
 
 \begin{quote}
 In any case, these are but steps toward more graphical program-description
@@ -1418,7 +1443,7 @@ systems, for we will not forever stay confined to mere strings of symbols.
 
 % The bibliography should be embedded for final submission.
 
-\bibliography{../research}
+\bibliography{../research}}
 %\softraggedright
 %P. Q. Smith, and X. Y. Jones. ...reference text...
 

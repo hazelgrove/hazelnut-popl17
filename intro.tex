@@ -33,9 +33,13 @@
 % editor to construct a program, it is easy, and indeed necessary, to deviate from this disciplined process.  Rather, text editors operate on sequences of
 % characters (i.e. \emph{text}.) 
 
-%Although all programs can be represented as text, most text does not correspond to a syntactically well-formed and semantically well-defined program. 
-Programmers and the tools that they use often encounter text that does not correspond to a meaningful program. This may be because the programmer is in the midst of a sequence of 
-edit actions that leaves the text temporarily malformed or ill-typed, or because the programmer has made a mistake\todo{mention YoungSeok's data here?}. It is difficult for tools to help programmers determine and execute a corrective course of action in such situations (e.g. by providing \todo{cite study on benefits of syntax highlighting}syntax highlighting and semantics-aware code completion services\todo{cite something?}.) %because the language definition is silent %For example, a code editor cannot assist the programmer in these situations.
+%Although programs can be represented as text, most text does not correspond to a syntactically well-formed and semantically well-defined program. 
+Most programming languages define a textual syntax. This allows programmers to use text editors and other standard text-based tools to construct and manipulate programs. While this is of substantial practical utility, it also introduces some fundamental complexity into the programming process. 
+
+Cognitively, it requires that programmers understand the subtleties of text parsing (e.g. the relative precedence of the various forms.) This can be particularly challenging for novice and end-user programmers.\todo{citation?}
+
+It also complicates matters for tool designers because they might be confronted with text that does not correspond to a well-formed, meaningful program\todo{mention YoungSeok's data here}. This may be because the programmer is in the midst of a sequence of 
+edit actions that leaves the text temporarily malformed or ill-typed, or because the programmer has made a mistake. The language definition is silent about these situations, so it is difficult for tools to help programmers determine and execute a corrective course of action (e.g. by providing \todo{cite study on benefits of syntax highlighting}syntax highlighting and semantics-aware code completion services\todo{cite something?}.)
 
 Some editors have developed \emph{ad hoc} workarounds for this problem, e.g. they might attempt to insert closing delimiters automatically, use whitespace to guess where a construct is likely to end, or recover from a type error by pretending that the type was as expected (if, indeed, an expected type can be determined.\todo{citations?}) These heuristic methods are imperfect, complex and sometimes misleading.
 
@@ -53,18 +57,16 @@ Some editors have developed \emph{ad hoc} workarounds for this problem, e.g. the
 % available in text editors do not always correspond to sensible
 % transformations on the structure of the program.
 
-\emph{Structure editors} have long promised to address this
-problem by allowing programmers to edit the tree structure of a program, or some rich projection thereof, 
-directly. Each edit action leaves the program being constructed in a
-structurally well-formed state.\footnote{In addition to eliminating malformed edit states, it is also often promised that programs can be written more quickly using a structure editor. However, we will not discuss such ``edit costs'' here, because they depend on particular implementation details, e.g. whether a keyboard or a mouse is in use.} We give examples of notable structure editors in Sec. \ref{sec:rw}.  
+\emph{Structure editors} are program editors where every edit action leaves the program being manipulated in a 
+structurally well-formed state.\footnote{In addition to eliminating malformed edit states, it is also often promised that programs can be written more quickly using a structure editor. However, we will not discuss such ``edit costs'' here, because they depend on particular implementation details, e.g. whether a keyboard or a mouse is in use.} Scratch etc. for novices. mbeddr for pros. Lamdu and Unison ongoing efforts with a functional foundation. We give other examples of notable structure editors in Sec. \ref{sec:rw}.\todo{revise}
 
-The problem is that it is still possible to leave the program in a semantically meaningless (i.e. undefined) state, because language definitions generally only give meaning to complete, well-typed terms. This makes it difficult for humans and tools to reason about types and binding during the development process.  %More sophisticated semantic reasoning principles thus remain .
+The problem is that it is still possible to leave the program in a semantically meaningless (i.e. undefined) state, because language definitions generally only give meaning to complete, well-typed terms. This makes it difficult for humans and tools to reason about types and binding during the development process, even when using a structure editor. Some structure editors attempt stuff, but it is not clear what invariants are being maintained (e.g. Unison ; Scratch seems not to allow literals of the wrong type, but variables are not typed.)\todo{revise} %More sophisticated semantic reasoning principles thus remain .
 
 %% TODO: some sort of transition that talks about how you still don't have
 %% semantic reasoning principles because you can be left in a semantically
 %% ill-defined state
 
-In this paper, we present our ongoing work on a minimal structure editor, Hazelnut,  defined in the type-theoretic style (i.e. Hazelnut is a \emph{structure editor calculus}.) In Hazelnut, expressions and types with \emph{holes} have a well-defined static semantics. Edit actions are type-aware and leave the program in both a structurally and semantically well-defined state. In fact, edit actions maintain an even stronger invariant -- when acting on an expression whose type is determined by its surroundings (e.g. an expression in function argument position), only edit actions consistent with that type are permitted (we will formally state this invariant in Sec. \ref{sec:actions}.) This does not imply that programs need to be constructed in a strictly outside-in manner, however, because an expression that has a type that is not yet consistent with its surroundings will automatically be put into a {hole} that defers consistency analysis until the hole is \emph{finished}.
+\todo{revise remainder of intro}In this paper, we present our ongoing work on a minimal structure editor, Hazelnut,  defined in the type-theoretic style (i.e. Hazelnut is a \emph{structure editor calculus}.) In Hazelnut, expressions and types with \emph{holes} have a well-defined static semantics. Edit actions are type-aware and leave the program in both a structurally and semantically well-defined state. In fact, edit actions maintain an even stronger invariant -- when acting on an expression whose type is determined by its surroundings (e.g. an expression in function argument position), only edit actions consistent with that type are permitted (we will formally state this invariant in Sec. \ref{sec:actions}.) This does not imply that programs need to be constructed in a strictly outside-in manner, however, because an expression that has a type that is not yet consistent with its surroundings will automatically be put into a {hole} that defers consistency analysis until the hole is \emph{finished}.
 
 The remainder of the paper is organized as follows:
 \begin{itemize}
@@ -72,6 +74,7 @@ The remainder of the paper is organized as follows:
     \ref{sec:example}.
 
   \item We then formally define Hazelnut in Section \ref{sec:hazel} and state the important metatheoretic properties.
+  \item Dynamics \ref{sec:dynamics}
 
   \item In Section \ref{sec:mech}, we describe our ongoing effort to formalize the semantics and metatheory of Hazelnut in Agda.
 
