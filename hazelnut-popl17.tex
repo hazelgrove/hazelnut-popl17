@@ -6,6 +6,7 @@
 % 10pt          To set in 10-point type instead of 9-point.
 % 11pt          To set in 11-point type instead of 9-point.
 % authoryear    To obtain author/year citation style instead of numeric.
+\usepackage[T1]{fontenc}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -19,6 +20,8 @@
 \usepackage{colortab}
 \usepackage{url}
 \usepackage{todonotes}
+\usepackage{listings}
+\usepackage{microtype}
 \sloppy
 \def \TirNameStyle #1{\small\rulename{#1}}
 \renewcommand{\MathparLineskip}{\lineskiplimit=.3\baselineskip\lineskip=.3\baselineskip plus .2\baselineskip}
@@ -84,14 +87,22 @@
 
 \maketitle
 \begin{abstract}
-Programmers typically construct and manipulate well-typed expressions  only indirectly, as text that must pass through a parser and type\-checker. Not all text survives this journey. In particular, text that arises transiently during the editing process, or when the programmer has made a mistake, is often malformed or ill-typed. 
+% Programmers typically construct and manipulate well-typed expressions  only indirectly, as text that must pass through a parser and type\-checker. Not all text survives this journey. In particular, text that arises transiently, or when the programmer makes a mistake, is often malformed or ill-typed. 
 % Not all text that arises during the programming process survives the journey through a parser and typechecker. In particular, text that arises transiently during the editing process, or when the programmer has made a mistake, is often malformed or ill-typed. 
-Contending with (i.e. reasoning about) malformed text, or well-formed but meaningless expressions, is a difficult task, for programmers and tools alike.
+% Contending with malformed program text or well-formed but meaningless syntax trees is difficult for programmers and their tools alike.
 
 %  \emph{Structure editors} have long promised to alleviate these burdens by exposing only edit actions that  cause sensible changes to the program structure.
 % Existing designs for structure editors, however, are complex and somewhat \emph{ad hoc}. They also focus primarily on syntactic well-formedness, so programs can still be left semantically meaningless as they are being constructed.
+% Structure editors (e.g. Scratch) eliminate the possibility of syntax errors. 
 
-This paper introduces Hazelnut, a minimal \emph{structure editor} where every edit action leaves the expression being edited in both a statically and dynamically meaningful state (with the latter implying that Hazelnut is particularly suitable as a basis for \emph{live programming}.) Uniquely, 1) Hazelnut is defined in a principled type-theoretic style, with a rich metatheory mechanized in Agda; and 2) users need not construct outer forms before they construct inner forms. Instead, Hazelnut's \emph{action semantics} automatically places terms that have a type that is inconsistent with the expected type into a \emph{hole}, which safely defers the type consistency check until the hole is \emph{finished}. Interestingly, this mechanism is related to a mechanism that arises in the semantics of gradual type systems. %Formally, Hazelnut is a bidirectionally typed lambda calculus extended with \emph{holes}, a \emph{focus model} (based on Huet's zipper) and an \emph{action model}.
+\emph{Structure editors} allow programmers to edit the tree structure of a program directly -- there are no syntax errors. This can have cognitive benefits, particularly for novice and end-user programmers (as evidenced by the popularity of structure editors like Scratch.) It also simplifies matters for tool designers, because they need not contend with malformed program text. %Structure editors for professional programmers are also under active development (e.g. \texttt{mbeddr}.)
+
+This paper defines Hazelnut, a {structure editor} based on a small bidirectionally typed lambda calculus that takes this approach two steps further: Hazelnut's edit actions operate over terms that are not just syntactically well-formed but also statically and dynamically meaningful. 
+Na\"ively, this injunction against type errors would force programmers to construct terms in an unnatural ``outside-in'' manner. To avoid this problem, Hazelnut's {action semantics} automatically places terms that have a type that is incompatible with the expected type into a \emph{hole}, which safely defers the type compatibility check until the hole is \emph{finished}. Interestingly, this mechanism is related to a mechanism that arises in gradual type systems.
+
+We intend Hazelnut as a minimal foundational calculus, rather than as an end-user tool itself. To that end, we show how Hazelnut's rich metatheory, which we have mechanized in Agda, guides the definition of an extension to Hazelnut. We also briefly discuss how Hazelnut's semantics lends itself to implementation as a functional reactive web application. Our reference implementation is written using \lstinline{js_of_ocaml}.
+
+%Formally, Hazelnut is a bidirectionally typed lambda calculus extended with \emph{holes}, a \emph{focus model} (based on Huet's zipper) and an \emph{action model}.
 \end{abstract}
 
 %\category{D.3.2}{Programming Languages}{Language Classifications}[Extensible Languages]
@@ -685,6 +696,43 @@ For concision, we show only the rules for ascription here:
     }
   }
 \end{equation}
+and this for the example
+\begin{equation}\label{r:movefirstchild-lam}
+\inferrule{ }{
+  \performMove{
+    \zwsel{\hlam{x}{\hexp}}
+  }{
+    \aMove{\dChild}
+  }{
+    \hlam{x}{\zwsel{\hexp}}
+  }
+}
+\end{equation}
+
+\begin{equation}\label{r:moveparent-ap2}
+  \inferrule{ }{
+    \performMove{
+      \hap{{\hexp_1}}{\zwsel{\hexp_2}}
+    }{
+      \aMove{\dParent}
+    }{
+      \zwsel{\hap{\hexp_1}{\hexp_2}}
+    }
+  }
+\end{equation}
+
+\begin{equation}\label{r:moveparent-hole}
+  \inferrule{ }{
+    \performMove{
+      \hhole{\zwsel{\hexp}}
+    }{
+      \aMove{\dParent}
+    }{
+      \zwsel{\hhole{\hexp}}
+    }
+  }
+\end{equation}
+
 \end{subequations}
 \subsubsection{Deletion} The $\aDel$ action replaces the selected subterm with an empty hole.
 
@@ -1289,6 +1337,8 @@ Finally, if the focus is inside a non-empty hole, we special case the situation 
 
 \section{Related Work}\label{sec:rw}
 %\subsection{Structure Editors}
+
+TODO: \url{http://research.nii.ac.jp/~hu/pub/hosc07.pdf}
 
 Structured editing has been recognized as a way to avoid the possibility of syntax errors for decades.  An early example is the
 The Cornell Program Synthesizer~\cite{teitelbaum_cornell_1981}, first published in 1981.

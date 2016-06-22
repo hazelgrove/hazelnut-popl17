@@ -3,132 +3,156 @@
 \[
 \begin{array}{|c||c|c||l|l|}
 \hline
-\# & \textbf{H-Expression} & \textbf{Z-Expression} & \textbf{Next Action} & \textbf{Semantics}
+\# & \textbf{Z-Expression} & 
+%\textbf{H-Expression} & 
+\textbf{Type} & \textbf{Next Action} & \textbf{Rule}
 \\
 \hline
 1 &
-\hhole{} &
-\zwsel{\hhole{}}
+\zwsel{\hhole{}} & 
+% \hhole{} &
+\tehole 
 &
-\aConstruct{\flam{x}} & \refrule{\ref{r:conelamhole}}
+\aConstruct{\flam{x}} & 
+\text{(\ref{r:conelamhole})}
 \\ 2 &
-\hlam{x}{\hhole{}} : \tarr{\hhole{}}{\hhole{}} &
-\hlam{x}{\hhole{}} : \tarr{\zwsel{\hhole{}}}{\hhole{}}
-&
-\aConstruct{\fnum{}} & \refrule{\ref{r:contnum}}
+\hlam{x}{\hhole{}} : \tarr{\zwsel{\hhole{}}}{\hhole{}} & 
+% \hlam{x}{\hhole{}} : \tarr{\hhole{}}{\hhole{}} &
+\tarr{\tehole}{\tehole} &
+\aConstruct{\fnum{}} &
+\text{(\ref{r:contnum})}
 \\ 3 &
-\hlam{x}{\hhole{}} : \tarr{\tnum{}}{\hhole{}} &
-\hlam{x}{\hhole{}} : \tarr{\zwsel{\tnum{}}}{\hhole{}}
-&
-\aMove{\dNext{}} & \refrule{\ref{r:movenextsib}}
+\hlam{x}{\hhole{}} : \tarr{\zwsel{\tnum{}}}{\hhole{}} &
+% \hlam{x}{\hhole{}} : \tarr{\tnum{}}{\hhole{}} &
+\tarr{\tnum}{\tehole} & 
+\aMove{\dNext{}} & 
+\text{({\ref{r:movenextsib}})}
 \\ 4 &
-&
 \hlam{x}{\hhole{}} : \tarr{\tnum}{\zwsel{\hhole{}}}
 &
-\aConstruct{\fnum{}} & \refrule{\ref{r:contnum}}
+% \text{\textquotedbl}&
+\tarr{\tnum}{\tehole} & 
+\aConstruct{\fnum{}} & 
+\text{(\ref{r:contnum})}
 \\ 5 &
-\hlam{x}{\hhole{}} : \tarr{\tnum{}}{\tnum{}} &
-\hlam{x}{\hhole{}} : \tarr{\tnum{}}{\zwsel{\tnum{}}}
-&
-\aMove{\dParent{}} & \refrule{\ref{r:moveparent}}
+\hlam{x}{\hhole{}} : \tarr{\tnum{}}{\zwsel{\tnum{}}} & 
+% \hlam{x}{\hhole{}} : \tarr{\tnum{}}{\tnum{}} &
+\tarr{\tnum}{\tnum} &
+\aMove{\dParent{}} & 
+\text{(\ref{r:moveparent})}
 \\ 6 &
-&
 \hlam{x}{\hhole{}} : \zwsel{\tarr{\tnum{}}{\tnum{}}}
 &
-\aMove{\dPrev{}} & \refrule{\ref{r:moveprevsib}}
+% \text{\textquotedbl}&
+\tarr{\tnum}{\tnum} & 
+\aMove{\dPrev{}} & 
+\text{(\ref{r:moveprevsib})}
 \\ 7 &
-&
-\zwsel{\hlam{x}{\hhole{}}} : \tarr{\tnum{}}{\tnum{}}
-&
-\aMove{\dChild{}} & \refrule{\ref{r:movefirstchild-lam}}
+% &
+\zwsel{\hlam{x}{\hhole{}}} : \tarr{\tnum{}}{\tnum{}} & 
+\tarr{\tnum}{\tnum} &
+% &
+\aMove{\dChild{}} & 
+\text{(\ref{r:movefirstchild-lam})}
 \\ 8 &
-&
-\hlam{x}{\zwsel{\hhole{}}} : \tarr{\tnum{}}{\tnum{}}
-&
-\aConstruct{\fvar{x}} & \refrule{\ref{r:conevar}}
+% &
+\hlam{x}{\zwsel{\hhole{}}} : \tarr{\tnum{}}{\tnum{}} &
+\tarr{\tnum}{\tnum} & 
+\aConstruct{\fvar{x}} & 
+\text{(\ref{r:conevar})}
 \\ 9 &
-\hlam{x}{{x}} : \tarr{\tnum{}}{\tnum{}}
+% \hlam{x}{{x}} : \tarr{\tnum{}}{\tnum{}}
+% &
+\hlam{x}{\zwsel{{x}}} : \tarr{\tnum{}}{\tnum{}} &
+\tarr{\tnum}{\tnum} & 
+\quad\textrm{---}
 &
-\hlam{x}{\zwsel{{x}}} : \tarr{\tnum{}}{\tnum{}}
-&
-\quad\textrm{---{}---}
-&
-\quad\textrm{---{}---}
+\quad\textrm{---}
 \\
 \hline
 \multicolumn{5}{c}{\text{... now assume a context where $id : \tarr{\tnum}{\tnum}$ ...}}\\
 \hline
 10 &
-\hhole{} &
-\zwsel{\hhole{}}
-&
-\aConstruct{\fasc} & \refrule{\ref{r:constructasc}}
+% \hhole{} &
+\zwsel{\hhole{}} & 
+\tehole &
+\aConstruct{\fasc} & 
+\text{(\ref{r:constructasc})}
 \\
 11 &
-\hhole{} : \hhole{} &
-\hhole{} : \zwsel{ \hhole{}}
-&
-\aConstruct{\fnum{}} & \refrule{\ref{r:contnum}}
+% \hhole{} : \hhole{} &
+\hhole{} : \zwsel{ \hhole{}} &
+\tehole & 
+\aConstruct{\fnum{}} & 
+\text{(\ref{r:contnum})}
 \\
 12 &
-\hhole{} :\tnum{} &
-\hhole{} : \zwsel{\tnum{}}
-&
-\aMove{\dPrev{}} & \refrule{\ref{r:moveprevsib}}
+% \hhole{} :\tnum{} &
+\hhole{} : \zwsel{\tnum{}} &
+\tnum &
+\aMove{\dPrev{}} & 
+\text{(\ref{r:moveprevsib})}
 \\
-%13 &
-%\hhole{} :\tnum{} &
-%\zwsel{\hhole{}} : \tnum{}
-%&
-%\aMove{\dPrev{}} & \refrule{\ref{r:moveprevsib}}
-%\\
+% %13 &
+% %\hhole{} :\tnum{} &
+% %\zwsel{\hhole{}} : \tnum{}
+% %&
+% %\aMove{\dPrev{}} & \refrule{\ref{r:moveprevsib}}
+% %\\
 13 &
-%\hhole{} :\tnum{}
- &
-\zwsel{\hhole{}} : \tnum{}
-&
-\aConstruct{ \fvar{id}} & \refrule{\ref{r:conevar2}}
+% \hhole{} :\tnum{}
+ % &
+\zwsel{\hhole{}} : \tnum{} &
+\tnum & 
+\aConstruct{ \fvar{id}} & 
+\text{(\ref{r:conevar2})}
 \\
 14 &
-\hhole{\textrm{$id$}} : \tnum{} &
-\hhole{\zwsel{{\textrm{$id$}}}} : \tnum{}
-&
-\aConstruct{\fap{}} & \refrule{\ref{r:coneapfn}}
+% \hhole{\textrm{$id$}} : \tnum{} &
+\hhole{\zwsel{{\textrm{$id$}}}} : \tnum{} &
+\tnum & 
+\aConstruct{\fap{}} & 
+\text{(\ref{r:coneapfn})}
 \\
 15 &
-\hhole{\hap{{{\textrm{$id$}}}}{{\hhole{}}}} : \tnum{}
-&
-\hhole{\hap{{{\textrm{$id$}}}}{\zwsel{\hhole{}}}} : \tnum{}
-&
-\aConstruct{\fnumlit{3}} &  \refrule{\ref{r:conenumnum}}
+% \hhole{\hap{{{\textrm{$id$}}}}{{\hhole{}}}} : \tnum{}
+% &
+\hhole{\hap{{{\textrm{$id$}}}}{\zwsel{\hhole{}}}} : \tnum{} &
+\tnum & 
+\aConstruct{\fnumlit{3}} &  
+\text{(\ref{r:conenumnum})}
 \\
 16 &
-\hhole{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}} : \tnum{}
-&
-\hhole{\hap{{{\textrm{$id$}}}}{\zwsel{\hnum{3}}}} : \tnum{}
-&
-\aMove{\dParent{}} &  \refrule{\ref{r:moveparent-ap2}}
+% \hhole{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}} : \tnum{}
+% &
+\hhole{\hap{{{\textrm{$id$}}}}{\zwsel{\hnum{3}}}} : \tnum{} &
+\tnum & 
+\aMove{\dParent{}} &  
+\text{(\ref{r:moveparent-ap2})}
 \\
 17 &
-%\hhole{\hap{{{\textrm{id}}}}{{\hnum{3}}}} : \tnum{}
-&
-\hhole{\zwsel{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}} : \tnum{}
-&
-\aMove{\dParent{}} &  \refrule{\ref{r:moveparent-hole}}
+% %\hhole{\hap{{{\textrm{id}}}}{{\hnum{3}}}} : \tnum{}
+% &
+\hhole{\zwsel{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}} : \tnum{} &
+\tnum & 
+\aMove{\dParent{}} &  
+\text{(\ref{r:moveparent-hole})}
 \\
 18 &
-%\hhole{\hap{{{\textrm{id}}}}{{\hnum{3}}}} : \tnum{}
-&
-\zwsel{\hhole{{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}}} : \tnum{}
-&
-\aFinish &  \refrule{\ref{r:finishana}}
+% %\hhole{\hap{{{\textrm{id}}}}{{\hnum{3}}}} : \tnum{}
+% &
+\zwsel{\hhole{{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}}} : \tnum{} &
+\tnum & 
+\aFinish &  
+\text{(\ref{r:finishana})}
 \\
 19 &
-{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}} : \tnum{}
-&
-\zwsel{{{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}}} : \tnum{}
-&
-\quad\textrm{---{}---} & \quad\textrm{---{}---}
+% {\hap{{{\textrm{$id$}}}}{{\hnum{3}}}} : \tnum{}
+% &
+\zwsel{{{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}}} : \tnum{} &
+\tnum & 
+\quad\textrm{---} & 
+\quad\textrm{---}
 \\
 \hline
 

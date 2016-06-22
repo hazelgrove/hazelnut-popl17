@@ -35,9 +35,9 @@
 
 %Although all programs can be represented as text, most text does not correspond to a syntactically well-formed and semantically well-defined program. 
 Programmers and the tools that they use often encounter text that does not correspond to a meaningful program. This may be because the programmer is in the midst of a sequence of 
-edit actions that leaves the text temporarily malformed or ill-typed, or because the programmer has made a mistake. It is difficult for tools to help programmers execute a corrective course of action in such situations (e.g. by providing syntax highlighting and semantics-aware code completion.) %because the language definition is necessarily silent about the structure or meaning of such text. %For example, a code editor cannot assist the programmer in these situations.
+edit actions that leaves the text temporarily malformed or ill-typed, or because the programmer has made a mistake\todo{mention YoungSeok's data here?}. It is difficult for tools to help programmers determine and execute a corrective course of action in such situations (e.g. by providing \todo{cite study on benefits of syntax highlighting}syntax highlighting and semantics-aware code completion services\todo{cite something?}.) %because the language definition is silent %For example, a code editor cannot assist the programmer in these situations.
 
-Some editors have developed \emph{ad hoc} workarounds for this problem, e.g. they might use whitespace to guess where a construct is likely to end, attempt to insert closing delimiters automatically, or recover from a type error by pretending that the type was as expected (if, indeed, an expected type can be determined.\todo{citations?}) These heuristic methods are quite complex and sometimes misleading.
+Some editors have developed \emph{ad hoc} workarounds for this problem, e.g. they might attempt to insert closing delimiters automatically, use whitespace to guess where a construct is likely to end, or recover from a type error by pretending that the type was as expected (if, indeed, an expected type can be determined.\todo{citations?}) These heuristic methods are imperfect, complex and sometimes misleading.
 
 % stuck editing a representation of the program instead of the structures
 % themselves. The editor does not restrict what the programmer may do: you
@@ -53,10 +53,10 @@ Some editors have developed \emph{ad hoc} workarounds for this problem, e.g. the
 % available in text editors do not always correspond to sensible
 % transformations on the structure of the program.
 
-\emph{Structure editors} have made some progress toward addressing this
-problem by allowing programmers to edit the tree structure of a program
+\emph{Structure editors} have long promised to address this
+problem by allowing programmers to edit the tree structure of a program, or some rich projection thereof, 
 directly. Each edit action leaves the program being constructed in a
-structurally well-formed state.\footnote{In addition to eliminating malformed edit states, it is also generally the case that programs can be written more quickly using a structure editor. However, we will not talk about ``edit costs'' here, because we would like to abstract away from details like whether a keyboard or a mouse (or some other input device) is being used.} We give examples of notable structure editors in Sec. \ref{sec:rw}.  
+structurally well-formed state.\footnote{In addition to eliminating malformed edit states, it is also often promised that programs can be written more quickly using a structure editor. However, we will not discuss such ``edit costs'' here, because they depend on particular implementation details, e.g. whether a keyboard or a mouse is in use.} We give examples of notable structure editors in Sec. \ref{sec:rw}.  
 
 The problem is that it is still possible to leave the program in a semantically meaningless (i.e. undefined) state, because language definitions generally only give meaning to complete, well-typed terms. This makes it difficult for humans and tools to reason about types and binding during the development process.  %More sophisticated semantic reasoning principles thus remain .
 
