@@ -46,11 +46,12 @@ Cognitively, it requires that programmers understand the subtleties of text pars
 One study~\cite{Altadmri:2015:MCI:2676723.2677258} of novice programmer error found that the most common of all errors was an syntactic error, specifically unbalanced parenthesis.
 % Too much detail? 
 
-It also complicates matters for tool designers because they might be confronted with text that does not correspond to a well-formed, meaningful program
+It also complicates matters for tool designers because they might be confronted with text that does not correspond to a well-formed, meaningful program.
 By analyzing the same data set used in~\cite{6883030}, which contains 1,460 hours of fine-grained code editing logs collected from 21 programmers, we found that 44.2\% of the code edits resulted in syntactically malformed state of the source code.
 %\todo{mention YoungSeok's data here}. 
-This may be because the programmer is in the midst of a sequence of 
-edit actions that leaves the text temporarily malformed or ill-typed, or because the programmer has made a mistake. The language definition is silent about these situations, so it is difficult for tools to help programmers determine and execute a corrective course of action (e.g. by providing \todo{cite study on benefits of syntax highlighting}syntax highlighting and semantics-aware code completion services\todo{cite something?}.)
+These malformed states could be errors, but they also may be because the programmer is in the midst of a sequence of edit actions that leaves the text temporarily malformed or ill-typed.
+%, or because the programmer has made a mistake. 
+The language definition is silent about these situations, so it is difficult for tools to help programmers determine and execute a corrective course of action (e.g. by providing syntax highlighting~\cite{sarkar2015impact} and semantics-aware code completion services~\cite{Mooty:2010:CCC:1915084.1916348}.)
 
 Some editors have developed \emph{ad hoc} workarounds for this problem, e.g. they might attempt to insert closing delimiters automatically, use whitespace to guess where a construct is likely to end, or recover from a type error by pretending that the type was as expected (if, indeed, an expected type can be determined.\todo{citations?}) These heuristic methods are imperfect, complex and sometimes misleading.
 
