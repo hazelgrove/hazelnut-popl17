@@ -34,11 +34,11 @@
 % characters (i.e. \emph{text}.) 
 
 %Although programs can be represented as text, most text does not correspond to a syntactically well-formed and semantically well-defined program. 
-Most programming languages define a textual syntax. This allows programmers to use text editors and other standard text-based tools to construct and manipulate programs. While this is of substantial practical utility, it also introduces some fundamental complexity into the programming process. 
+Most contemporary programming languages define a textual syntax so that programmers can use text editors and other text-based tools to construct and manipulate programs. While this design is of substantial practical utility, it also introduces some fundamental complexity into the programming process. 
 
 Cognitively, it requires that programmers understand the subtleties of text parsing (e.g. the relative precedence of the various forms.) This can be particularly challenging for novice and end-user programmers.\todo{citation?}
 
-It also complicates matters for tool designers because they might be confronted with text that does not correspond to a well-formed, meaningful program\todo{mention YoungSeok's data here}. This may be because the programmer is in the midst of a sequence of 
+It also complicates matters for tool designers because tools are often confronted with text that does not correspond to a well-formed, meaningful program\todo{mention YoungSeok's data here}. This may be because the programmer is in the midst of a sequence of 
 edit actions that leaves the text temporarily malformed or ill-typed, or because the programmer has made a mistake. The language definition is silent about these situations, so it is difficult for tools to help programmers determine and execute a corrective course of action (e.g. by providing \todo{cite study on benefits of syntax highlighting}syntax highlighting and semantics-aware code completion services\todo{cite something?}.)
 
 Some editors have developed \emph{ad hoc} workarounds for this problem, e.g. they might attempt to insert closing delimiters automatically, use whitespace to guess where a construct is likely to end, or recover from a type error by pretending that the type was as expected (if, indeed, an expected type can be determined.\todo{citations?}) These heuristic methods are imperfect, complex and sometimes misleading.
