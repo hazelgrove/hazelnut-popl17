@@ -124,7 +124,7 @@ We intend Hazelnut as a minimal foundational calculus, rather than as an end-use
 \todo{revise text}\todo{add let and ifz}\todo{make eqn numbering work better}Hazelnut is based on the simply-typed lambda calculus extended with a single base type, $\tnum$. Its major constituents, introduced by example in the previous section, are:
 \begin{itemize}
 \item \textbf{H-types} and \textbf{H-expressions} (Sec. \ref{sec:holes}), which are terms with \emph{holes}. Holes mark subterms that are ``under construction.'' H-types classify H-expressions according to a {bidirectionally typed} static semantics.
-\item \textbf{Z-types} and \textbf{Z-expressions} (Sec. \ref{sec:cursors}), which superimpose a single \emph{focus} onto H-types and H-expressions (using Huet's \emph{zipper pattern} \cite{JFP::Huet1997}.)
+\item \textbf{Z-types} and \textbf{Z-expressions} (Sec. \ref{sec:cursors}), which superimpose a single \emph{focus}\todo{cursor?} onto H-types and H-expressions (using Huet's \emph{zipper pattern} \cite{JFP::Huet1997}.)
 \item \textbf{Actions} (Sec. \ref{sec:actions}), which move the focus or modify the subterm in focus.
 
 Whenever an action is performed on a well-typed expression, it produces another well-typed expression in a \emph{sensible} manner. More specifically, the action semantics satisfies a crucial \emph{sensibility theorem}, stated in Sec. \ref{sec:actions}.
@@ -734,6 +734,7 @@ and this for the example\todo{revise}
     }
   }
 \end{equation}
+\end{subequations}
 
 \paragraph{Reachability}
 
@@ -745,8 +746,8 @@ actions that, when applied to the first term produces the second.
 
 As a consequence of applying Theorem \ref{thrm:actsafe} inductively at
 every action in such a list, we couldn't hope to construct an ill-typed
-term, so the statement here matches the mutually recursive structure of the
-bidirectional typing judgements.
+term. Therefore the statement here matches the mutually recursive structure
+of the bidirectional typing judgements.
 
 \begin{theorem}[Reachability]\todo{why $\htau$ and not $\ztau$?}
 \label{thrm:reach}
@@ -767,8 +768,6 @@ Both of the following hold:
 \end{theorem}
 
 
-
-\end{subequations}
 \subsubsection{Deletion} The $\aDel$ action replaces the selected subterm with an empty hole.
 
 Again, the rule for Z-types is self-explanatory:
@@ -835,8 +834,16 @@ Deletion within a Z-expression is similarly straightforward:
 %     \performDel{\hexp : \ztau}{\hexp : \ztau'}
 %   }
 % \end{equation}
-
 \end{subequations}
+
+\paragraph{Deletability}\todo{do we care?}
+The meaning of the deletion action is to remove the entire term in focus,
+and its definition does not depend on the structure of the term being
+deleted. Therefore, there is no theorem to state that acts as a checksum on
+the rules analogous to Theorem \ref{thrm:reach} or \ref{thrm:construct},
+since we could not have forgotten any rules corresponding to the structure
+of the terms.
+
 \subsubsection{Construction} The construction actions, $\aConstruct{\varphi}$, are used to construct terms of a shape indicated by $\varphi$ into the program at or around the focus.
 
 Again, let us begin with type actions. The $\aConstruct{\farr}$ action constructs an arrow type. The focused H-type becomes the argument type, and the focus is placed on an empty return type hole:
@@ -1128,6 +1135,13 @@ If the focused non-empty hole appears in analytic position, then it can only be 
 \end{equation}
 \end{subequations}
 
+\paragraph{Finishability}\todo{do we care?}
+
+As with deletion, since the meaning of the finish action does not depend on
+the structure of the term being finished other than requiring that it must
+be one of the two hole forms, there is no checksum theorem to state for
+this action.
+
 \subsubsection{Zipper Cases} The rules given so far handle the base cases, where the action has ``reached'' the focused expression. We also need to define the recursive cases, which propagate the action into the subtree where the focus appears. These rules follow the structure of the corresponding rules in the statics of H-expressions.
 
 \begin{subequations}
@@ -1351,13 +1365,14 @@ Finally, if the focus is inside a non-empty hole, we special case the situation 
   }
 \end{equation}
 
-\paragraph{Constructibility}
+\paragraph{Constructibility}\todo{why is this with the zipper rules not the
+    construct rules?}
 
 We give the following theorem to demonstrate that the rules for the action
 $\aConstruct{\varphi}$ do indeed capture the process of building any term
 of the form $\varphi$. Intuitively, its proof gives a list of composable
 actions that, when applied one sequentially to an empty hole in focus,
-produce any well-typed expression.
+build any well-typed expression.
 
 As with Theorem \ref{thrm:reach}, the statement of this theorem must match
 the mutually recursive structure of the bidirectional typing judgements.
