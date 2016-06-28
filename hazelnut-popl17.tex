@@ -208,7 +208,7 @@ Functions are not themselves annotated with types, so they can only appear in an
   \hana{\hGamma}{\hlam{x}{\hexp}}{\tarr{\htau_1}{\htau_2}}
 }
 \end{equation}
-(It would be straightforward to also add a ``half-annotated'' lambda form, $\lambda x{:}\tau.e$, but for simplicity, we leave it out of our calculus \cite{DBLP:conf/tldi/ChlipalaPH05}.)
+It would be straightforward to also add a ``half-annotated'' lambda form, $\lambda x{:}\tau.e$, but for simplicity, we leave it out of our calculus \cite{DBLP:conf/tldi/ChlipalaPH05}.
 
 For function application, if the expression in function position synthesizes an arrow type, the argument is analyzed against the synthesized argument type:
 \begin{equation}\label{rule:syn-ap}
@@ -295,6 +295,7 @@ The final rule handles function applications where the expression in function po
 }
 \end{equation}
 
+\todo{redundant text w/ citation}
 The hole type behaves much like the type $?$ in prior work by Siek and Taha on gradual types for functional languages \cite{Siek06a}. Their system (which was not bidirectionally typed nor an editor model) also needed to define two rules for function application. In general, when a premise requires that a synthesized type be of a particular form, we need a special case where the synthesized hole type is treated instead as if it were the ``holey-est'' type of that form.\footnote{Alternatively, we might add a rule that allows expressions that synthesize hole type to then non-deterministically synthesize any other type, but maintaining determinism is useful in practice, so we avoid this approach.}
 
 \end{subequations}
@@ -745,7 +746,7 @@ same up to the erasure of focus, its proof gives a list of composable
 actions that, when applied to the first term produces the second.
 
 As a consequence of applying Theorem \ref{thrm:actsafe} inductively at
-every action in such a list, we couldn't hope to construct an ill-typed
+every action in such a list, it is possible consider moving to an ill-typed
 term. Therefore the statement here matches the mutually recursive structure
 of the bidirectional typing judgements.
 
@@ -1136,7 +1137,6 @@ If the focused non-empty hole appears in analytic position, then it can only be 
 \end{subequations}
 
 \paragraph{Finishability}\todo{do we care?}
-
 As with deletion, since the meaning of the finish action does not depend on
 the structure of the term being finished other than requiring that it must
 be one of the two hole forms, there is no checksum theorem to state for
