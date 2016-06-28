@@ -21,7 +21,7 @@
 \usepackage{url}
 \usepackage{todonotes}
 \usepackage{listings}
-\lstset{tabsize=2, 
+\lstset{tabsize=2,
 basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 \usepackage{microtype}
 \sloppy
@@ -89,17 +89,17 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 
 \maketitle
 \begin{abstract}
-% Programmers typically construct and manipulate well-typed expressions  only indirectly, as text that must pass through a parser and type\-checker. Not all text survives this journey. In particular, text that arises transiently, or when the programmer makes a mistake, is often malformed or ill-typed. 
-% Not all text that arises during the programming process survives the journey through a parser and typechecker. In particular, text that arises transiently during the editing process, or when the programmer has made a mistake, is often malformed or ill-typed. 
+% Programmers typically construct and manipulate well-typed expressions  only indirectly, as text that must pass through a parser and type\-checker. Not all text survives this journey. In particular, text that arises transiently, or when the programmer makes a mistake, is often malformed or ill-typed.
+% Not all text that arises during the programming process survives the journey through a parser and typechecker. In particular, text that arises transiently during the editing process, or when the programmer has made a mistake, is often malformed or ill-typed.
 % Contending with malformed program text or well-formed but meaningless syntax trees is difficult for programmers and their tools alike.
 
 %  \emph{Structure editors} have long promised to alleviate these burdens by exposing only edit actions that  cause sensible changes to the program structure.
 % Existing designs for structure editors, however, are complex and somewhat \emph{ad hoc}. They also focus primarily on syntactic well-formedness, so programs can still be left semantically meaningless as they are being constructed.
-% Structure editors (e.g. Scratch) eliminate the possibility of syntax errors. 
+% Structure editors (e.g. Scratch) eliminate the possibility of syntax errors.
 
 \emph{Structure editors} allow programmers to edit the tree structure of a program directly -- there are no syntax errors. This can have cognitive benefits, particularly for novice and end-user programmers (as evidenced by the popularity of structure editors like Scratch.) It also simplifies matters for tool designers, because they need not contend with malformed program text. %Structure editors for professional programmers are also under active development (e.g. \texttt{mbeddr}.)
 
-This paper defines Hazelnut, a {structure editor} based on a small bidirectionally typed lambda calculus that takes this approach two steps further: Hazelnut's edit actions operate over terms that are not just syntactically well-formed but also statically and dynamically meaningful. 
+This paper defines Hazelnut, a {structure editor} based on a small bidirectionally typed lambda calculus that takes this approach two steps further: Hazelnut's edit actions operate over terms that are not just syntactically well-formed but also statically and dynamically meaningful.
 Na\"ively, this injunction against type errors would force programmers to construct terms in an unnatural ``outside-in'' manner. To avoid this problem, Hazelnut's {action semantics} automatically places terms that have a type that is incompatible with the expected type into a \emph{hole}, which safely defers the type compatibility check until the hole is \emph{finished}. Interestingly, this mechanism is related to a mechanism that arises in gradual type systems.
 
 We intend Hazelnut as a minimal foundational calculus, rather than as an end-user tool itself. To that end, we show how Hazelnut's rich metatheory, which we have mechanized in Agda, guides the definition of an extension to Hazelnut. We also briefly discuss how Hazelnut's semantics lends itself to implementation as a functional reactive web application. Our reference implementation is written using \lstinline{js_of_ocaml}.
@@ -735,7 +735,38 @@ and this for the example\todo{revise}
   }
 \end{equation}
 
-Reachability\todo{state reachability theorem}
+\paragraph{Reachability}
+
+We give the following theorem to demonstrate that the rules for movement do
+indeed capture the process of moving the focus to any editable position
+within a term. Intuitively, given two zippered expressions that are the
+same up to the erasure of focus, its proof gives a list of composable
+actions that, when applied to the first term produces the second.
+
+As a consequence of applying Theorem \ref{thrm:actsafe} inductively at
+every action in such a list, we couldn't hope to construct an ill-typed
+term, so the statement here matches the mutually recursive structure of the
+bidirectional typing judgements.
+
+\begin{theorem}[Reachability]\todo{why $\htau$ and not $\ztau$?}
+\label{thrm:reach}
+Both of the following hold:
+\begin{enumerate}
+  \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+   $\hsyn{\hGamma}{\removeSel{\zexp'}}{\htau}$ and $\removeSel{\zexp}
+   = \removeSel{\zexp'}$ then $\exists L \in \mathit{list}
+   ~\mathtt{action}$ such that $\mathit{iterate}~ L~ \zexp
+   = \zexp'$.
+
+  \item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+   $\hana{\hGamma}{\removeSel{\zexp'}}{\htau}$ and $\removeSel{\zexp}
+   = \removeSel{\zexp'}$ then $\exists L \in \mathit{list}
+   ~\mathtt{action}$ such that $\mathit{iterate}~ L~ \zexp
+   = \zexp'$.
+\end{enumerate}
+\end{theorem}
+
+
 
 \end{subequations}
 \subsubsection{Deletion} The $\aDel$ action replaces the selected subterm with an empty hole.
@@ -1320,7 +1351,40 @@ Finally, if the focus is inside a non-empty hole, we special case the situation 
   }
 \end{equation}
 
-Constructibility\todo{state constructibility theorem}
+\paragraph{Constructibility}
+
+We give the following theorem to demonstrate that the rules for the action
+$\aConstruct{\varphi}$ do indeed capture the process of building any term
+of the form $\varphi$. Intuitively, its proof gives a list of composable
+actions that, when applied one sequentially to an empty hole in focus,
+produce any well-typed expression.
+
+As with Theorem \ref{thrm:reach}, the statement of this theorem must match
+the mutually recursive structure of the bidirectional typing judgements.
+
+\begin{theorem}[Constructability]\todo{why $\htau$ and not $\ztau$?}
+\label{thrm:construct}
+Both of the following hold:
+\begin{enumerate}
+  \item If $\hsyn{\hGamma}{\hexp}{\htau}$ then $\exists \zexp'$ $\exists
+      L \in \mathit{list} ~\mathtt{action}$ such that
+      $\mathit{iterate}~ L~ \zwsel{\hhole{}} = \zexp'$ and
+      $\removeSel{\zexp'} = \hexp$
+
+  \item If $\hana{\hGamma}{\hexp}{\htau}$ then $\exists \zexp'$ $\exists
+      L \in \mathit{list} ~\mathtt{action}$ such that $\mathit{iterate}~
+      L~ \zwsel{\hhole{}} = \zexp'$ and $\removeSel{\zexp'} = \hexp$
+\end{enumerate}
+\end{theorem}
+
+Because actions are defined on the zippered form of expressions, we argue
+that we can construct a term that is the same as the target up to the
+erasure of focus rather than on the nose. Since any form inside a zippered
+term may be in focus, there are linearly many such terms for a given
+$\hexp$---Theorem \ref{thrm:construct} can be composed with
+Theorem \ref{thrm:reach} to reach any one that might be desired in
+particular.
+
 \end{subequations}
 
 \clearpage
