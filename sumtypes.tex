@@ -1,0 +1,72 @@
+
+\newcommand{\TABperformAna}[5]{#1 \vdash & #2                & \xlongrightarrow{#4} & #5 & \Leftarrow #3}
+\newcommand{\TABperformSyn}[6]{#1 \vdash & #2 \Rightarrow #3 & \xlongrightarrow{#4} & #5 \Rightarrow #6}
+\newcommand{\TABperformTyp}[3]{& #1 & \xlongrightarrow{#2} & #3}
+
+\newcommand{\TABperformMove}[3]{#1 \xlongrightarrow{#2} #3}
+\newcommand{\TABperformDel}[2]{#1 \xlongrightarrow{\aDel} #2}
+
+To accomodate the new type connective~$\tau + \tau$, we extend our
+previous syntantic forms for H-Types, H-Expressions, Actions, Z-Types and Z-Expressions.  
+%
+In particular,
+in H-Types, Actions and Z-Types, we include syntax for the type connective.
+%
+In H-Expressions, Actions and Z-Expressions, we include term syntax
+for the type's introduction and elimination forms, injection and case
+analysis, respectively.
+
+\begin{grammar}
+\textsf{HTyp} & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
+\\
+\textsf{HExp} & $\hexp$ & \bnfas & $\cdots 
+\bnfalt \hinj{i}{\hexp}
+\bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
+\\
+\textsf{Action} & $\alpha$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
+\\[3mm]
+\textsf{ZTyp} & $\ztau$ & \bnfas & $\cdots \bnfalt \tsum{\ztau}{\htau} \bnfalt \tsum{\htau}{\ztau}$
+\\
+\textsf{ZExp} & $\zexp$ & \bnfas & $\cdots
+\bnfalt \hinj{i}{\zexp}
+\bnfalt \hcase{\zexp}{x}{\hexp}{y}{\hexp}
+$
+\\
+&&& $
+\bnfaltbrk \hcase{\hexp}{x}{\zexp}{y}{\hexp}
+\bnfalt    \hcase{\hexp}{x}{\hexp}{y}{\zexp}$
+\end{grammar}
+
+\[
+\begin{array}{r@{~}l@{~~~}c@{~~~}ll@{~~}}
+  \hline
+  \multicolumn{5}{|l|}{\textsf{Type Construction Actions for $+$ Type}}
+  \\
+  \hline
+  %\hline
+  %&\textbf{Pre} & \texttt{cons}. & \textbf{Post} & \textbf{Term type}
+  %\\
+  \TABperformTyp{\zwsel{\hehole}}{\aConstructx{\fsum}}
+  {\tsum{\zwsel{\hehole}}{\hehole}}
+  \\[3mm]
+  \hline
+  \multicolumn{5}{|l|}{\textsf{Analytical Construction Actions for $+$ Type}}
+  \\
+  \hline
+  \TABperformAna{\hGamma}{\zwsel{\hehole}}
+              {\tsum{\hehole}{\hehole}}
+              {\aConstructx{\finj{i}}}
+              {\hinj{i}{\zwsel{\hehole}}}
+  \\
+  \TABperformAna{\hGamma}{\zwsel{\hehole}}
+              {\htau, \tincompat{\htau}{ \tsum{\hehole}{\hehole} }}
+              {\aConstructx{\finj{i}}}
+              {\hhole{\hinj{i}{\zwsel{\hehole}}}}
+  \\[2mm]
+  \TABperformAna{\hGamma}{\zwsel{\hehole}}
+              {\htau}
+              {\aConstructx{\fcase{x}{y}}}
+              {\hcase{\zwsel{\hehole}}{x}{\hehole}{y}{\hehole}}
+
+\end{array}
+\]
