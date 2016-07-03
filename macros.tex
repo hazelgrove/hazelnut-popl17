@@ -36,7 +36,11 @@
 \newcommand{\zrsel}[1]{{#1}{\bowtie}}
 
 %\newcommand{\zwsel}[1]{\adjustbox{cframe=blue}{\ensuremath{{\textcolor{blue}{\triangleright}}{#1}{\textcolor{blue}{\triangleleft}}}}}
-\newcommand{\zwsel}[1]{\colorbox{blue!10!white!30}{\ensuremath{{\textcolor{blue}{\triangleright}}{#1}{\textcolor{blue}{\triangleleft}}}}}
+\newcommand{\zwsel}[1]{
+  \setlength{\fboxsep}{0pt}
+  \colorbox{blue!10!white!100}{
+    \ensuremath{{\textcolor{blue}{\triangleright}}{#1}{\textcolor{blue}{\triangleleft}}}}
+}
 %\newcommand{\zwsel}[1]{{\triangleright}{#1}{\triangleleft}}
 
 \newcommand{\removeSel}[1]{#1^{\diamond}}
