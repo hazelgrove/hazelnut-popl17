@@ -14,6 +14,211 @@ Each action produces a new Z-expression, but this may or may not correspond to a
 %focus in the Z-Expression to produce the next line, which may or may not
 %produce a substantively different H-Expression.
 
+
+\begin{figure}[t!]
+\[
+\begin{array}{|c||c|c||l|l|}
+\hline
+\# & \textbf{Z-Expression} & 
+%\textbf{H-Expression} & 
+% \textbf{Type} & 
+\textbf{Next Action} & \textbf{Rule}
+\\
+\hline
+1 &
+\zwsel{\hhole{}} & 
+% \hhole{} &
+% \tehole 
+% &
+\aConstruct{\flam{x}} & 
+\text{(\ref{r:conelamhole})}
+\\ 2 &
+\hlam{x}{\hhole{}} : \tarr{\zwsel{\hhole{}}}{\hhole{}} & 
+% \hlam{x}{\hhole{}} : \tarr{\hhole{}}{\hhole{}} &
+% \tarr{\tehole}{\tehole} &
+\aConstruct{\fnum{}} &
+\text{(\ref{r:contnum})}
+\\ 3 &
+\hlam{x}{\hhole{}} : \tarr{\zwsel{\tnum{}}}{\hhole{}} &
+% \hlam{x}{\hhole{}} : \tarr{\tnum{}}{\hhole{}} &
+% \tarr{\tnum}{\tehole} & 
+\aMove{\dNext{}} & 
+\text{({\ref{r:movenextsib}})}
+\\ 4 &
+\hlam{x}{\hhole{}} : \tarr{\tnum}{\zwsel{\hhole{}}}
+&
+% \text{\textquotedbl}&
+% \tarr{\tnum}{\tehole} & 
+\aConstruct{\fnum{}} & 
+\text{(\ref{r:contnum})}
+\\ 5 &
+\hlam{x}{\hhole{}} : \tarr{\tnum{}}{\zwsel{\tnum{}}} & 
+% \hlam{x}{\hhole{}} : \tarr{\tnum{}}{\tnum{}} &
+% \tarr{\tnum}{\tnum} &
+\aMove{\dParent{}} & 
+\text{(\ref{r:moveparent})}
+\\ 6 &
+\hlam{x}{\hhole{}} : \zwsel{\tarr{\tnum{}}{\tnum{}}}
+&
+% \text{\textquotedbl}&
+% \tarr{\tnum}{\tnum} & 
+\aMove{\dPrev{}} & 
+\text{(\ref{r:moveprevsib})}
+\\ 7 &
+% &
+\zwsel{\hlam{x}{\hhole{}}} : \tarr{\tnum{}}{\tnum{}} & 
+% \tarr{\tnum}{\tnum} &
+% &
+\aMove{\dChild{}} & 
+\text{(\ref{r:movefirstchild-lam})}
+\\ 8 &
+% &
+\hlam{x}{\zwsel{\hhole{}}} : \tarr{\tnum{}}{\tnum{}} &
+% \tarr{\tnum}{\tnum} & 
+\aConstruct{\fvar{x}} & 
+\text{(\ref{r:conevar})}
+\\ 9 &
+% \hlam{x}{{x}} : \tarr{\tnum{}}{\tnum{}}
+% &
+\hlam{x}{\zwsel{{x}}} : \tarr{\tnum{}}{\tnum{}} &
+% \tarr{\tnum}{\tnum} & 
+\quad\textrm{---}
+&
+\quad\textrm{---}
+\\
+\hline
+% \multicolumn{5}{c}{\text{... now assume a context where $id : \tarr{\tnum}{\tnum}$ ...}}\\
+% \hline
+% 10 &
+% % \hhole{} &
+% \zwsel{\hhole{}} & 
+% \tehole &
+% \aConstruct{\fasc} & 
+% \text{(\ref{r:constructasc})}
+% \\
+% 11 &
+% % \hhole{} : \hhole{} &
+% \hhole{} : \zwsel{ \hhole{}} &
+% \tehole & 
+% \aConstruct{\fnum{}} & 
+% \text{(\ref{r:contnum})}
+% \\
+% 12 &
+% % \hhole{} :\tnum{} &
+% \hhole{} : \zwsel{\tnum{}} &
+% \tnum &
+% \aMove{\dPrev{}} & 
+% \text{(\ref{r:moveprevsib})}
+% \\
+% % %13 &
+% % %\hhole{} :\tnum{} &
+% % %\zwsel{\hhole{}} : \tnum{}
+% % %&
+% % %\aMove{\dPrev{}} & \refrule{\ref{r:moveprevsib}}
+% % %\\
+% 13 &
+% % \hhole{} :\tnum{}
+%  % &
+% \zwsel{\hhole{}} : \tnum{} &
+% \tnum & 
+% \aConstruct{ \fvar{id}} & 
+% \text{(\ref{r:conevar2})}
+% \\
+% 14 &
+% % \hhole{\textrm{$id$}} : \tnum{} &
+% \hhole{\zwsel{{\textrm{$id$}}}} : \tnum{} &
+% \tnum & 
+% \aConstruct{\fap{}} & 
+% \text{(\ref{r:coneapfn})}
+% \\
+% 15 &
+% % \hhole{\hap{{{\textrm{$id$}}}}{{\hhole{}}}} : \tnum{}
+% % &
+% \hhole{\hap{{{\textrm{$id$}}}}{\zwsel{\hhole{}}}} : \tnum{} &
+% \tnum & 
+% \aConstruct{\fnumlit{3}} &  
+% \text{(\ref{r:conenumnum})}
+% \\
+% 16 &
+% % \hhole{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}} : \tnum{}
+% % &
+% \hhole{\hap{{{\textrm{$id$}}}}{\zwsel{\hnum{3}}}} : \tnum{} &
+% \tnum & 
+% \aMove{\dParent{}} &  
+% \text{(\ref{r:moveparent-ap2})}
+% \\
+% 17 &
+% % %\hhole{\hap{{{\textrm{id}}}}{{\hnum{3}}}} : \tnum{}
+% % &
+% \hhole{\zwsel{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}} : \tnum{} &
+% \tnum & 
+% \aMove{\dParent{}} &  
+% \text{(\ref{r:moveparent-hole})}
+% \\
+% 18 &
+% % %\hhole{\hap{{{\textrm{id}}}}{{\hnum{3}}}} : \tnum{}
+% % &
+% \zwsel{\hhole{{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}}} : \tnum{} &
+% \tnum & 
+% \aFinish &  
+% \text{(\ref{r:finishana})}
+% \\
+% 19 &
+% % {\hap{{{\textrm{$id$}}}}{{\hnum{3}}}} : \tnum{}
+% % &
+% \zwsel{{{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}}} : \tnum{} &
+% \tnum & 
+% \quad\textrm{---} & 
+% \quad\textrm{---}
+% \\
+% \hline
+
+%% 11 &
+%% {\textrm{id}} : \tarr{\tnum{}}{\tnum{}}
+%% &
+%% \hlam{x}{\zwsel{{x}}} : \tarr{\tnum{}}{\tnum{}}
+%% &
+%% \aMove{\dParent{}} & ?
+%% \\ 12 &
+%% %{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}
+%% &
+%% \zwsel{\hlam{x}{{{x}}}} : \tarr{\tnum{}}{\tnum{}}
+%% &
+%% \aMove{\dParent{}} & \refrule{15b} bad
+%% \\ 13 &
+%% %{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}
+%% &
+%% \zwsel{\hlam{x}{{{x}}} : \tarr{\tnum{}}{\tnum{}}}
+%% &
+%% \aConstruct{\fap{}} & \refrule{20h} bad
+%% \\ 14 &
+%% \hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\hhole{}}
+%% &
+%% \hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\zwsel{\hhole{}}}
+%% &
+%% \aConstruct{\fnumlit{3}} & \refrule{20l} bad
+%% \\ 15 &
+%% %\hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\hhole{3}}
+%% %&
+%% %\hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\zwsel{\hhole{3}}}
+%% %&
+%% %\aFinish{} & ?
+%% %\\
+%% \hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{{\hnum{3}}}
+%% &
+%% \hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\zwsel{{\hnum{3}}}}
+%% &
+%% \quad\textrm{---{}---}
+%% &
+%% \quad\textrm{---{}---}
+%% \\
+%% \hline
+\end{array}
+\]
+\caption{Constructing an identity function in Hazelnut. The formal syntax and the rules referenced in the final column are described in Section \ref{sec:hazel}.}
+\label{fig:first-example}
+\end{figure}
+
 Line~1 begins with the simplest initial expression: an H-expression
 consisting of a single hole. The corresponding Z-Expression has that hole in focus,
 indicated by the syntax~$\zwsel{\hehole}$. Focus determines the locus of action. The first action the user performs is $\aConstruct{\flam{x}}$, which replaces the hole with a lambda abstraction binding the variable $x$. This results in the program on line
