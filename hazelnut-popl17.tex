@@ -21,7 +21,7 @@
 \usepackage{url}
 \usepackage{todonotes}
 \usepackage{listings}
-\lstset{tabsize=2, 
+\lstset{tabsize=2,
 basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 \usepackage{microtype}
 \sloppy
@@ -78,8 +78,8 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 %\titlebanner{}        % These are ignored unless
 \preprintfooter{Draft}   % 'preprint' option specified.
 
-\title{Hazelnut: A Bidirectionally Typed \\ Structure Editor Calculus}
-%\subtitle{Modular Type Constructors}
+\title{Hazelnut: A Bidirectionally Typed \\ Structure Editor
+ Calculus}
 
 %\authorinfo{\vspace{-2px}}{}{}
 \authorinfo{~}{~}{~}
@@ -89,20 +89,20 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 
 \maketitle
 \begin{abstract}
-% Programmers typically construct and manipulate well-typed expressions  only indirectly, as text that must pass through a parser and type\-checker. Not all text survives this journey. In particular, text that arises transiently, or when the programmer makes a mistake, is often malformed or ill-typed. 
-% Not all text that arises during the programming process survives the journey through a parser and typechecker. In particular, text that arises transiently during the editing process, or when the programmer has made a mistake, is often malformed or ill-typed. 
+% Programmers typically construct and manipulate well-typed expressions  only indirectly, as text that must pass through a parser and type\-checker. Not all text survives this journey. In particular, text that arises transiently, or when the programmer makes a mistake, is often malformed or ill-typed.
+% Not all text that arises during the programming process survives the journey through a parser and typechecker. In particular, text that arises transiently during the editing process, or when the programmer has made a mistake, is often malformed or ill-typed.
 % Contending with malformed program text or well-formed but meaningless syntax trees is difficult for programmers and their tools alike.
 
 %  \emph{Structure editors} have long promised to alleviate these burdens by exposing only edit actions that  cause sensible changes to the program structure.
 % Existing designs for structure editors, however, are complex and somewhat \emph{ad hoc}. They also focus primarily on syntactic well-formedness, so programs can still be left semantically meaningless as they are being constructed.
 % Structure editors (e.g. Scratch) eliminate the possibility of syntax errors. 
 
-\emph{Structure editors} allow programmers to edit the tree structure of a program directly. This can have cognitive benefits, particularly for novice and end-user programmers (as evidenced by the popularity of structure editors like Scratch.) It also simplifies matters for tool designers, because they need not contend with malformed program text. %Structure editors for professional programmers are also under active development (e.g. \texttt{mbeddr}.)
+\emph{Structure editors} allow programmers to edit the tree structure of a program directly. This can have cognitive benefits, particularly for novice and end-user programmers (as evidenced by the popularity of structure editors like Scratch.) It also simplifies matters for tool designers, because they do not need to contend with malformed program text.
 
-This paper defines Hazelnut, a {structure editor} based on a small bidirectionally typed lambda calculus that takes two more steps in this direction: Hazelnut's edit actions operate over terms that are not only syntactically well-formed but also statically and dynamically meaningful.  
-Na\"ively, enforcing an injunction on ill-typed edit states would force programmers to construct terms in an unnatural ``outside-in'' manner. To avoid this problem, Hazelnut's {action semantics} automatically places terms assigned a type that is incompatible with the expected type into a \emph{hole}, which safely defers the type compatibility check until the hole is \emph{finished}. Interestingly, this mechanism is related to a mechanism that arises in the semantics of gradual type systems.
+This paper defines Hazelnut, a {structure editor} based on a small bidirectionally typed lambda calculus extended with \emph{holes} and a \emph{focus} (\emph{ala} Huet's zipper.) Hazelnut goes one step beyond syntactic well-formedness: it's {edit actions} operate over statically meaningful terms.  
+Na\"ively, this prohibition on ill-typed edit states would force the programmer to construct terms in a rigid ``outside-in'' manner. To avoid this problem, the {action semantics} automatically places terms assigned a type that is inconsistent with the expected type {inside} a {hole}. This safely defers the type consistency check until the term inside the hole is \emph{finished}. 
 
-We intend Hazelnut to serve as a principled foundational calculus, rather than as an end-user tool itself. To that end, we demonstrate how Hazelnut's rich metatheory, which we have mechanized in Agda, guides an extension to Hazelnut. We also  discuss how Hazelnut's semantics lends itself to implementation as a functional reactive program. Our reference implementation is written using \lstinline{js_of_ocaml}.
+Hazelnut is a foundational type-theoretic account of typed structure editing, rather than an end-user tool itself. To that end, we describe how Hazelnut's rich metatheory, which we have mechanized in Agda, guides the definition of an extension to the calculus. We also discuss various plausible evaluation strategies for terms with holes, and in so doing reveal connections with gradual typing and contextual modal type theory (the Curry-Howard interpretation of contextual modal logic.) Finally, we  discuss how Hazelnut's semantics lends itself to implementation as a functional reactive program. Our reference implementation is written using \lstinline{js_of_ocaml}.
 
 %Formally, Hazelnut is a bidirectionally typed lambda calculus extended with \emph{holes}, a \emph{focus model} (based on Huet's zipper) and an \emph{action model}.
 \end{abstract}
@@ -124,7 +124,7 @@ We intend Hazelnut to serve as a principled foundational calculus, rather than a
 \todo{revise text}\todo{add let and ifz}\todo{make eqn numbering work better}Hazelnut is based on the simply-typed lambda calculus extended with a single base type, $\tnum$. Its major constituents, introduced by example in the previous section, are:
 \begin{itemize}
 \item \textbf{H-types} and \textbf{H-expressions} (Sec. \ref{sec:holes}), which are terms with \emph{holes}. Holes mark subterms that are ``under construction.'' H-types classify H-expressions according to a {bidirectionally typed} static semantics.
-\item \textbf{Z-types} and \textbf{Z-expressions} (Sec. \ref{sec:cursors}), which superimpose a single \emph{focus} onto H-types and H-expressions (using Huet's \emph{zipper pattern} \cite{JFP::Huet1997}.)
+\item \textbf{Z-types} and \textbf{Z-expressions} (Sec. \ref{sec:cursors}), which superimpose a single \emph{focus}\todo{cursor?} onto H-types and H-expressions (using Huet's \emph{zipper pattern} \cite{JFP::Huet1997}.)
 \item \textbf{Actions} (Sec. \ref{sec:actions}), which move the focus or modify the subterm in focus.
 
 Whenever an action is performed on a well-typed expression, it produces another well-typed expression in a \emph{sensible} manner. More specifically, the action semantics satisfies a crucial \emph{sensibility theorem}, stated in Sec. \ref{sec:actions}.
@@ -208,7 +208,7 @@ Functions are not themselves annotated with types, so they can only appear in an
   \hana{\hGamma}{\hlam{x}{\hexp}}{\tarr{\htau_1}{\htau_2}}
 }
 \end{equation}
-(It would be straightforward to also add a ``half-annotated'' lambda form, $\lambda x{:}\tau.e$, but for simplicity, we leave it out of our calculus \cite{DBLP:conf/tldi/ChlipalaPH05}.)
+It would be straightforward to also add a ``half-annotated'' lambda form, $\lambda x{:}\tau.e$, but for simplicity, we leave it out of our calculus \cite{DBLP:conf/tldi/ChlipalaPH05}.
 
 For function application, if the expression in function position synthesizes an arrow type, the argument is analyzed against the synthesized argument type:
 \begin{equation}\label{rule:syn-ap}
@@ -295,6 +295,7 @@ The final rule handles function applications where the expression in function po
 }
 \end{equation}
 
+\todo{redundant text w/ citation}
 The hole type behaves much like the type $?$ in prior work by Siek and Taha on gradual types for functional languages \cite{Siek06a}. Their system (which was not bidirectionally typed nor an editor model) also needed to define two rules for function application. In general, when a premise requires that a synthesized type be of a particular form, we need a special case where the synthesized hole type is treated instead as if it were the ``holey-est'' type of that form.\footnote{Alternatively, we might add a rule that allows expressions that synthesize hole type to then non-deterministically synthesize any other type, but maintaining determinism is useful in practice, so we avoid this approach.}
 
 \end{subequations}
@@ -734,10 +735,40 @@ and this for the example\todo{revise}
     }
   }
 \end{equation}
-
-Reachability\todo{state reachability theorem}
-
 \end{subequations}
+
+\paragraph{Reachability}
+
+We give the following theorem to demonstrate that the rules for movement do
+indeed capture the process of moving the focus to any editable position
+within a term. Intuitively, given two zippered expressions that are the
+same up to the erasure of focus, its proof gives a list of composable
+actions that, when applied to the first term produces the second.
+
+As a consequence of applying Theorem \ref{thrm:actsafe} inductively at
+every action in such a list, it is possible consider moving to an ill-typed
+term. Therefore the statement here matches the mutually recursive structure
+of the bidirectional typing judgements.
+
+\begin{theorem}[Reachability]\todo{why $\htau$ and not $\ztau$?}
+\label{thrm:reach}
+Both of the following hold:
+\begin{enumerate}
+  \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+   $\hsyn{\hGamma}{\removeSel{\zexp'}}{\htau}$ and $\removeSel{\zexp}
+   = \removeSel{\zexp'}$ then $\exists L \in \mathit{list}
+   ~\mathtt{action}$ such that $\mathit{iterate}~ L~ \zexp
+   = \zexp'$.
+
+  \item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+   $\hana{\hGamma}{\removeSel{\zexp'}}{\htau}$ and $\removeSel{\zexp}
+   = \removeSel{\zexp'}$ then $\exists L \in \mathit{list}
+   ~\mathtt{action}$ such that $\mathit{iterate}~ L~ \zexp
+   = \zexp'$.
+\end{enumerate}
+\end{theorem}
+
+
 \subsubsection{Deletion} The $\aDel$ action replaces the selected subterm with an empty hole.
 
 Again, the rule for Z-types is self-explanatory:
@@ -804,8 +835,16 @@ Deletion within a Z-expression is similarly straightforward:
 %     \performDel{\hexp : \ztau}{\hexp : \ztau'}
 %   }
 % \end{equation}
-
 \end{subequations}
+
+\paragraph{Deletability}\todo{do we care?}
+The meaning of the deletion action is to remove the entire term in focus,
+and its definition does not depend on the structure of the term being
+deleted. Therefore, there is no theorem to state that acts as a checksum on
+the rules analogous to Theorem \ref{thrm:reach} or \ref{thrm:construct},
+since we could not have forgotten any rules corresponding to the structure
+of the terms.
+
 \subsubsection{Construction} The construction actions, $\aConstruct{\varphi}$, are used to construct terms of a shape indicated by $\varphi$ into the program at or around the focus.
 
 Again, let us begin with type actions. The $\aConstruct{\farr}$ action constructs an arrow type. The focused H-type becomes the argument type, and the focus is placed on an empty return type hole:
@@ -1097,6 +1136,12 @@ If the focused non-empty hole appears in analytic position, then it can only be 
 \end{equation}
 \end{subequations}
 
+\paragraph{Finishability}\todo{do we care?}
+As with deletion, since the meaning of the finish action does not depend on
+the structure of the term being finished other than requiring that it must
+be one of the two hole forms, there is no checksum theorem to state for
+this action.
+
 \subsubsection{Zipper Cases} The rules given so far handle the base cases, where the action has ``reached'' the focused expression. We also need to define the recursive cases, which propagate the action into the subtree where the focus appears. These rules follow the structure of the corresponding rules in the statics of H-expressions.
 
 \begin{subequations}
@@ -1320,7 +1365,41 @@ Finally, if the focus is inside a non-empty hole, we special case the situation 
   }
 \end{equation}
 
-Constructibility\todo{state constructibility theorem}
+\paragraph{Constructibility}\todo{why is this with the zipper rules not the
+    construct rules?}
+
+We give the following theorem to demonstrate that the rules for the action
+$\aConstruct{\varphi}$ do indeed capture the process of building any term
+of the form $\varphi$. Intuitively, its proof gives a list of composable
+actions that, when applied one sequentially to an empty hole in focus,
+build any well-typed expression.
+
+As with Theorem \ref{thrm:reach}, the statement of this theorem must match
+the mutually recursive structure of the bidirectional typing judgements.
+
+\begin{theorem}[Constructability]\todo{why $\htau$ and not $\ztau$?}
+\label{thrm:construct}
+Both of the following hold:
+\begin{enumerate}
+  \item If $\hsyn{\hGamma}{\hexp}{\htau}$ then $\exists \zexp'$ $\exists
+      L \in \mathit{list} ~\mathtt{action}$ such that
+      $\mathit{iterate}~ L~ \zwsel{\hhole{}} = \zexp'$ and
+      $\removeSel{\zexp'} = \hexp$
+
+  \item If $\hana{\hGamma}{\hexp}{\htau}$ then $\exists \zexp'$ $\exists
+      L \in \mathit{list} ~\mathtt{action}$ such that $\mathit{iterate}~
+      L~ \zwsel{\hhole{}} = \zexp'$ and $\removeSel{\zexp'} = \hexp$
+\end{enumerate}
+\end{theorem}
+
+Because actions are defined on the zippered form of expressions, we argue
+that we can construct a term that is the same as the target up to the
+erasure of focus rather than on the nose. Since any form inside a zippered
+term may be in focus, there are linearly many such terms for a given
+$\hexp$---Theorem \ref{thrm:construct} can be composed with
+Theorem \ref{thrm:reach} to reach any one that might be desired in
+particular.
+
 \end{subequations}
 
 \clearpage
@@ -1363,7 +1442,7 @@ Construct actions
 \section{Related Work}\label{sec:rw}
 %\subsection{Structure Editors}
 
-TODO: \url{http://research.nii.ac.jp/~hu/pub/hosc07.pdf}
+\todo{TODO: \url{http://research.nii.ac.jp/~hu/pub/hosc07.pdf}}
 
 Structured editing has been recognized as a way to avoid the possibility of syntax errors for decades.  An early example is the
 The Cornell Program Synthesizer~\cite{teitelbaum_cornell_1981}, first published in 1981.
@@ -1389,9 +1468,9 @@ Perhaps the systems most similar in spirit to Hazelnut are Lamdu~\cite{lamdu} an
 
 Our work differs from all of these in that we begin with a formal editor calculus and build from there, rather than starting with an implementation and leaving many of the formal details formally unspecified. For example, while Lamdu has many interesting features, there is no theoretical basis presented for their work -- it is a rather large body of Haskell code with an unclear (and indeed, often somewhat perplexing, in our experience) action model. Unison is also a rather large body of Haskell code, though its action model appears superficially more similar to ours. We maintain what we believe to be a stronger action sensibility invariant than Unison (i.e. in Unison, one must construct expressions from the outside-in.) These systems are rich sources of interesting ideas, however -- there is room enough for many different approaches in this (re-)emerging space.
 
-TODO: cite \url{http://cseweb.ucsd.edu/~lerner/pb.html}
+\todo{TODO: cite \url{http://cseweb.ucsd.edu/~lerner/pb.html}}
 
-TODO: cite \url{http://delivery.acm.org/10.1145/1060000/1056965/p1557-ko.pdf?ip=73.154.143.34&id=1056965&acc=AUTHOR-IZED&key=4D4702B0C3E38B35%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35%2EC2CC0A83071F7605&CFID=780613712&CFTOKEN=33786941&__acm__=1462392463_f29fc98965004c61bfb1291d07756a23}
+\todo{TODO: cite} \url{http://delivery.acm.org/10.1145/1060000/1056965/p1557-ko.pdf?ip=73.154.143.34&id=1056965&acc=AUTHOR-IZED&key=4D4702B0C3E38B35%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35%2EC2CC0A83071F7605&CFID=780613712&CFTOKEN=33786941&__acm__=1462392463_f29fc98965004c61bfb1291d07756a23}
 
 %Drag-and-drop / for novices: lots of examples, e.g. Alice and others
 %
@@ -1408,6 +1487,12 @@ TODO: cite \url{http://delivery.acm.org/10.1145/1060000/1056965/p1557-ko.pdf?ip=
 \section{Discussion \& Conclusion}
 \label{sec:future}
 \todo{revise}This paper presented Hazelnut, a type theoretic structure editor calculus. Our aim is to take a principled approach to its design by formally specifying its semantics, providing strong metatheoretic guarantees, mechanizing its semantics and metatheory in Agda and implementing it using the concepts of  functional reactive programming. As of this submission, we have achieved reasonable confidence in the formal system presented above, and have transitioned our focus toward the mechanization and implementation efforts. By the time of presentation, we anticipate having complete or nearly complete versions of these.
+
+In addition to eliminating malformed edit states, structure editors also promise to increase the speed of development. However, we will not discuss such ``edit costs'' here, because they depend on particular implementation details, e.g. whether a keyboard or a mouse is in use.\todo{integrate this}
+
+By keeping the program in both a structurally and semantically well-defined state at all times, Hazelnut allows users to avoid premature commitment~\cite{green1996usability}.  
+By inserting a hole, the user can leave certain parts of the program unfinished, \todo{What is the best word to define this concept?  In progress, unfinished, incomple?} and yet still in a well defined type state. 
+This also enables progressive evaluation~\cite{green1996usability}, because unfinished solutions are also are well-defined at all times, thus enabling tools to provide evaluation of unfinished solutions.\todo{integrate this} 
 
 \subsection{Future Work}
 Hazelnut is, obviously, a very limited language at its core. So the most obvious avenue for future work is to increase the expressive power of this language. Our plan is to simultaneously maintain a mechanization and implementation (following, for example, Standard ML) as we proceed, ultimately producing the first large-scale, formally verified bidirectionally typed language codesigned with a type-aware editor. It may be that certain language features are unnecessary given a sufficiently advanced type-aware structure editor (e.g. SML's \texttt{open}?), while other features may only be practical with editor support. We intend to use Hazelnut and derivative systems thereof as a platform for rigorously exploring such questions.
@@ -1431,6 +1516,9 @@ It may also be possible to give a dynamics to incomplete expressions. Prior work
 $\hhole{\hhole{\hexp}}$. In our semantics given here, we eliminated them as they came up in a somewhat \emph{ad hoc} manner. We have not yet
 explored an equational theory for terms with holes, but intend to once our
 formalization effort is more mature.\todo{fix bib}
+
+\todo{new action form that makes actions extensible given proofs of
+admissiblity of a derived form, like prevSib}
 
 \begin{quote}
 In any case, these are but steps toward more graphical program-description
