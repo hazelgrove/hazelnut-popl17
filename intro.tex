@@ -96,16 +96,18 @@ Na\"ively, enforcing this injunction on ill-typed edit states would force progra
 
 
 The remainder of this paper is organized as follows:
-\begin{itemize}[noitemsep,nolistsep]
+\begin{itemize}[itemsep=0px,partopsep=2px,topsep=2px]
 \item We begin in Section
     \ref{sec:example} with two example edit sequences to develop the reader's intuitions.  
 \item We then give a detailed overview of Hazelnut's semantics and metatheory, which have been mechanized using the Agda proof assistant, in Section \ref{sec:hazel}.
-\item Hazelnut is designed as a {foundational} calculus, i.e. as a calculus that language and editor designers extend with higher level constructs. We show how Hazelnut's rich mechanized metatheory guides and constrains the development of such an extension in Section \ref{sec:extending}. 
+\item Hazelnut is a {foundational} calculus, i.e. a calculus that language and editor designers are expected to extend with higher level constructs. We show how Hazelnut's rich mechanized metatheory guides the development of an extension of Hazelnut with simple sum types in Section \ref{sec:extending}. 
 \item In Section \ref{sec:impl}, we briefly describe how Hazelnut's action semantics lends itself to efficient implementation as a functional reactive program. Our reference implementation is written using \lstinline{js_of_ocaml} and the OCaml \lstinline{React} library.
  
-\item This paper is primarily concerned with develop a statics and an action model. However, we consider the space of possible evaluation strategies for incomplete expressions in Section \ref{sec:dynamics}. In so doing, we discover interesting connections with gradual typing and contextual modal type theory. The former provides an interpretation of type holes, and the latter provides a logical interpretation of expression holes. It also suggests a principled design for an ``edit and resume'' feature.\todo{revise this one} 
+% \item However, we consider the space of possible evaluation strategies for incomplete expressions in Section \ref{sec:dynamics}. 
+% so doing, we discover interesting connections with gradual typing and contextual modal type theory. The former provides an interpretation of type holes, and the latter provides a logical interpretation of expression holes. \todo{revise this one} 
 
-\item In Section \ref{sec:rw}, we summarize the related work.
-\item We conclude in Section \ref{sec:future} by summarizing this vision of a principled science of structure editing rooted in type theory, and suggest a number of future directions.
+\item In Section \ref{sec:rw}, we summarize related work. In particular, much of the technical machinery needed to handle type holes coincides with that developed in the study of gradual type systems. Similarly, one interpretation of expression holes is as the closures of contextual modal type theory, which, by its correspondence with contextual modal logic, lays logical foundations beneath our work. %This suggests a principled design for an ``edit and resume'' feature.
+
+\item We conclude in Section \ref{sec:future} by summarizing our vision of a principled science of structure editor design rooted in type theory, and suggest a number of future directions.
 \end{itemize} 
-\todo{summarize contents of the supplement here?}
+The supplemental material includes 1) a typeset listing of Hazelnut's rules in definitional order; 2) the formalization of Hazelnut in Agda; and 3) our reference implementation of Hazelnut, both in source form and pre-compiled to JavaScript for use in a web browser.

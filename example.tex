@@ -1,6 +1,9 @@
 % !TEX root = hazelnut-popl17.tex
+The reader is encouraged to follow along with the examples that we will discuss in this section using the implementation.
 
 %
+\subsection{Example 1: Constructing the Increment Function}
+
 Figure~\ref{fig:first-example} shows an edit sequence that constructs the increment function, of type $\tarr{\tnum}{\tnum}$, starting from an empty hole via a sequence of {actions}. We will discuss the syntactic forms and the referenced rules in Sec. \ref{sec:hazel}. For now, let us develop only the high-level intuitions. 
 
 %In the first task (Lines 1-9), the user constructs the identity function over numbers. In the second task (Lines 10-19), the user applies this function (assumed to be bound to a variable, $id$), to the number expression $\hnum{3}$.
@@ -16,12 +19,9 @@ Figure~\ref{fig:first-example} shows an edit sequence that constructs the increm
 
 The edit state in Hazelnut is a {Z-expression}, $\zexp$. Every Z-expression has a single {H-expression}, $\hexp$, or {H-type}, $\htau$, under the {cursor}. The selected H-expression or H-type is typeset $\zwsel{\hexp}$ or $\zwsel{\htau}$, respectively. For example, on Line 1 of Figure \ref{fig:first-example}, the empty expression hole, $\hhole{}$, is under the cursor. 
 
-Actions act relative to the cursor. The first action the user performs is $\aConstruct{\flam{x}}$, which instantiates the hole with a lambda abstraction binding the variable $x$. This results in the program on line
-2, consisting of a lambda abstraction ascribed an arrow type with holes in all positions. The cursor is placed on the argument type hole. Type holes, like empty expression holes, are also typeset $\tehole$ for visual consistency. 
+Actions act relative to the cursor. The first action the user performs is $\aConstruct{\flam{x}}$, which instantiates the hole with a lambda abstraction binding the variable $x$. This results in the program on Line 2, consisting of a lambda abstraction ascribed an arrow type with holes in all positions. The cursor is placed on the argument type hole. Type holes are also typeset $\tehole$ for visual consistency. 
 
-The
-user proceeds to fill these holes using construction and movement actions, resulting in the final expression on Line 9. With no holes remaining, this expression is \emph{complete}.% (though it could, of course, undergo further actions nevertheless.)
-
+\subsection{Example 2: Applying the Increment Function}
 So far, editing has proceeded in an essentially type-directed, outside-in fashion -- the user first specified the type of the function, then produced a body of that type by the action on Line 8. Lines 10-12 similarly begin in a type-directed manner with the user giving an explicit type ascription, indicating that the expression that they are constructing will have type $\tnum$. 
 
 
@@ -226,7 +226,7 @@ So far, editing has proceeded in an essentially type-directed, outside-in fashio
 %% \hline
 \end{array}
 \]
-\caption{Constructing an identity function in Hazelnut. The formal syntax and the rules referenced in the final column are described in Section \ref{sec:hazel}.}
+\caption{Constructing an increment function in Hazelnut. The formal syntax and the rules referenced in the final column are described in Section \ref{sec:hazel}.}
 \label{fig:first-example}
 \end{figure}
 

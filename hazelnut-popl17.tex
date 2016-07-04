@@ -45,7 +45,7 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 \renewcommand\floatpagefraction{0.85}
 
 \AtBeginDocument{%
- \abovedisplayskip=3pt
+ \abovedisplayskip=2pt
  \abovedisplayshortskip=0pt
  \belowdisplayskip=2pt
  \belowdisplayshortskip=0pt
@@ -55,10 +55,10 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 \setlength{\textfloatsep}{12pt}
 
 \usepackage[compact]{titlesec}
-\titlespacing*{\section}{0pt}{2pt}{0pt}
-\titlespacing*{\subsection}{0pt}{4pt}{3pt}
-\titlespacing*{\subsubsection}{0pt}{4pt}{3pt}
-\titlespacing*{\paragraph}{0pt}{3pt}{5pt}
+\titlespacing*{\section}{0pt}{4pt}{2pt}
+\titlespacing*{\subsection}{0pt}{4pt}{2pt}
+\titlespacing*{\subsubsection}{0pt}{4pt}{2pt}
+\titlespacing*{\paragraph}{0pt}{4pt}{2pt}
 \setlength{\skip\footins}{3pt}
 
 \usepackage[colorlinks=true,allcolors=blue,breaklinks,draft=false]{hyperref}   % hyperlinks, including DOIs and URLs in bibliography
@@ -1401,23 +1401,26 @@ term may be in focus, there are linearly many such terms for a given
 $\hexp$---Theorem \ref{thrm:construct} can be composed with
 Theorem \ref{thrm:reach} to reach any one that might be desired in
 particular.
-
 \end{subequations}
 
-\clearpage
-
-\section{Dynamics of Hazelnut}\label{sec:dynamics}
-
-\subsection{Complete Expressions}
-... canonical forms and type safety with e complete in it ...
-
-\subsection{Holes as TODOs}
-... add an e err and define new type safety ...
-
-\subsection{Indeterminate Expressions}
-\input{dynamics}
+\subsection{Mechanization}
+\label{sec:mech}\label{sec:mt}
+\input{agda}
 
 \clearpage
+
+% \section{Dynamics of Hazelnut}\label{sec:dynamics}
+
+% \subsection{Complete Expressions}
+% ... canonical forms and type safety with e complete in it ...
+
+% \subsection{Holes as TODOs}
+% ... add an e err and define new type safety ...
+
+% \subsection{Indeterminate Expressions}
+% \input{dynamics}
+
+% \clearpage
 
 \section{Extending Hazelnut}\label{sec:extending}
 \todo{write this section} Add sum types.
@@ -1433,11 +1436,6 @@ Movement actions
 Construct actions
 
 \input{sumtypes}
-
-\section{Mechanization}
-\label{sec:mech}\label{sec:mt}
-\input{agda}
-
 
 \section{Implementation}
 \label{sec:impl}
