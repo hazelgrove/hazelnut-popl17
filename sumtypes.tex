@@ -10,9 +10,9 @@ To accomodate the new type connective~$\tau + \tau$, we extend our
 previous syntantic forms for H-Types, H-Expressions, Actions, Z-Types and Z-Expressions.  
 %
 In particular,
-in H-Types, Actions and Z-Types, we include syntax for the type connective.
+in H-Types, Shapes and Z-Types, we include syntax for the type connective.
 %
-In H-Expressions, Actions and Z-Expressions, we include term syntax
+In H-Expressions, Shapes and Z-Expressions, we include term syntax
 for the type's introduction and elimination forms, injection and case
 analysis, respectively.
 
@@ -23,7 +23,7 @@ analysis, respectively.
 \bnfalt \hinj{i}{\hexp}
 \bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
 \\
-\textsf{Action} & $\alpha$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
+\textsf{Shape} & $\varphi$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
 \\[3mm]
 \textsf{ZTyp} & $\ztau$ & \bnfas & $\cdots \bnfalt \tsum{\ztau}{\htau} \bnfalt \tsum{\htau}{\ztau}$
 \\
