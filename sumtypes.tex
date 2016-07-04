@@ -6,8 +6,11 @@
 \newcommand{\TABperformMove}[3]{#1 \xlongrightarrow{#2} #3}
 \newcommand{\TABperformDel}[2]{#1 \xlongrightarrow{\aDel} #2}
 
+\paragraph{Syntax.} 
+%
 To accomodate the new type connective~$\tau + \tau$, we extend our
-previous syntantic forms for H-Types, H-Expressions, Actions, Z-Types and Z-Expressions.  
+previous syntantic forms for H-Types, H-Expressions, Actions, Z-Types
+and Z-Expressions.
 %
 In particular,
 in H-Types, Shapes and Z-Types, we include syntax for the type connective.
@@ -37,22 +40,43 @@ $
 \bnfalt    \hcase{\hexp}{x}{\hexp}{y}{\zexp}$
 \end{grammar}
 
-\[
-\begin{array}{r@{~}l@{~~~}c@{~~~}ll@{~~}}
-  \hline
-  \multicolumn{5}{|l|}{\textsf{Type Construction Actions for $+$ Type}}
+\begin{mathpar}
+\Infer{Inj$_1$}
+{ \hana{ \hGamma }{ \hexp }{ \htau_1 } }
+{ \hana{ \hGamma }{ \hinj{1}{\hexp} }{ \tsum{\htau_1}{\htau_2} } }
+\and
+\Infer{Inj$_2$}
+{ \hana{ \hGamma }{ \hexp }{ \htau_2 } }
+{ \hana{ \hGamma }{ \hinj{2}{\hexp} }{ \tsum{\htau_1}{\htau_2} } }
+\and
+\Infer{Case}
+{ \hsyn{ \hGamma }{ \hexp }{ \tsum{\htau_1}{\htau_2} }
   \\
-  \hline
+  \hana{ \hGamma, x:\htau_1 }{ \hexp_1 }{ \htau }
+  \\
+  \hana{ \hGamma, y:\htau_2 }{ \hexp_2 }{ \htau }
+}
+{ \hana{ \hGamma }{ \hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2} }{ \htau } }
+\end{mathpar}
+
+{
+\small
+\begin{displaymath}
+\begin{array}{@{}r@{~}l@{~~~}c@{~~~}ll@{~~}}
+  %\hline
+  \multicolumn{5}{l}{\textbf{Type Construction Actions for $+$ Type}:}
+  \\
+  %\hline
   %\hline
   %&\textbf{Pre} & \texttt{cons}. & \textbf{Post} & \textbf{Term type}
   %\\
   \TABperformTyp{\zwsel{\hehole}}{\aConstructx{\fsum}}
   {\tsum{\zwsel{\hehole}}{\hehole}}
   \\[3mm]
-  \hline
-  \multicolumn{5}{|l|}{\textsf{Analytical Construction Actions for $+$ Type}}
+  %\hline
+  \multicolumn{5}{l}{\textbf{Analytical Construction Actions for $+$ Type}:}
   \\
-  \hline
+  %\hline
   \TABperformAna{\hGamma}{\zwsel{\hehole}}
               {\tsum{\hehole}{\hehole}}
               {\aConstructx{\finj{i}}}
@@ -62,11 +86,17 @@ $
               {\htau, \tincompat{\htau}{ \tsum{\hehole}{\hehole} }}
               {\aConstructx{\finj{i}}}
               {\hhole{\hinj{i}{\zwsel{\hehole}}}}
-  \\[2mm]
+  \\
   \TABperformAna{\hGamma}{\zwsel{\hehole}}
               {\htau}
               {\aConstructx{\fcase{x}{y}}}
               {\hcase{\zwsel{\hehole}}{x}{\hehole}{y}{\hehole}}
+  \\[3mm]
+  \multicolumn{5}{l}{\textbf{Synthetic Construction Actions for $+$ Type}:}
+  \\
+  \multicolumn{5}{l}{\textit{none}}
+  \\[3mm]
 
 \end{array}
-\]
+\end{displaymath}
+}
