@@ -1,23 +1,34 @@
 % !TEX root = hazelnut-popl17.tex
 
 %
-\todo{add let and ifz}\todo{add let to example}\todo{finalize table}Figure~\ref{fig:first-example} gives an example of the Hazelnut user
-performing two simple programming tasks.
-The syntactic forms in this figure will be formally defined in Sec. \ref{sec:hazel}. For now, we will develop only the necessary intuitions. In the first task (Lines 1-9), the user constructs the identity function over numbers. In the second task (Lines 10-19), the user applies this function (assumed to be bound to a variable, $id$), to the number expression $\hnum{3}$.
-Each of these tasks is carried out interactively, through the sequence of \emph{actions} shown in the  column labeled \textbf{Next Action}. For reference, we cite the relevant rules from Sec. \ref{sec:hazel} in the final column.
+Figure~\ref{fig:first-example} shows an edit sequence that constructs the increment function, of type $\tarr{\tnum}{\tnum}$, starting from an empty hole via a sequence of {actions}. We will discuss the syntactic forms and the referenced rules in Sec. \ref{sec:hazel}. For now, let us develop only the high-level intuitions. 
 
-The second and third columns of the
-table show the program as it is being constructed in two forms. The second column shows it as an \textbf{H-expression}, which is an expression that can contain \emph{holes}, delimited by $\llparenthesis$ and $\rrparenthesis$. The third column shows a corresponding \textbf{Z-expression}. Z-expressions are H-expressions with a single focus on some sub-term, delimited by $\triangleright$ and $\triangleleft$. The focus need not be on a hole.
+%In the first task (Lines 1-9), the user constructs the identity function over numbers. In the second task (Lines 10-19), the user applies this function (assumed to be bound to a variable, $id$), to the number expression $\hnum{3}$.
+% Each of these tasks is carried out interactively, through the sequence of \emph{actions} shown in the  column labeled \textbf{Next Action}. For reference, we cite the relevant rules from Sec. \ref{sec:hazel} in the final column.
+
+% The second and third columns of the
+% table show the program as it is being constructed in two forms. The second column shows it as an \textbf{H-expression}, which is an expression that can contain \emph{holes}, delimited by $\llparenthesis$ and $\rrparenthesis$. The third column shows a corresponding \textbf{Z-expression}. Z-expressions are H-expressions with a single focus on some sub-term, delimited by $\triangleright$ and $\triangleleft$. The focus need not be on a hole.
 % on working on filling just one of the holes.
-Each action produces a new Z-expression, but this may or may not correspond to a new H-expression (in particular, some actions only move the focus, without changing the structure of the term.)
+% Each action produces a new Z-expression, but this may or may not correspond to a new H-expression (in particular, some actions only move the focus, without changing the structure of the term.)
 % to the hole in
 %focus in the Z-Expression to produce the next line, which may or may not
 %produce a substantively different H-Expression.
 
+The edit state in Hazelnut is a {Z-expression}, $\zexp$. Every Z-expression has a single {H-expression}, $\hexp$, or {H-type}, $\htau$, under the {cursor}. The selected H-expression or H-type is typeset $\zwsel{\hexp}$ or $\zwsel{\htau}$, respectively. For example, on Line 1 of Figure \ref{fig:first-example}, the empty expression hole, $\hhole{}$, is under the cursor. 
+
+Actions act relative to the cursor. The first action the user performs is $\aConstruct{\flam{x}}$, which instantiates the hole with a lambda abstraction binding the variable $x$. This results in the program on line
+2, consisting of a lambda abstraction ascribed an arrow type with holes in all positions. The cursor is placed on the argument type hole. Type holes, like empty expression holes, are also typeset $\tehole$ for visual consistency. 
+
+The
+user proceeds to fill these holes using construction and movement actions, resulting in the final expression on Line 9. With no holes remaining, this expression is \emph{complete}.% (though it could, of course, undergo further actions nevertheless.)
+
+So far, editing has proceeded in an essentially type-directed, outside-in fashion -- the user first specified the type of the function, then produced a body of that type by the action on Line 8. Lines 10-12 similarly begin in a type-directed manner with the user giving an explicit type ascription, indicating that the expression that they are constructing will have type $\tnum$. 
+
+
 
 \begin{figure}[t!]
 \[
-\begin{array}{|c||c|c||l|l|}
+\begin{array}{|c||c|l||l|l|}
 \hline
 \# & \textbf{Z-Expression} & 
 %\textbf{H-Expression} & 
@@ -218,14 +229,6 @@ Each action produces a new Z-expression, but this may or may not correspond to a
 \caption{Constructing an identity function in Hazelnut. The formal syntax and the rules referenced in the final column are described in Section \ref{sec:hazel}.}
 \label{fig:first-example}
 \end{figure}
-
-Line~1 begins with the simplest initial expression: an H-expression
-consisting of a single hole. The corresponding Z-Expression has that hole in focus,
-indicated by the syntax~$\zwsel{\hehole}$. Focus determines the locus of action. The first action the user performs is $\aConstruct{\flam{x}}$, which replaces the hole with a lambda abstraction binding the variable $x$. This results in the program on line
-2, consisting of a lambda abstraction ascribed an arrow type with holes in all positions. The argument type hole is in focus. The
-user proceeds to fill these holes using construction and movement actions, resulting in the final expression on Line 9. With no holes remaining, this expression is \emph{complete}.% (though it could, of course, undergo further actions nevertheless.)
-
-So far, editing has proceeded in an essentially type-directed, outside-in fashion -- the user first specified the type of the function, then produced a body of that type by the action on Line 8. Lines 10-12 similarly begin in a type-directed manner with the user giving an explicit type ascription, indicating that the expression that they are constructing will have type $\tnum$. 
 
 However, on Line 13, the user performs the $\aConstruct{\fvar{id}}$ action. Notice that $id$ has type $\tarr{\tnum}{\tnum}$, which is not consistent with the type $\tnum$ given in the ascription. Na\"ively, this would produce a type error, leaving the program in a well-formed but semantically undefined state. One way to avoid this state is to simply not make this action available in the program configuration on Line 12. This is inflexible, forcing an outside-in approach to program construction (i.e. the user would need to construct the function application form before constructing the variable $id$.) Instead, Hazelnut permits this action, but places the variable $id$ inside a hole. This defers the consistency check that would normally occur: a hole can be checked against any type, as long as its contents have some type. The cursor is placed inside the hole. The user then proceeds to apply $id$ to the number expression $\hnum{3}$. At this point, the expression inside the hole has a type consistent with the ascription, so the user can \emph{finish} the hole. In our simple formalism, this requires moving the cursor to the hole (in practice, the system might find the nearest parent of hole form.) The result is the complete, well-typed program shown on Line 19 (notice that \emph{complete} is distinct from \emph{closed} -- the variable $id$ is free on Line 19, so this is not a closed program.)
 
