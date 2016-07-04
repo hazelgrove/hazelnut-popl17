@@ -3,7 +3,7 @@
 \newcommand{\TABperformSyn}[6]{#1 \vdash & #2 \Rightarrow #3 & \xlongrightarrow{#4} & #5 \Rightarrow #6}
 \newcommand{\TABperformTyp}[3]{& #1 & \xlongrightarrow{#2} & #3}
 
-\newcommand{\TABperformMove}[3]{#1 \xlongrightarrow{#2} #3}
+\newcommand{\TABperformMove}[3]{#1 & \xlongrightarrow{#2} & #3}
 \newcommand{\TABperformDel}[2]{#1 \xlongrightarrow{\aDel} #2}
 
 \paragraph{Syntax.} 
@@ -19,6 +19,7 @@ In H-Expressions, Shapes and Z-Expressions, we include term syntax
 for the type's introduction and elimination forms, injection and case
 analysis, respectively.
 
+\textbf{Syntactic Extensions for Sum Type:}
 \begin{grammar}
 \textsf{HTyp} & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
 \\
@@ -40,6 +41,7 @@ $
 \bnfalt    \hcase{\hexp}{x}{\hexp}{y}{\zexp}$
 \end{grammar}
 
+\textbf{Static Semantics of Sum Type:}
 \begin{mathpar}
 \Infer{Inj$_1$}
 { \hana{ \hGamma }{ \hexp }{ \htau_1 } }
@@ -64,7 +66,7 @@ $
 \begin{displaymath}
 \begin{array}{@{}r@{~}l@{~~~}c@{~~~}ll@{~~}}
   %\hline
-  \multicolumn{5}{l}{\textbf{Type Construction Actions for $+$ Type}:}
+  \multicolumn{5}{l}{\textbf{Type Construction Actions for Sum Type}:}
   \\
   %\hline
   %\hline
@@ -74,7 +76,7 @@ $
   {\tsum{\zwsel{\hehole}}{\hehole}}
   \\[3mm]
   %\hline
-  \multicolumn{5}{l}{\textbf{Analytical Construction Actions for $+$ Type}:}
+  \multicolumn{5}{l}{\textbf{Analytical Construction Actions for Sum Type}:}
   \\
   %\hline
   \TABperformAna{\hGamma}{\zwsel{\hehole}}
@@ -91,12 +93,92 @@ $
               {\htau}
               {\aConstructx{\fcase{x}{y}}}
               {\hcase{\zwsel{\hehole}}{x}{\hehole}{y}{\hehole}}
-  \\[3mm]
-  \multicolumn{5}{l}{\textbf{Synthetic Construction Actions for $+$ Type}:}
+  %\\[3mm]
+  %\multicolumn{5}{l}{\textbf{Synthetic Construction Actions for $+$ Type}:}
+  %\\
+  %\multicolumn{5}{l}{\textit{none}}
+  %\\[3mm]
+\end{array}
+\end{displaymath}
+\\[-2mm]
+\begin{displaymath}
+\begin{array}{@{}rcl}
+  \multicolumn{3}{l}{\textbf{Movement Actions for Sum Type Forms}:}
   \\
-  \multicolumn{5}{l}{\textit{none}}
-  \\[3mm]
-
+  \TABperformMove
+      {\zwsel{\tsum{\htau_1}{\htau_2}}}
+      {\aMove{\dChild}}
+      {      {\tsum{\zwsel{\htau_1}}{\htau_2}}}
+  \\
+  \TABperformMove
+      {      {\tsum{\zwsel{\htau_1}}{\htau_2}}}
+      {\aMove{\dNext}}
+      {      {\tsum{{\htau_1}}{\zwsel{\htau_2}}}}
+  \\
+  \TABperformMove
+      {      {\tsum{{\htau_1}}{\zwsel{\htau_2}}}}
+      {\aMove{\dPrev}}
+      {      {\tsum{\zwsel{\htau_1}}{\htau_2}}}
+  \\
+  \TABperformMove
+      {      {\tsum{\zwsel{\htau_1}}{\htau_2}}}
+      {\aMove{\dParent}}
+      {\zwsel{\tsum{{\htau_1}}{{\htau_2}}}}
+  \\
+  \TABperformMove
+      {      {\tsum{{\htau_1}}{{\zwsel{\htau_2}}}}}
+      {\aMove{\dParent}}
+      {\zwsel{\tsum{{\htau_1}}{\htau_2}}}
+  \\[2mm]
+  \TABperformMove
+      {\zwsel{\hinj{i}{\hexp}}}
+      {\aMove{\dChild}}
+      {\hinj{i}{\zwsel{\hexp}}}      
+  \\
+  \TABperformMove
+      {\hinj{i}{\zwsel{\hexp}}}      
+      {\aMove{\dParent}}
+      {\zwsel{\hinj{i}{\hexp}}}
+  \\[2mm]
+  \TABperformMove
+      {\zwsel{\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}}}
+      {\aMove{\dChild}}
+      {      {\hcase{\zwsel{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
+  \\
+  \TABperformMove
+      {      {\hcase{\zwsel{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
+      {\aMove{\dNext}}
+      {      {\hcase{{\hexp}}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
+  \\
+  \TABperformMove
+      {      {\hcase{{\hexp}}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
+      {\aMove{\dNext}}
+      {      {\hcase{{\hexp}}{x}{{\hexp_1}}{y}{\zwsel{\hexp_2}}}}
+  \\
+  \TABperformMove
+      {      {\hcase{{\hexp}}{x}{{\hexp_1}}{y}{\zwsel{\hexp_2}}}}
+      {\aMove{\dPrev}}
+      {      {\hcase{{\hexp}}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
+  \\
+  \TABperformMove
+      {      {\hcase{{\hexp}}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
+      {\aMove{\dPrev}}
+      {      {\hcase{{\zwsel{\hexp}}}{x}{{\hexp_1}}{y}{{\hexp_2}}}}
+  \\
+  \TABperformMove
+      {      {\hcase{\zwsel{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
+      {\aMove{\dParent}}
+      {\zwsel{\hcase{{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
+  \\
+  \TABperformMove
+      {      {\hcase{{\hexp}}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
+      {\aMove{\dParent}}
+      {\zwsel{\hcase{{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
+  \\
+  \TABperformMove
+      {      {\hcase{{\hexp}}{x}{\hexp_1}{y}{\zwsel{\hexp_2}}}}
+      {\aMove{\dParent}}
+      {\zwsel{\hcase{{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
 \end{array}
 \end{displaymath}
 }
