@@ -26,6 +26,7 @@ The actions on Lines 2-4 complete the type ascription. In particular, the $\aCon
 
 
 \begin{figure}[t!]
+\begin{center}
 $\arraycolsep=4px
 \begin{array}{|r||l|l||l|l|}
 \hline
@@ -53,7 +54,7 @@ $\arraycolsep=4px
 % \hlam{x}{\hhole{}} : \tarr{\tnum{}}{\hhole{}} &
 % \tarr{\tnum}{\tehole} & 
 \aMove{\dNext{}} & 
-\text{({\ref{r:movenextsib}})}
+\text{({\ref{rule:move-nextSib-arr}})}
 \\ 4 &
 \hlam{x}{\hhole{}} : \tarr{\tnum}{\zwsel{\hhole{}}}
 &
@@ -66,18 +67,18 @@ $\arraycolsep=4px
 % \hlam{x}{\hhole{}} : \tarr{\tnum{}}{\tnum{}} &
 % \tarr{\tnum}{\tnum} &
 \aMove{\dParent{}} & 
-\text{(\ref{r:moveparent})}
+\text{(\ref{rule:move-parent-arr-right})}
 \\ 6 &
 \hlam{x}{\hhole{}} : \zwsel{\tarr{\tnum{}}{\tnum{}}}
 &
 % \text{\textquotedbl}&
 % \tarr{\tnum}{\tnum} & 
 \aMove{\dParent{}} & 
-\text{(\ref{r:moveprevsib})}
+\text{(\ref{rule:move-parent-asc-right})}
 \\ 7 & 
 \zwsel{\hlam{x}{\hhole{}} : \tarr{\tnum}{\tnum}} & 
 \aMove{\dChild} & 
-\text{(...)}
+\text{(\ref{r:movefirstchild})}
 \\ 8 &
 % &
 \zwsel{\hlam{x}{\hhole{}}} : \tarr{\tnum{}}{\tnum{}} & 
@@ -98,158 +99,32 @@ $\arraycolsep=4px
 % \tarr{\tnum}{\tnum} & 
 {\aConstruct{\fplus}}
 &
-\text{(...)}
+\text{(\ref{rule:construct-plus-compat})}
 \\ 11 & 
 \hlam{x}{\hadd{x}{\zwsel{\hhole{}}}} : \tarr{\tnum{}}{\tnum{}} & 
 \aConstruct{\fnumlit{1}} & 
-\text{(...)}
+\text{(\ref{r:conenumnum})}
 \\ 12 & 
 \hlam{x}{\hadd{x}{\zwsel{\hnum{1}}}} : \tarr{\tnum}{\tnum} & 
 \textrm{---} & 
 {\textrm{---}}
 \\ \hline
-% \multicolumn{5}{c}{\text{... now assume a context where $id : \tarr{\tnum}{\tnum}$ ...}}\\
-% \hline
-% 10 &
-% % \hhole{} &
-% \zwsel{\hhole{}} & 
-% \tehole &
-% \aConstruct{\fasc} & 
-% \text{(\ref{r:constructasc})}
-% \\
-% 11 &
-% % \hhole{} : \hhole{} &
-% \hhole{} : \zwsel{ \hhole{}} &
-% \tehole & 
-% \aConstruct{\fnum{}} & 
-% \text{(\ref{r:contnum})}
-% \\
-% 12 &
-% % \hhole{} :\tnum{} &
-% \hhole{} : \zwsel{\tnum{}} &
-% \tnum &
-% \aMove{\dPrev{}} & 
-% \text{(\ref{r:moveprevsib})}
-% \\
-% % %13 &
-% % %\hhole{} :\tnum{} &
-% % %\zwsel{\hhole{}} : \tnum{}
-% % %&
-% % %\aMove{\dPrev{}} & \refrule{\ref{r:moveprevsib}}
-% % %\\
-% 13 &
-% % \hhole{} :\tnum{}
-%  % &
-% \zwsel{\hhole{}} : \tnum{} &
-% \tnum & 
-% \aConstruct{ \fvar{id}} & 
-% \text{(\ref{r:conevar2})}
-% \\
-% 14 &
-% % \hhole{\textrm{$id$}} : \tnum{} &
-% \hhole{\zwsel{{\textrm{$id$}}}} : \tnum{} &
-% \tnum & 
-% \aConstruct{\fap{}} & 
-% \text{(\ref{r:coneapfn})}
-% \\
-% 15 &
-% % \hhole{\hap{{{\textrm{$id$}}}}{{\hhole{}}}} : \tnum{}
-% % &
-% \hhole{\hap{{{\textrm{$id$}}}}{\zwsel{\hhole{}}}} : \tnum{} &
-% \tnum & 
-% \aConstruct{\fnumlit{3}} &  
-% \text{(\ref{r:conenumnum})}
-% \\
-% 16 &
-% % \hhole{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}} : \tnum{}
-% % &
-% \hhole{\hap{{{\textrm{$id$}}}}{\zwsel{\hnum{3}}}} : \tnum{} &
-% \tnum & 
-% \aMove{\dParent{}} &  
-% \text{(\ref{r:moveparent-ap2})}
-% \\
-% 17 &
-% % %\hhole{\hap{{{\textrm{id}}}}{{\hnum{3}}}} : \tnum{}
-% % &
-% \hhole{\zwsel{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}} : \tnum{} &
-% \tnum & 
-% \aMove{\dParent{}} &  
-% \text{(\ref{r:moveparent-hole})}
-% \\
-% 18 &
-% % %\hhole{\hap{{{\textrm{id}}}}{{\hnum{3}}}} : \tnum{}
-% % &
-% \zwsel{\hhole{{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}}} : \tnum{} &
-% \tnum & 
-% \aFinish &  
-% \text{(\ref{r:finishana})}
-% \\
-% 19 &
-% % {\hap{{{\textrm{$id$}}}}{{\hnum{3}}}} : \tnum{}
-% % &
-% \zwsel{{{\hap{{{\textrm{$id$}}}}{{\hnum{3}}}}}} : \tnum{} &
-% \tnum & 
-% \quad\textrm{---} & 
-% \quad\textrm{---}
-% \\
-% \hline
-
-%% 11 &
-%% {\textrm{id}} : \tarr{\tnum{}}{\tnum{}}
-%% &
-%% \hlam{x}{\zwsel{{x}}} : \tarr{\tnum{}}{\tnum{}}
-%% &
-%% \aMove{\dParent{}} & ?
-%% \\ 12 &
-%% %{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}
-%% &
-%% \zwsel{\hlam{x}{{{x}}}} : \tarr{\tnum{}}{\tnum{}}
-%% &
-%% \aMove{\dParent{}} & \refrule{15b} bad
-%% \\ 13 &
-%% %{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}
-%% &
-%% \zwsel{\hlam{x}{{{x}}} : \tarr{\tnum{}}{\tnum{}}}
-%% &
-%% \aConstruct{\fap{}} & \refrule{20h} bad
-%% \\ 14 &
-%% \hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\hhole{}}
-%% &
-%% \hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\zwsel{\hhole{}}}
-%% &
-%% \aConstruct{\fnumlit{3}} & \refrule{20l} bad
-%% \\ 15 &
-%% %\hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\hhole{3}}
-%% %&
-%% %\hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\zwsel{\hhole{3}}}
-%% %&
-%% %\aFinish{} & ?
-%% %\\
-%% \hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{{\hnum{3}}}
-%% &
-%% \hapP{{\textrm{id}} : \tarr{\tnum{}}{\tnum{}}}{\zwsel{{\hnum{3}}}}
-%% &
-%% \quad\textrm{---{}---}
-%% &
-%% \quad\textrm{---{}---}
-%% \\
-%% \hline
 \end{array}
-$
+$\end{center}\vspace{-6px}
 \caption{Constructing an increment function in Hazelnut. The formal syntax and the rules referenced in the final column are described in Section \ref{sec:hazel}.}
 \label{fig:first-example}
 \end{figure}
 
-\todo{rule references}The actions on Lines 5-8 move the cursor to the function body. For simplicity, Hazelnut defines only a small collection of primitive movement actions. In practice, an editor would also support compound movement actions, e.g. an action that moves the cursor directly to the next remaining hole, defined in terms of these primitive actions.
+The actions on Lines 5-8 move the cursor to the function body. For simplicity, Hazelnut defines only a small collection of primitive movement actions. In practice, an editor would also support compound movement actions, e.g. an action that moves the cursor directly to the next remaining hole, defined in terms of these primitive movement actions.
 
 Lines 9-11 complete the function body by first constructing the variable $x$, then  constructing the plus form, and finally constructing the number $\hnum{1}$. Notice that we did not need to construct the function body in an ``outside-in'' manner, i.e. we constructed $x$ before constructing the outer plus form. The transient function body, $x$, was coincidentally of type $\tnum$, so Hazelnut needed to make no special allowances in this case.
 
 \subsection{Example 2: Applying the Increment Function}
 
 \begin{figure}[t!]
-\colorbox{light-gray}{~~~~~~... now assume a context where $incr : \tarr{\tnum}{\tnum}$ ...~~~~~~}
+\begin{center}
+\colorbox{light-gray}{\hspace{53px} now assume $incr : \tarr{\tnum}{\tnum}$ \hspace{53px}}
 % \vspace{-6px}
-
 $\arraycolsep=4px
 \begin{array}{|r||l|l||l|l|}
 % \\
@@ -266,42 +141,42 @@ $\arraycolsep=4px
 % \tehole 
 % &
 \aConstruct{\fvar{incr}} \hphantom{~\,\,~~}& 
-\text{(...)}
+\text{(\ref{r:conevar})}
 \\ 14 & 
 \zwsel{incr} & 
 \aConstruct{\fap} & 
-\text{(...)}
+\text{(\ref{r:coneapfn})}
 \\ 15 & 
 incr(\zwsel{\hhole{}}) & 
 \aConstruct{\fvar{incr}} & 
-\text{(...)}
+\text{(\ref{r:conevar2})}
 \\ 16 & 
 incr(\hhole{\zwsel{incr}}) & 
 \aConstruct{\fap} & 
-\text{(...)}
+\text{(\ref{r:coneapfn})}
 \\ 17 & 
 incr(\hhole{incr(\zwsel{\hhole{}})}) \hphantom{~~~~} & 
 \aConstruct{\fnumlit{3}} & 
-\text{(...)}
+\text{(\ref{r:conenumnum})}
 \\ 18 & 
 incr(\hhole{incr(\zwsel{\hnum{3}})}) & 
 \aMove{\dParent}& 
-\text{(...)}
+\text{(\ref{r:moveparent-ap2})}
 \\ 19 & 
 incr(\hhole{\zwsel{incr(\hnum{3})}}) & 
 \aMove{\dParent} & 
-\text{(...)}
+\text{(\ref{r:moveparent-hole})}
 \\ 20 &
 incr(\zwsel{\hhole{incr(\hnum{3})}})& 
 \aFinish & 
-\text{(...)}
+\text{(\ref{r:finishana})}
 \\ 21 & 
 incr(\zwsel{incr(\hnum{3})}) & 
 \textrm{---} & 
 {\textrm{---}}
 \\ \hline
 \end{array}
-$
+$\end{center}\vspace{-6px}
 \caption{Appyling the increment function.}
 \label{fig:second-example}
 \end{figure}
@@ -314,19 +189,21 @@ We need to apply $incr$ again, so we perform the same action on Line 15 as we di
 \[
 incr(\zwsel{incr})
 \]
-The problem is that this is ill-typed, i.e. the argument of $incr$ must be of type $\tnum$ but is here of type $\tarr{\tnum}{\tnum}$. To maintain our edit invariant, this result would not be permitted. Consequently, the programmer would instead need to perform the $\aConstruct{\fap}$ action on Line 15. This would result in the following edit state (which is well-typed according to the semantics we will define in the next section):
+This edit state is ill-typed, i.e. the argument of $incr$ must be of type $\tnum$ but is here of type $\tarr{\tnum}{\tnum}$. To maintain our edit invariant, this edit state cannot be allowed to arise. 
+
+The programmer could alternatively have performed the $\aConstruct{\fap}$ action on Line 15. This would result in the following edit state, which is well-typed according to the static semantics we will define in the next section:
 \[
 incr(\hhole{}(\zwsel{\hhole{}}))
 \]
-The programmer is not able to mention the intended function before constructing the outer application form.
+The problem is that the programmer is not able to identify the intended function before constructing the outer application form. This is qualitatively unnatural.
 
 Hazelnut supports a more flexible strategy: rather than disallowing the $\aConstruct{\fvar{incr}}$ action on Line 15, it puts $incr$ inside a hole:
 \[
 incr(\hhole{\zwsel{incr}})
 \]
-As we will detail, this defers the necessary type compatibility check, just as the empty hole does. The expression inside a non-empty hole must itself be well-typed. 
+As we will detail, this defers the necessary type compatibility check, exactly as the empty hole does. One way to think about non-empty holes is as a formalization of the heuristic concept of the ``red underline'' that a text or syntactic structure editor displays where a type incompatibility is detected. The difference is that discovering a type incompatibility does not leave the entire program formally meaningless.
 
-Lines 16-17 proceed to apply the inner mention of $incr$ to a number literal, $\hnum{3}$. Finally, Lines 18-19 move the cursor to the non-empty hole and Line 20 performs the $\aFinish$ action. This action checks that the expression inside the hole is compatible with the type the hole is being checked against, as indeed it is, and removes the hole, resulting in the final edit state on Line 20. In practice, an editor might automatically perform the $\aFinish$ action as soon as it is possible to do so, but for simplicity, in Hazelnut it must be performed explicitly.
+The expression inside a non-empty hole must itself be well-typed, so we can continue to edit it. Lines 16-17 proceed to apply the inner mention of $incr$ to a number literal, $\hnum{3}$. Finally, Lines 18-19 move the cursor to the non-empty hole and Line 20 performs the $\aFinish$ action. This action checks that the expression inside the hole is compatible with the type the hole is being checked against, as indeed it now is, and removes the hole, resulting in the final edit state on Line 20. In practice, an editor might automatically perform the $\aFinish$ action as soon as it is possible to do so, but for simplicity, Hazelnut formally requires that it be performed explicitly.
 
 % So far, editing has proceeded in an essentially type-directed, outside-in fashion -- the user first specified the type of the function, then produced a body of that type by the action on Line 8. Lines 10-12 similarly begin in a type-directed manner with the user giving an explicit type ascription, indicating that the expression that they are constructing will have type $\tnum$. 
 
