@@ -195,7 +195,7 @@ The programmer could alternatively have performed the $\aConstruct{\fap}$ action
 \[
 incr(\hhole{}(\zwsel{\hhole{}}))
 \]
-The problem is that the programmer is not able to identify the intended function before constructing the outer function application form. This stands in contrast to Lines 13-14. % This is qualitatively unnatural.
+The problem is that the programmer is not able to identify the intended function before constructing the function application form. This stands in contrast to Lines 13-14. % This is qualitatively unnatural.
 
 Hazelnut's action semantics addresses this problem: rather than disallowing the $\aConstruct{\fvar{incr}}$ action on Line 15, it leaves $incr$ inside a hole:
 \[

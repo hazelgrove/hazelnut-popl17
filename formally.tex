@@ -125,7 +125,7 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 %     }
 %   \end{equation}
 % \end{subequations}
-\caption{H-type consistency and H-type matching at arrow.}
+\caption{H-type consistency and matched arrow types.}
 \label{fig:type-consistency}
 \end{figure}
 
@@ -202,7 +202,9 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 \label{fig:ana-syn}
 \end{figure}
 
-The statics of Hazelnut is organized as a \emph{bidirectional type system} \cite{Pierce:2000:LTI:345099.345100,bidi-tutorial} around the two mutually defined judgements in Figure \ref{fig:ana-syn}. Typing contexts, $\hGamma$, map each variable $x \in \domof{\hGamma}$ to a hypothesis $x : \htau$ in the usual manner. Derivations of the type analysis judgement, $\hana{\hGamma}{\hexp}{\htau}$, establish that $\hexp$ can appear where an expression of type $\htau$ is expected. Derivations of the type synthesis judgement, $\hsyn{\hGamma}{\hexp}{\htau}$, infer a type from $\hexp$, which is necessary in positions where an expected type is not available (e.g. at the top level.) Algorithmically, the type is an ``input'' of the type analysis judgement, but an ``output'' of the type synthesis judgement. %The rules describe a \emph{local type inference} scheme, i.e. type ascriptions are unnecessary when an expression is being analyzed against a known type.
+The statics of Hazelnut is organized as a \emph{bidirectional type system} \cite{Pierce:2000:LTI:345099.345100,bidi-tutorial} around the two mutually defined judgements in Figure \ref{fig:ana-syn}. Typing contexts, $\hGamma$, map each variable $x \in \domof{\hGamma}$ to a hypothesis $x : \htau$ in the usual manner. We identify the context up to exchange and adopt the usual identification convention for structures that differ only up to alpha-equivalence. 
+
+Derivations of the type analysis judgement, $\hana{\hGamma}{\hexp}{\htau}$, establish that $\hexp$ can appear where an expression of type $\htau$ is expected. Derivations of the type synthesis judgement, $\hsyn{\hGamma}{\hexp}{\htau}$, infer a type from $\hexp$, which is necessary in positions where an expected type is not available (e.g. at the top level.) Algorithmically, the type is an ``input'' of the type analysis judgement, but an ``output'' of the type synthesis judgement. %The rules describe a \emph{local type inference} scheme, i.e. type ascriptions are unnecessary when an expression is being analyzed against a known type.
 Making a judgemental distinction between these two notions will be essential in our action semantics (Sec. \ref{sec:actions}.)
 
 
@@ -212,60 +214,43 @@ Making a judgemental distinction between these two notions will be essential in 
 
 
 \begin{subequations}\label{rules:syn-ana}
-Type synthesis is stronger than type analysis in that if an expression is able to synthesize a type, it can also be analyzed against that type, or any other \emph{consistent} type, according to the following \emph{subsumption rule}:
-\begin{equation}\label{rule:ana-subsume}
+Type synthesis is stronger than type analysis in that if an expression is able to synthesize a type, it can also be analyzed against that type, or any other \emph{consistent} type, according to the \emph{subsumption rule}, Rule (\ref{rule:ana-subsume}).
+
+Figure \ref{fig:type-consistency} defines the \emph{H-type consistency judgement}, $\tcompat{\htau}{\htau'}$ as a reflexive and symmetric (but not transitive) relation between H-types. It coincides with equality for complete H-types. Two incomplete H-types are consistent if they differ only where a hole appears in either type. The type hole is therefore compatible with every type. This notion of H-type consistency coincides with the notion of type consistency that Siek and Taha discovered in their foundational work on gradual type systems, if we interpret the type hole as the $?$ type \cite{Siek06a}.\todo{fwd reference related work}
+
+Rule (\ref{rule:syn-lam}) defines analysis for lambda abstractions, $\hlam{x}{\hexp}$. There is no type synthesis rule that applies to this form, so lambda abstractions can appear only in analytic position, i.e. where an expected type is known.\footnote{It is possible to also define a ``half-annotated'' synthetic lambda form, $\lambda x{:}\tau.e$, but for simplicity, we leave it out \cite{DBLP:conf/tldi/ChlipalaPH05}.} Rule (\ref{rule:syn-lam}) is not quite the standard rule, reproduced below:
+\begin{equation*}
 \inferrule{
-  \hsyn{\hGamma}{\hexp}{\htau'}\\
-  \tcompat{\htau}{\htau'}
-}{
-  \hana{\hGamma}{\hexp}{\htau}
-}
-\end{equation}
-
-Figure \ref{fig:type-consistency} defines the \emph{H-type consistency judgement}, $\tcompat{\htau}{\htau'}$ as a reflexive, symmetric, non-transitive relation between H-types. It coincides with equality for complete H-types. Two incomplete H-types are consistent if they differ only up to the replacement of branches with holes. The type hole is  compatible with every type. This notion of consistency coincides with the notion of consistency that Siek and Taha discovered in their foundational work on gradual type systems, if we interpret the type hole as the $?$ type \cite{Siek06a}. 
-
-Type ascription allows the user to explicitly state  a type for the ascribed expression to be analyzed against:
-A variable synthesizes the hypothesized type:
-
-Lambda abstractions are not themselves annotated, so they can appear only in analytic position:
-\begin{equation}\label{rule:syn-lam}
-\inferrule{
-  \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
   \hana{\hGamma, x : \htau_1}{\hexp}{\htau_2}
 }{
-  \hana{\hGamma}{\hlam{x}{\hexp}}{\htau}
+  \hana{\hGamma}{\hlam{x}{\hexp}}{\tarr{\htau_1}{\htau_2}}
 }
-\end{equation}
-It is possible to also define a ``half-annotated'' lambda form, $\lambda x{:}\tau.e$, but for simplicity, we leave it out \cite{DBLP:conf/tldi/ChlipalaPH05}.
-
-When applying a function, if the expression in function position synthesizes an arrow type, the argument is analyzed against the synthesized argument type:
-% \begin{equation}\label{rule:syn-ap}
-% \inferrule{
-%   \hsyn{\hGamma}{\hexp_1}{\tarr{\htau_2}{\htau}}\\
-%   \hana{\hGamma}{\hexp_2}{\htau_2}
-% }{
-%   \hsyn{\hGamma}{\hap{\hexp_1}{\hexp_2}}{\htau}
-% }
-% \end{equation}
-
-
-Numbers synthesize type $\tnum$:
-
-Addition operates like a function over numbers:
-
-The rules given so far are sufficient to type complete H-expressions. The remaining rules give H-expressions with holes a well-defined static semantics.
-
-The empty hole synthesizes the hole type:
-A non-empty hole contains an H-expression that is ``under construction'', as described in Sec. \ref{sec:example}. The  expression inside the hole must synthesize some type, but, like the empty hole, the non-empty hole synthesizes only the hole type:
-The type consistency judgement $\tcompat{\htau}{\htau'}$, which appeared as a premise in the subsumption rule, makes the hole type compatible with any other type:
-\begin{subequations}\label{rules:tcompat}
-\begin{equation}\label{rule:tcompat-hole}
-\inferrule{ }{
-  \tcompat{\htau}{\tehole}
+\end{equation*}
+The problem is that this standard rule alone leaves us unable to analyze lambda abstractions against the type hole, because the type hole is not immediately of the form $\tarr{\htau_1}{\htau_2}$. There are two possible solutions to this problem. One solution would be to define a second rule specifically for this case:
+\begin{equation*}
+\inferrule{
+  \hana{\hGamma, x : \tehole}{\hexp}{\tehole}
+}{
+  \hana{\hGamma}{\hlam{x}{\hexp}}{\tehole}
 }
-\end{equation}
-\end{subequations}
-The remaining rules, given in the appendix, establish that type consistency is symmetric and reflexive (but not transitive.)
+\end{equation*}
+Intead, we combine these two possible rules into a single rule through the simple auxiliary \emph{matched arrow type} judgement, $\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$, defined in Figure \ref{fig:type-consistency}. This judgement leaves arrow types alone and assigns the arrow type $\tarr{\tehole}{\tehole}$ to the type hole. It is easy to see that the two rules above are admissible by appeal to Rule (\ref{rule:syn-lam}) and the matched arrow type judgement\todo{is admissible the right word}. Encouragingly, this judgement also arises in the study of gradual type systems\todo{first paper?}.
+
+Rule (\ref{rule:syn-asc}) defines type synthesis of expressions of ascription form, $\hexp : \htau$. This allows the user to explicitly state  a type for the ascribed expression to be analyzed against.
+
+Rule (\ref{rule:syn-var}) is the standard rule for variables. 
+
+Rule (\ref{rule:syn-ap}) is again nearly the standard rule for function application. It again makes use of the matched function type judgement to combine what would otherwise need to be two rules for function application -- one for when $e_1$ synthesizes an arrow type, and another for when $e_1$ synthesizes the type hole. Indeed, Siek and Taha needed two application rules for the same fundamental reason \cite{Siek06a}. Subsequent work on gradual typing introduced this notion of type matching\todo{cite}.
+
+Rule (\ref{rule:syn-num}) states that number literals synthesize the $\tnum$ type. Rule (\ref{rule:syn-plus}) states that $\hexp_1 + \hexp_2$ behaves like a function over numbers. 
+
+The rules given so far are sufficient to type complete H-expressions. The two remaining rules give H-expressions with holes a well-defined static semantics.
+
+Rule (\ref{rule:syn-ehole}) states that the empty expression hole synthesizes the type hole.
+
+
+A non-empty hole contains an H-expression that is ``under construction'', as described in Sec. \ref{sec:example}. According to Rule (\ref{rule:syn-hole}), the  expression inside the hole must synthesize some type, but, like the empty hole, the non-empty hole synthesizes only the hole type. 
+
 
 % \begin{equation}\label{rule:tcompat-comm}
 % \inferrule{
@@ -288,7 +273,9 @@ The remaining rules, given in the appendix, establish that type consistency is s
 % }
 % \end{equation}
 
-Taken we can derive that $\hana{id : \tarr{\tnum}{\tnum}}{\hhole{id}}{\tnum}$, as is necessary to synthesize a type for the H-expression on Line 14 of Fig. \ref{fig:first-example}. %In other words, this mechanism is essential if  users are to able to construct a program in anything but an ``outside in'' fashion.
+Given these rules, it is instructive to derive the following (by subsumption):  
+\[\hana{incr : \tarr{\tnum}{\tnum}}{\hhole{incr}}{\tnum}\]
+% This is the key premise necessary to synthesize the $\tnum$ type for the H-expression that results from cursor erasure -- defined next -- of the Z-expression on Line 16 of Fig. \ref{fig:second-example}. %In other words, this mechanism is essential if  users are to able to construct a program in anything but an ``outside in'' fashion.
 
 % The final rule handles function applications where the expression in function position synthesizes a hole type, rather than an arrow type. We treat it as if it had instead synthesized $\tarr{\tehole}{\tehole}$:
 % \begin{equation}\label{rule:syn-ap-2}
@@ -300,13 +287,13 @@ Taken we can derive that $\hana{id : \tarr{\tnum}{\tnum}}{\hhole{id}}{\tnum}$, a
 % }
 % \end{equation}
 
-\todo{redundant text w/ citation}
-The hole type behaves much like the type $?$ in prior work by Siek and Taha on gradual types for functional languages \cite{Siek06a}. Their system (which was not bidirectionally typed nor an editor model) also needed to define two rules for function application. In general, when a premise requires that a synthesized type be of a particular form, we need a special case where the synthesized hole type is treated instead as if it were the ``holey-est'' type of that form.\footnote{Alternatively, we might add a rule that allows expressions that synthesize hole type to then non-deterministically synthesize any other type, but maintaining determinism is useful in practice, so we avoid this approach.}
+% \todo{redundant text w/ citation}
+% The hole type behaves much like the type $?$ in prior work by Siek and Taha on gradual types for functional languages \cite{Siek06a}. Their system (which was not bidirectionally typed nor an editor model) also needed to define two rules for function application. In general, when a premise requires that a synthesized type be of a particular form, we need a special case where the synthesized hole type is treated instead as if it were the ``holey-est'' type of that form.\footnote{Alternatively, we might add a rule that allows expressions that synthesize hole type to then non-deterministically synthesize any other type, but maintaining determinism is useful in practice, so we avoid this approach.}
 
 \end{subequations}
 \subsection{Focus Model}\label{sec:cursors}
 \begin{figure}[t]
-\hspace{-3px}$\arraycolsep=3pt\begin{array}{lllllll}
+\hspace{-3px}$\arraycolsep=2pt\begin{array}{lllllll}
 \mathsf{ZTyp} & \ztau & ::= &
   %\zlsel{\htau} ~\vert~
   \zwsel{\htau} ~\vert~
