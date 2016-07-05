@@ -59,8 +59,18 @@ $
   \hana{ \hGamma, y:\htau_2 }{ \hexp_2 }{ \htau }
 }
 { \hana{ \hGamma }{ \hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2} }{ \htau } }
+\and
+\Infer{Case-H}
+{ \hsyn{ \hGamma }{ \hexp }{ \hehole }
+  \\
+  \hana{ \hGamma, x:\hehole }{ \hexp_1 }{ \htau }
+  \\
+  \hana{ \hGamma, y:\hehole }{ \hexp_2 }{ \htau }
+}
+{ \hana{ \hGamma }{ \hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2} }{ \htau } }
 \end{mathpar}
 
+\begin{figure}
 {
 \small
 \begin{displaymath}
@@ -98,6 +108,9 @@ $
   %\\
   %\multicolumn{5}{l}{\textit{none}}
   %\\[3mm]
+
+  %\\[3mm]
+  %\multicolumn{5}{l}{\textbf{Synthetic Construction Actions for $+$ Type}:}
 \end{array}
 \end{displaymath}
 \\[-2mm]
@@ -181,4 +194,188 @@ $
       {\zwsel{\hcase{{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
 \end{array}
 \end{displaymath}
+\\[2mm]
+\textbf{Action Semantics for Zipper Structure:}
+\begin{mathpar}
+\noindent
+\Infer{}
+{
+  \performAna{\hGamma}{\zexp}{\htau_1}{\alpha}{\zexp'}
+}{
+  \performAna
+  {\hGamma}
+  {\hinj{1}{\zexp }}
+  {\htau_1 + \htau_2}
+  {\alpha}
+  {\hinj{1}{\zexp' }}
 }
+\and
+\Infer{}
+{
+  \performAna{\hGamma}{\zexp}{\htau_2}{\alpha}{\zexp'}
+}{
+  \performAna
+  {\hGamma}
+  {\hinj{2}{\zexp }}
+  {\htau_1 + \htau_2}
+  {\alpha}
+  {\hinj{2}{\zexp' }}
+}
+\and
+\Infer{}
+{
+  \hsyn
+  {\hGamma}
+  {\removeSel{\zexp}}
+  {\htau_0}  
+  \\
+  \performSyn
+  {\hGamma}
+  {\zexp}
+  {\htau_0}
+  {\alpha}
+  {\zexp'}
+  {\htau_1 + \htau_2}
+  \\\\
+  \hana{\hGamma, x:\htau_1}{\hexp_1}{\htau}
+  \\
+  \hana{\hGamma, y:\htau_2}{\hexp_2}{\htau}
+}{
+  \performAna
+  {\hGamma}
+  {\hcase{\zexp }{x}{\hexp_1}{y}{\hexp_2}}
+  {\htau}
+  {\alpha}
+  {\hcase{\zexp'}{x}{\hexp_1}{y}{\hexp_2}}
+}
+\and
+\Infer{}
+{
+  \hsyn
+  {\hGamma}
+  {\removeSel{\zexp}}
+  {\htau_0}  
+  \\
+  \performSyn
+  {\hGamma}
+  {\zexp}
+  {\htau_0}
+  {\alpha}
+  {\zexp'}
+  {\hehole}
+  \\\\
+  \hana{\hGamma, x:\hehole}{\hexp_1}{\htau}
+  \\
+  \hana{\hGamma, y:\hehole}{\hexp_2}{\htau}
+}{
+  \performAna
+  {\hGamma}
+  {\hcase{\zexp }{x}{\hexp_1}{y}{\hexp_2}}
+  {\htau}
+  {\alpha}
+  {\hcase{\zexp'}{x}{\hexp_1}{y}{\hexp_2}}
+}
+%
+\and
+\Infer{}
+{
+  \hsyn
+  {\hGamma}
+  {\hexp}
+  {\htau_1 + \htau_2}
+  \\\\
+  \performAna
+  {\hGamma, x:\htau_1}
+  {\zexp_1}
+  {\htau}
+  {\alpha}
+  {\zexp_1'}
+  \\
+  \hana{\hGamma, y:\htau_2}{\hexp_2}{\htau}
+}{
+  \performAna
+  {\hGamma}
+  {\hcase{\hexp }{x}{\zexp_1}{y}{\hexp_2}}
+  {\htau}
+  {\alpha}
+  {\hcase{\hexp}{x}{\zexp_1'}{y}{\hexp_2}}
+}
+\and
+\Infer{}
+{
+  \hsyn
+  {\hGamma}
+  {\hexp}
+  {\hehole}
+  \\\\
+  \performAna
+  {\hGamma, x:\hehole}
+  {\zexp_1}
+  {\htau}
+  {\alpha}
+  {\zexp_1'}
+  \\
+  \hana{\hGamma, y:\htau_2}{\hexp_2}{\htau}
+}{
+  \performAna
+  {\hGamma}
+  {\hcase{\hexp }{x}{\zexp_1}{y}{\hexp_2}}
+  {\htau}
+  {\alpha}
+  {\hcase{\hexp}{x}{\zexp_1'}{y}{\hexp_2}}
+}
+%
+\and
+\Infer{}
+{
+  \hsyn
+  {\hGamma}
+  {\hexp}
+  {\htau_1 + \htau_2}
+  \\\\
+  \hana{\hGamma, x:\htau_1}{\hexp_1}{\htau}
+  \\
+  \performAna
+  {\hGamma, y:\htau_2}
+  {\zexp_2}
+  {\htau}
+  {\alpha}
+  {\zexp_2'}
+}{
+  \performAna
+  {\hGamma}
+  {\hcase{\hexp }{x}{\hexp_1}{y}{\zexp_2}}
+  {\htau}
+  {\alpha}
+  {\hcase{\hexp}{x}{\hexp_1}{y}{\zexp_2'}}
+}
+%
+\and
+\Infer{}
+{
+  \hsyn
+  {\hGamma}
+  {\hexp}
+  {\hehole}
+  \\\\
+  \hana{\hGamma, x:\htau_1}{\hexp_1}{\htau}
+  \\
+  \performAna
+  {\hGamma, y:\hehole}
+  {\zexp_2}
+  {\htau}
+  {\alpha}
+  {\zexp_2'}
+}{
+  \performAna
+  {\hGamma}
+  {\hcase{\hexp }{x}{\hexp_1}{y}{\zexp_2}}
+  {\htau}
+  {\alpha}
+  {\hcase{\hexp}{x}{\hexp_1}{y}{\zexp_2'}}
+}
+
+\end{mathpar}
+}
+\caption{Hazelnut action semantics for sum type extension.}
+\end{figure}
