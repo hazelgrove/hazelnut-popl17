@@ -2,14 +2,14 @@
 
 The previous section introduced Hazelnut by example. In this section, we systematically introduce the following  structures:
 \begin{itemize}[itemsep=0px,partopsep=2px,topsep=2px]
-\item \textbf{H-expressions} and \textbf{H-types} (Sec. \ref{sec:holes}), i.e. expressions and types with \emph{holes}. H-types classify H-expressions according to Hazelnut's \textbf{bidirectionally typed static semantics}.
+\item \textbf{H-types} and \textbf{H-expressions} (Sec. \ref{sec:holes}), which are types and expressions with {holes}. H-types classify H-expressions according to Hazelnut's \textbf{bidirectional static semantics}.
 \item \textbf{Z-expressions} and \textbf{Z-types} (Sec. \ref{sec:cursors}), which superimpose\- a \emph{cursor} onto H-expressions and H-types, respectively (following Huet's \emph{zipper pattern} \cite{JFP::Huet1997}.) Every Z-expression (resp. Z-type) corresponds to an H-expression (resp. H-type) by \emph{cursor erasure}.
-\item \textbf{Actions} (Sec. \ref{sec:actions}), which act relative to the cursor according to Hazelnut's \textbf{bidirectionally typed action semantics}. The action semantics enjoys a rich metatheory. Of particular note, the \emph{sensibility theorem} establishes that every edit state is well-typed after cursor erasure.
+\item \textbf{Actions} (Sec. \ref{sec:actions}), which act relative to the cursor according to Hazelnut's \textbf{bidirectional action semantics}. The action semantics enjoys a rich metatheory. Of particular note, the \emph{sensibility theorem} establishes that every edit state is well-typed after cursor erasure.
 \end{itemize}
 
 Our overview below omits certain ``uninteresting'' details. The supplement includes the complete collection of rules, in definitional order. These rules, along with the proofs of the metatheorems, have been mechanized in Agda \cite{norell:thesis}, also in the supplement. We will summarize this effort in Sec. \ref{sec:mech}.% The supplement contains the Agda sources and additional technical details.
 
-\subsection{H-expressions and H-types}\label{sec:holes}
+\subsection{H-types and H-expressions}\label{sec:holes}
 
 
 Figure \ref{fig:hexp-syntax} defines the syntax of H-types and H-expressions. Most forms correspond directly to those of the simply typed lambda calculus (STLC) extended with a single base type, $\tnum$, of numbers (cf. \cite{pfpl}.) The number expression corresponding to the mathematical number $n$ is drawn $\hnum{n}$, and for simplicity, we define only a single arithmetic operation, $\hadd{\hexp}{\hexp}$. The form $\hexp : \htau$ is an explicit \emph{type ascription}. 
@@ -242,14 +242,14 @@ Rule (\ref{rule:syn-var}) is the standard rule for variables.
 
 Rule (\ref{rule:syn-ap}) is again nearly the standard rule for function application. It again makes use of the matched function type judgement to combine what would otherwise need to be two rules for function application -- one for when $e_1$ synthesizes an arrow type, and another for when $e_1$ synthesizes the type hole. Indeed, Siek and Taha needed two application rules for the same fundamental reason \cite{Siek06a}. Subsequent work on gradual typing introduced this notion of type matching\todo{cite}.
 
-Rule (\ref{rule:syn-num}) states that number literals synthesize the $\tnum$ type. Rule (\ref{rule:syn-plus}) states that $\hexp_1 + \hexp_2$ behaves like a function over numbers. 
+Rule (\ref{rule:syn-num}) states that numbers synthesize the $\tnum$ type. Rule (\ref{rule:syn-plus}) states that $\hexp_1 + \hexp_2$ behaves like a function over numbers. 
 
-The rules given so far are sufficient to type complete H-expressions. The two remaining rules give H-expressions with holes a well-defined static semantics.
+The rules described so far are sufficient to type complete H-expressions. The two remaining rules give H-expressions with holes a well-defined static semantics.
 
 Rule (\ref{rule:syn-ehole}) states that the empty expression hole synthesizes the type hole.
 
 
-A non-empty hole contains an H-expression that is ``under construction'', as described in Sec. \ref{sec:example}. According to Rule (\ref{rule:syn-hole}), the  expression inside the hole must synthesize some type, but, like the empty hole, the non-empty hole synthesizes only the hole type. 
+A non-empty hole contains an H-expression that is ``under construction'', as described in Sec. \ref{sec:example}. According to Rule (\ref{rule:syn-hole}), this inner  expression must synthesize some type, but, like the empty hole,  non-empty holes synthesize the type hole. 
 
 
 % \begin{equation}\label{rule:tcompat-comm}
@@ -291,7 +291,7 @@ Given these rules, it is instructive to derive the following (by subsumption):
 % The hole type behaves much like the type $?$ in prior work by Siek and Taha on gradual types for functional languages \cite{Siek06a}. Their system (which was not bidirectionally typed nor an editor model) also needed to define two rules for function application. In general, when a premise requires that a synthesized type be of a particular form, we need a special case where the synthesized hole type is treated instead as if it were the ``holey-est'' type of that form.\footnote{Alternatively, we might add a rule that allows expressions that synthesize hole type to then non-deterministically synthesize any other type, but maintaining determinism is useful in practice, so we avoid this approach.}
 
 \end{subequations}
-\subsection{Focus Model}\label{sec:cursors}
+\subsection{Z-expressions and Z-types}\label{sec:cursors}
 \begin{figure}[t]
 \hspace{-3px}$\arraycolsep=2pt\begin{array}{lllllll}
 \mathsf{ZTyp} & \ztau & ::= &
