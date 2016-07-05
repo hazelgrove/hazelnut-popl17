@@ -6,6 +6,8 @@
 \newcommand{\TABperformMove}[3]{#1 & \xlongrightarrow{#2} & #3}
 \newcommand{\TABperformDel}[2]{#1 \xlongrightarrow{\aDel} #2}
 
+\newcommand{\sumhasmatched}[2]{#1 \blacktriangleright_{+} #2}
+
 \paragraph{Syntax.} 
 %
 To accomodate the new type connective~$\tau + \tau$, we extend our
@@ -42,6 +44,15 @@ $
 \end{grammar}
 
 \textbf{Static Semantics of Sum Type:}
+
+\begin{mathpar}
+\Infer{}{ }
+{\sumhasmatched{\hehole}{\hehole + \hehole}}
+\and
+\Infer{}{ }
+{\sumhasmatched{\htau_1 + \htau_2}{\htau_1 + \htau_2}}
+\end{mathpar}
+
 \begin{mathpar}
 \Infer{Inj$_1$}
 { \hana{ \hGamma }{ \hexp }{ \htau_1 } }
