@@ -9,7 +9,7 @@ The previous section introduced Hazelnut by example. In this section, we systema
 
 Our overview below omits certain ``uninteresting'' details. The supplement includes the complete collection of rules, in definitional order. These rules, along with the proofs of the metatheorems, have been mechanized in Agda \cite{norell:thesis}, also in the supplement. We will summarize this effort in Sec. \ref{sec:mech}.% The supplement contains the Agda sources and additional technical details.
 
-\subsection{Holes}\label{sec:holes}
+\subsection{H-expressions and H-types}\label{sec:holes}
 
 
 Figure \ref{fig:hexp-syntax} defines the syntax of H-types and H-expressions. Most forms correspond directly to those of the simply typed lambda calculus (STLC) extended with a single base type, $\tnum$, of numbers (cf. \cite{pfpl}.) The number expression corresponding to the mathematical number $n$ is drawn $\hnum{n}$, and for simplicity, we define only a single arithmetic operation, $\hadd{\hexp}{\hexp}$. The form $\hexp : \htau$ is an explicit \emph{type ascription}. 
@@ -273,7 +273,7 @@ A non-empty hole contains an H-expression that is ``under construction'', as des
 % }
 % \end{equation}
 
-Given these rules, it is instructive to derive the following (by subsumption):  
+Given these rules, it is instructive to derive the following (by subsumption):
 \[\hana{incr : \tarr{\tnum}{\tnum}}{\hhole{incr}}{\tnum}\]
 % This is the key premise necessary to synthesize the $\tnum$ type for the H-expression that results from cursor erasure -- defined next -- of the Z-expression on Line 16 of Fig. \ref{fig:second-example}. %In other words, this mechanism is essential if  users are to able to construct a program in anything but an ``outside in'' fashion.
 

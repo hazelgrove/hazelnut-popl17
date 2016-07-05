@@ -201,7 +201,7 @@ Hazelnut's action semantics addresses this problem: rather than disallowing the 
 \[
 incr(\hhole{\zwsel{incr}})
 \]
-This defers the type consistency check, exactly as an empty hole in the same position does. One way to think about non-empty holes is as an internalization of the ``red underline'' that text or syntactic structure editors display to indicate a type inconsistency. By internalizing this concept, the presence of a type inconsistency does not leave the entire program formally meaningless.
+This defers the type consistency check, exactly as an empty hole in the same position does. One way to think about non-empty holes is as an internalization of the ``squiggly underline'' that text or syntactic structure editors display to indicate a type inconsistency. By internalizing this concept, the presence of a type inconsistency does not leave the entire program formally meaningless.
 
 The expression inside a non-empty hole must itself be well-typed, so the programmer can continue to edit it. Lines 16-17 proceed to apply the inner mention of $incr$ to a number literal, $\hnum{3}$. Finally, Lines 18-19 move the cursor to the non-empty hole and Line 20 performs the $\aFinish$ action. The $\aFinish$ action removes the hole if the type of the expression inside the hole is consistent with the expected type, as it now is. This results in the final edit state on Line 20, as desired. In practice, the editor might automatically perform the $\aFinish$ action as soon as it becomes possible, but for simplicity, Hazelnut formally requires that it be performed explicitly.
 

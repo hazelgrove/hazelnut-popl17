@@ -3,6 +3,8 @@
 % Violet hotdogs; highlight color helps distinguish them
 \newcommand{\llparenthesiscolor}{\textcolor{violet}{\llparenthesis}}
 \newcommand{\rrparenthesiscolor}{\textcolor{violet}{\rrparenthesis}}
+% \newcommand{\llparenthesiscolor}{\textcolor{red}{\lfloor}}
+% \newcommand{\rrparenthesiscolor}{\textcolor{red}{\rfloor}}
 
 % HTyp and HExp
 \newcommand{\hcomplete}[1]{#1~\mathsf{complete}}
@@ -25,10 +27,11 @@
 \newcommand{\hnum}[1]{\underline{#1}}
 \newcommand{\hadd}[2]{#1 + #2}
 \newcommand{\hehole}{\llparenthesiscolor\rrparenthesiscolor}
-%\newcommand{\hhole}[1]{\llparenthesiscolor#1\rrparenthesiscolor}
-\newcommand{\hhole}[1]{
-  \setlength{\fboxsep}{0pt}
-  \colorbox{violet!10!white!100}{\ensuremath{\llparenthesiscolor#1\rrparenthesiscolor}}}
+% \newcommand{\hhole}[1]{\setlength{\fboxsep}{0pt}\fcolorbox{red}{white}{\vphantom{)}$#1$}}
+\newcommand{\hhole}[1]{\llparenthesiscolor#1\rrparenthesiscolor}
+% \newcommand{\hhole}[1]{
+  % \setlength{\fboxsep}{0pt}
+  % \colorbox{violet!10!white!100}{\ensuremath{\llparenthesiscolor#1\rrparenthesiscolor}}}
 \newcommand{\hindet}[1]{\lceil#1\rceil}
 \newcommand{\hinj}[2]{\texttt{inj}_{#1}({#2})}
 \newcommand{\hcase}[5]{\texttt{case}({#1},{#2}.{#3},{#4}.{#5})}
