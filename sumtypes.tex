@@ -36,7 +36,7 @@ Extensions to \textbf{Syntax} for Sum Types:
 \bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
 \\
 \textsf{Shape} & $\varphi$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
-\\[3mm]
+\\
 \textsf{ZTyp} & $\ztau$ & \bnfas & $\cdots \bnfalt \tsum{\ztau}{\htau} \bnfalt \tsum{\htau}{\ztau}$
 \\
 \textsf{ZExp} & $\zexp$ & \bnfas & $\cdots
@@ -90,13 +90,16 @@ Extensions to \textbf{Static Semantics} for Sum Types:
 }
 { \hana{ \hGamma }{ \hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2} }{ \htau } }
 \end{mathpar}
-\\[2mm]
+\\[1mm]
 Extensions to \textbf{Editing Semantics} for Sum Types:
-\\[2mm]
+\\[1mm]
 \judgbox{\performTyp{\ztau}{\alpha}{\ztau}}{(Additional type construction action:)}
 \begin{mathpar}
-  \performTyp{\zwsel{\hehole}}{\aConstructx{\fsum}}
+  \Infer{}{ }
+{
+  \performTyp{\zwsel{\hehole}}{\aConstruct{\fsum}}
              {\tsum{\zwsel{\hehole}}{\hehole}}
+}
 \end{mathpar}
 
 \judgbox{\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}}
