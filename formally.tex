@@ -14,7 +14,7 @@ Our overview below omits certain ``uninteresting'' details. The supplement inclu
 
 Figure \ref{fig:hexp-syntax} defines the syntax of H-types and H-expressions. Most forms correspond directly to those of the simply typed lambda calculus (STLC) extended with a single base type, $\tnum$, of numbers (cf. \cite{pfpl}.) The number expression corresponding to the mathematical number $n$ is drawn $\hnum{n}$, and for simplicity, we define only a single arithmetic operation, $\hadd{\hexp}{\hexp}$. The form $\hexp : \htau$ is an explicit \emph{type ascription}. 
 
-In addition to these standard forms, \emph{type holes} and \emph{empty expression holes} are both drawn $\hehole$ and \emph{non-empty expression holes} are drawn $\hhole{\hexp}$. In our simple calculus, all well-formed H-types are valid classifiers of expressions, so we do not need non-empty type holes. Types and expressions that do not contain holes are \emph{complete types} and \emph{complete expressions}, respectively. Formally, we can derive $\hcomplete{\htau}$ when $\htau$ is complete, and $\hcomplete{\hexp}$ when $\hexp$ is complete. The rules are omitted here. We will not define a dynamics for Hazelnut explicitly, but the dynamics for complete H-expressions would be entirely standard (in Sec. \ref{sec:future} we discuss the multi-dimensional design space around the question of evaluating incomplete H-expressions.)% The complete types and expressions correspond immediately to the types and expressions of the STLC with numbers. %Holes mark subterms that are, notionally, ``under construction.'' We will see what this formally corresponds to in a moment.
+In addition to these standard forms, \emph{type holes} and \emph{empty expression holes} are both drawn $\hehole$ and \emph{non-empty expression holes} are drawn $\hhole{\hexp}$. We do not need non-empty type holes because every H-type is a valid classifier of H-expressions. Types and expressions that do not contain holes are \emph{complete types} and \emph{complete expressions}, respectively. Formally, we can derive $\hcomplete{\htau}$ when $\htau$ is complete, and $\hcomplete{\hexp}$ when $\hexp$ is complete (see supplement.) We are not concerned here with defining a dynamic semantics for Hazelnut, but the dynamics for complete H-expressions would be entirely standard (in Sec. \ref{sec:future} we discuss the multi-dimensional design space around the question of evaluating incomplete H-expressions.)% The complete types and expressions correspond immediately to the types and expressions of the STLC with numbers. %Holes mark subterms that are, notionally, ``under construction.'' We will see what this formally corresponds to in a moment.
 
 \begin{figure}[t]
 $\arraycolsep=4pt\begin{array}{lllllll}
@@ -36,21 +36,8 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 \caption{Syntax of H-types and H-expressions. Metavariable $x$ ranges over variables and $n$ ranges over numerals.}
 \label{fig:hexp-syntax}
 \end{figure}
-
-The statics of Hazelnut is organized as a \emph{bidirectional type system} \cite{Pierce:2000:LTI:345099.345100,bidi-tutorial} around the following mutually defined typing judgements:
-\[\arraycolsep=15pt\begin{array}{ll}
-%\textbf{Judgement Form} & \textbf{Description}\\
-\hana{\hGamma}{\hexp}{\htau} & \text{$\hexp$ analyzes against $\htau$}\\
-\hsyn{\hGamma}{\hexp}{\htau} & \text{$\hexp$ synthesizes $\htau$}
-\end{array}\]
-where typing contexts, $\hGamma$, map each variable $x \in \domof{\hGamma}$ to a hypothesis $x : \htau$ in the usual manner. Derivations of the type analysis judgement establish that $\hexp$ can appear where an expression of type $\htau$ is expected. Derivations of the type synthesis judgement infer a type from $\hexp$, which is necessary in positions where an expected type is not available (e.g. at the top level.) Algorithmically, the type is an ``input'' of the type analysis judgement, but an ``output'' of the type synthesis judgement. %The rules describe a \emph{local type inference} scheme, i.e. type ascriptions are unnecessary when an expression is being analyzed against a known type.
-Making a judgemental distinction between these two notions will be essential in our action semantics (Sec. \ref{sec:actions}.)
-
- %We use the metavariable $\Gamma$ for \emph{complete typing contexts}, i.e. typing contexts where each hypothesis mentions only complete types.
-
-
 \begin{figure}
-\noindent\fbox{$\tcompat{\htau}{\htau'}$}
+\noindent\fbox{$\tcompat{\htau}{\htau'}$}~~\text{$\tau$ and $\tau'$ are consistent}
 % \begin{subequations}%\label{rules:tcompat}
 % \begin{equation}%\label{rule:tcompat-comm}
 % \inferrule
@@ -88,7 +75,7 @@ Making a judgemental distinction between these two notions will be essential in 
 % \begin{equation}%\label{rule:tcompat-arr}
 % \end{equation}
 % \end{subequations}
-\fbox{$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$}
+\fbox{$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$}~~\text{$\tau$ has matched arrow type $\tarr{\htau_1}{\htau_2}$}
 \begin{mathpar}
 % \begin{subequations}
 % \begin{equation}
@@ -138,9 +125,91 @@ Making a judgemental distinction between these two notions will be essential in 
 %     }
 %   \end{equation}
 % \end{subequations}
-\caption{Type consistency and type matching at arrow.}
+\caption{H-type consistency and H-type matching at arrow.}
 \label{fig:type-consistency}
 \end{figure}
+
+\begin{figure}
+\fbox{$\hana{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ analyzes against $\htau$}
+\begin{subequations}
+\begin{equation}\label{rule:ana-subsume}
+\inferrule{
+  \hsyn{\hGamma}{\hexp}{\htau'}\\
+  \tcompat{\htau}{\htau'}
+}{
+  \hana{\hGamma}{\hexp}{\htau}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-lam}
+\inferrule{
+  \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
+  \hana{\hGamma, x : \htau_1}{\hexp}{\htau_2}
+}{
+  \hana{\hGamma}{\hlam{x}{\hexp}}{\htau}
+}
+\end{equation}
+\end{subequations}
+\fbox{$\hsyn{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ synthesizes $\htau$}
+\begin{subequations}
+\begin{equation}\label{rule:syn-asc}
+\inferrule{
+  \hana{\hGamma}{\hexp}{\htau}
+}{
+  \hsyn{\hGamma}{\hexp : \htau}{\htau}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-var}
+\inferrule{ }{
+  \hsyn{\hGamma, x : \htau}{x}{\htau}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-ap}
+\inferrule{
+  \hsyn{\hGamma}{\hexp_1}{\htau}\\
+  \arrmatch{\htau}{\tarr{\htau_2}{\htau'}}\\
+  \hana{\hGamma}{\hexp_2}{\htau_2}
+}{
+  \hsyn{\hGamma}{\hap{\hexp_1}{\hexp_2}}{\htau'}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-num}
+\inferrule{ }{
+  \hsyn{\hGamma}{\hnum{n}}{\tnum}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-plus}
+\inferrule{
+  \hana{\hGamma}{\hexp_1}{\tnum}\\
+  \hana{\hGamma}{\hexp_2}{\tnum}
+}{
+  \hsyn{\hGamma}{\hadd{\hexp_1}{\hexp_2}}{\tnum}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-ehole}
+\inferrule{ }{
+  \hsyn{\hGamma}{\hehole}{\tehole}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-hole}
+\inferrule{
+  \hsyn{\hGamma}{\hexp}{\htau}
+}{
+  \hsyn{\hGamma}{\hhole{\hexp}}{\tehole}
+}
+\end{equation}
+\end{subequations}
+\caption{Analysis and synthesis.}
+\label{fig:ana-syn}
+\end{figure}
+
+The statics of Hazelnut is organized as a \emph{bidirectional type system} \cite{Pierce:2000:LTI:345099.345100,bidi-tutorial} around the two mutually defined judgements in Figure \ref{fig:ana-syn}. Typing contexts, $\hGamma$, map each variable $x \in \domof{\hGamma}$ to a hypothesis $x : \htau$ in the usual manner. Derivations of the type analysis judgement, $\hana{\hGamma}{\hexp}{\htau}$, establish that $\hexp$ can appear where an expression of type $\htau$ is expected. Derivations of the type synthesis judgement, $\hsyn{\hGamma}{\hexp}{\htau}$, infer a type from $\hexp$, which is necessary in positions where an expected type is not available (e.g. at the top level.) Algorithmically, the type is an ``input'' of the type analysis judgement, but an ``output'' of the type synthesis judgement. %The rules describe a \emph{local type inference} scheme, i.e. type ascriptions are unnecessary when an expression is being analyzed against a known type.
+Making a judgemental distinction between these two notions will be essential in our action semantics (Sec. \ref{sec:actions}.)
+
+
+ %We use the metavariable $\Gamma$ for \emph{complete typing contexts}, i.e. typing contexts where each hypothesis mentions only complete types.
+
+
+
 
 \begin{subequations}\label{rules:syn-ana}
 Type synthesis is stronger than type analysis in that if an expression is able to synthesize a type, it can also be analyzed against that type, or any other \emph{consistent} type, according to the following \emph{subsumption rule}:
@@ -152,23 +221,11 @@ Type synthesis is stronger than type analysis in that if an expression is able t
   \hana{\hGamma}{\hexp}{\htau}
 }
 \end{equation}
-The \emph{H-type consistency relation}, $\tcompat{\htau}{\htau'}$, reduces to equality for complete H-types. We discuss its purpose with regard to incomplete H-types when we discuss the semantics of holes below. First, let us briefly review the standard constructs.
+
+Figure \ref{fig:type-consistency} defines the \emph{H-type consistency judgement}, $\tcompat{\htau}{\htau'}$ as a reflexive, symmetric, non-transitive relation between H-types. It coincides with equality for complete H-types. Two incomplete H-types are consistent if they differ only up to the replacement of branches with holes. The type hole is  compatible with every type. This notion of consistency coincides with the notion of consistency that Siek and Taha discovered in their foundational work on gradual type systems, if we interpret the type hole as the $?$ type \cite{Siek06a}. 
 
 Type ascription allows the user to explicitly state  a type for the ascribed expression to be analyzed against:
-\begin{equation}\label{rule:syn-asc}
-\inferrule{
-  \hana{\hGamma}{\hexp}{\htau}
-}{
-  \hsyn{\hGamma}{\hexp : \htau}{\htau}
-}
-\end{equation}
-
 A variable synthesizes the hypothesized type:
-\begin{equation}\label{rule:syn-var}
-\inferrule{ }{
-  \hsyn{\hGamma, x : \htau}{x}{\htau}
-}
-\end{equation}
 
 Lambda abstractions are not themselves annotated, so they can appear only in analytic position:
 \begin{equation}\label{rule:syn-lam}
@@ -190,51 +247,16 @@ When applying a function, if the expression in function position synthesizes an 
 %   \hsyn{\hGamma}{\hap{\hexp_1}{\hexp_2}}{\htau}
 % }
 % \end{equation}
-\begin{equation}\label{rule:syn-ap}
-\inferrule{
-  \hsyn{\hGamma}{\hexp_1}{\htau}\\
-  \arrmatch{\htau}{\tarr{\htau_2}{\htau'}}\\
-  \hana{\hGamma}{\hexp_2}{\htau_2}
-}{
-  \hsyn{\hGamma}{\hap{\hexp_1}{\hexp_2}}{\htau'}
-}
-\end{equation}
 
 
 Numbers synthesize type $\tnum$:
-\begin{equation}\label{rule:syn-num}
-\inferrule{ }{
-  \hsyn{\hGamma}{\hnum{n}}{\tnum}
-}
-\end{equation}
 
 Addition operates like a function over numbers:
-\begin{equation}\label{rule:syn-plus}
-\inferrule{
-  \hana{\hGamma}{\hexp_1}{\tnum}\\
-  \hana{\hGamma}{\hexp_2}{\tnum}
-}{
-  \hsyn{\hGamma}{\hadd{\hexp_1}{\hexp_2}}{\tnum}
-}
-\end{equation}
 
 The rules given so far are sufficient to type complete H-expressions. The remaining rules give H-expressions with holes a well-defined static semantics.
 
 The empty hole synthesizes the hole type:
-\begin{equation}\label{rule:syn-ehole}
-\inferrule{ }{
-  \hsyn{\hGamma}{\hehole}{\tehole}
-}
-\end{equation}
-
 A non-empty hole contains an H-expression that is ``under construction'', as described in Sec. \ref{sec:example}. The  expression inside the hole must synthesize some type, but, like the empty hole, the non-empty hole synthesizes only the hole type:
-\begin{equation}\label{rule:syn-hole}
-\inferrule{
-  \hsyn{\hGamma}{\hexp}{\htau}
-}{
-  \hsyn{\hGamma}{\hhole{\hexp}}{\tehole}
-}
-\end{equation}
 The type consistency judgement $\tcompat{\htau}{\htau'}$, which appeared as a premise in the subsumption rule, makes the hole type compatible with any other type:
 \begin{subequations}\label{rules:tcompat}
 \begin{equation}\label{rule:tcompat-hole}
