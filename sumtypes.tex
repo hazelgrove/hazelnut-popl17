@@ -6,6 +6,8 @@
 \newcommand{\TABperformMove}[3]{#1 & \xlongrightarrow{#2} & #3}
 \newcommand{\TABperformDel}[2]{#1 \xlongrightarrow{\aDel} #2}
 
+\newcommand{\sumhasmatched}[2]{#1 \mathrel{\textcolor{violet}{\blacktriangleright_{+}}} #2}
+
 \paragraph{Syntax.} 
 %
 To accomodate the new type connective~$\tau + \tau$, we extend our
@@ -19,7 +21,13 @@ In H-Expressions, Shapes and Z-Expressions, we include term syntax
 for the type's introduction and elimination forms, injection and case
 analysis, respectively.
 
-\textbf{Syntactic Extensions for Sum Type:}
+
+
+\begin{figure}
+{
+%\small
+Extensions to \textbf{Syntax} for Sum Types:
+%\\[2mm]
 \begin{grammar}
 \textsf{HTyp} & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
 \\
@@ -40,84 +48,177 @@ $
 \bnfaltbrk \hcase{\hexp}{x}{\zexp}{y}{\hexp}
 \bnfalt    \hcase{\hexp}{x}{\hexp}{y}{\zexp}$
 \end{grammar}
-
-\textbf{Static Semantics of Sum Type:}
+%\\[2mm]
+Extensions to \textbf{Static Semantics} for Sum Types:
+\\[1mm]
+\judgbox{\sumhasmatched{\htau}{\htau_1+\htau_2}}{$\htau$ has matched $\htau_1+\htau_2$}
 \begin{mathpar}
-\Infer{Inj$_1$}
-{ \hana{ \hGamma }{ \hexp }{ \htau_1 } }
-{ \hana{ \hGamma }{ \hinj{1}{\hexp} }{ \tsum{\htau_1}{\htau_2} } }
+\Infer{}{ }
+{\sumhasmatched{\hehole}{\hehole + \hehole}}
 \and
-\Infer{Inj$_2$}
-{ \hana{ \hGamma }{ \hexp }{ \htau_2 } }
-{ \hana{ \hGamma }{ \hinj{2}{\hexp} }{ \tsum{\htau_1}{\htau_2} } }
+\Infer{}{ }
+{\sumhasmatched{\htau_1 + \htau_2}{\htau_1 + \htau_2}}
+\end{mathpar}
+
+\judgbox{\tcompat{\htau_1}{\htau_2}}{(Additional compatibility form:)}
+\begin{mathpar}
+  \Infer{}{
+    \tcompat{\htau_1}{\htau_1'} 
+    \\
+    \tcompat{\htau_2}{\htau_2'}
+    }
+   {\tcompat{\htau_1 + \htau_2}{\htau_1' + \htau_2'}}
+\end{mathpar}
+
+\judgbox{\hana{\hGamma}{\hexp}{\htau}}{(Additional analytical typing forms:)}
+\begin{mathpar}
+\Infer{Inj$_i$}
+{ \hana{ \hGamma }{ \hexp }{ \htau_i }~~(i\in\{1,2\})
+  \\
+  \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}
+}
+{ \hana{ \hGamma }{ \hinj{i}{\hexp} }{ \htau_{+} } }
 \and
 \Infer{Case}
-{ \hsyn{ \hGamma }{ \hexp }{ \tsum{\htau_1}{\htau_2} }
+{ \hsyn{ \hGamma }{ \hexp }{ \htau_{+} }
+  \\
+  \sumhasmatched{\htau_{+}}{\tsum{\htau_1}{\htau_2}}
   \\
   \hana{ \hGamma, x:\htau_1 }{ \hexp_1 }{ \htau }
   \\
   \hana{ \hGamma, y:\htau_2 }{ \hexp_2 }{ \htau }
 }
 { \hana{ \hGamma }{ \hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2} }{ \htau } }
-\and
-\Infer{Case-H}
-{ \hsyn{ \hGamma }{ \hexp }{ \hehole }
-  \\
-  \hana{ \hGamma, x:\hehole }{ \hexp_1 }{ \htau }
-  \\
-  \hana{ \hGamma, y:\hehole }{ \hexp_2 }{ \htau }
-}
-{ \hana{ \hGamma }{ \hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2} }{ \htau } }
+\end{mathpar}
+\\[2mm]
+Extensions to \textbf{Editing Semantics} for Sum Types:
+\\[2mm]
+\judgbox{\performTyp{\ztau}{\alpha}{\ztau}}{(Additional type construction action:)}
+\begin{mathpar}
+  \performTyp{\zwsel{\hehole}}{\aConstructx{\fsum}}
+             {\tsum{\zwsel{\hehole}}{\hehole}}
 \end{mathpar}
 
-\begin{figure}
-{
-\small
-\begin{displaymath}
-\begin{array}{@{}r@{~}l@{~~~}c@{~~~}ll@{~~}}
-  %\hline
-  \multicolumn{5}{l}{\textbf{Type Construction Actions for Sum Type}:}
-  \\
-  %\hline
-  %\hline
-  %&\textbf{Pre} & \texttt{cons}. & \textbf{Post} & \textbf{Term type}
-  %\\
-  \TABperformTyp{\zwsel{\hehole}}{\aConstructx{\fsum}}
-  {\tsum{\zwsel{\hehole}}{\hehole}}
-  \\[3mm]
-  %\hline
-  \multicolumn{5}{l}{\textbf{Analytical Construction Actions for Sum Type}:}
-  \\
-  %\hline
-  \TABperformAna{\hGamma}{\zwsel{\hehole}}
+\judgbox{\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}}
+{(Additional analytical actions:)}
+\begin{mathpar}
+  \Infer{}{ }
+  {
+  \performAna{\hGamma}{\zwsel{\hehole}}
               {\tsum{\hehole}{\hehole}}
-              {\aConstructx{\finj{i}}}
+              {\aConstruct{\finj{i}}}
               {\hinj{i}{\zwsel{\hehole}}}
-  \\
-  \TABperformAna{\hGamma}{\zwsel{\hehole}}
-              {\htau, \tincompat{\htau}{ \tsum{\hehole}{\hehole} }}
-              {\aConstructx{\finj{i}}}
-              {\hhole{\hinj{i}{\zwsel{\hehole}}}}
-  \\
-  \TABperformAna{\hGamma}{\zwsel{\hehole}}
+  }
+  \and
+  \Infer{}{ \tincompat{\htau}{ \tsum{\hehole}{\hehole} } }
+        {
+  \performAna{\hGamma}{\zwsel{\hehole}}
               {\htau}
-              {\aConstructx{\fcase{x}{y}}}
+              {\aConstruct{\finj{i}}}
+              {\hhole{\hinj{i}{\zwsel{\hehole}}}}
+        }
+  \and
+  \Infer{}{ }{
+  \performAna{\hGamma}{\zwsel{\hehole}}
+              {\htau}
+              {\aConstruct{\fcase{x}{y}}}
               {\hcase{\zwsel{\hehole}}{x}{\hehole}{y}{\hehole}}
-  %\\[3mm]
-  %\multicolumn{5}{l}{\textbf{Synthetic Construction Actions for $+$ Type}:}
-  %\\
-  %\multicolumn{5}{l}{\textit{none}}
-  %\\[3mm]
+  }
+\and
+%% Inj -- Editing injected expression
+\Infer{}
+{
+  \performAna{\hGamma}{\zexp}{\htau_i}{\alpha}{\zexp'}~~(i\in\{1,2\})
+  \\
+  \sumhasmatched{\htau_{+}}{\htau_1+\htau_2}
+}{
+  \performAna
+  {\hGamma}
+  {\hinj{i}{\zexp }}
+  {\htau_{+}}
+  {\alpha}
+  {\hinj{i}{\zexp' }}
+}
+\and
+%% Case -- Editing scrutinee
+\Infer{}
+{
+  \hsyn
+  {\hGamma}
+  {\removeSel{\zexp}}
+  {\htau_0}  
+  \\
+  \performSyn
+  {\hGamma}
+  {\zexp}
+  {\htau_0}
+  {\alpha}
+  {\zexp'}
+  {\htau_{+}}
+  \\
+  \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}
+  \\\\
+  \hana{\hGamma, x:\htau_1}{\hexp_1}{\htau}
+  \\
+  \hana{\hGamma, y:\htau_2}{\hexp_2}{\htau}
+}{
+  \performAna
+  {\hGamma}
+  {\hcase{\zexp }{x}{\hexp_1}{y}{\hexp_2}}
+  {\htau}
+  {\alpha}
+  {\hcase{\zexp'}{x}{\hexp_1}{y}{\hexp_2}}
+}
+\and
+%% Case -- Editing first branch arm
+\Infer{}
+{
+  \hsyn{\hGamma}{\hexp}{\htau_{+}}
+  \\
+  \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}
+  \\\\
+  \performAna{\hGamma, x:\htau_1}{\zexp_1}{\htau}{\alpha}{\zexp_1'}
+  \\
+  \hana{\hGamma, y:\htau_2}{\hexp_2}{\htau}
+}{
+  \performAna
+  {\hGamma}
+  {\hcase{\hexp}{x}{\zexp_1}{y}{\hexp_2}}
+  {\htau}
+  {\alpha}
+  {\hcase{\hexp}{x}{\zexp_1'}{y}{\hexp_2}}
+}
+\and
+%% Case -- Editing second branch arm
+\Infer{}
+{
+  \hsyn{\hGamma}{\hexp}{\htau_{+}}
+  \\
+  \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}
+  \\\\
+  \hana{\hGamma, x:\htau_1}{\hexp_1}{\htau}
+  \\
+  \performAna{\hGamma, y:\htau_2}{\zexp_2}{\htau}{\alpha}{\zexp_2'}
+}{
+  \performAna
+  {\hGamma}
+  {\hcase{\hexp}{x}{\hexp_1}{y}{\zexp_2}}
+  {\htau}
+  {\alpha}
+  {\hcase{\hexp}{x}{\hexp_1}{y}{\zexp_2'}}
+}
 
-  %\\[3mm]
-  %\multicolumn{5}{l}{\textbf{Synthetic Construction Actions for $+$ Type}:}
-\end{array}
-\end{displaymath}
-\\[-2mm]
+\end{mathpar}
+}
+\caption{Hazelnut extensions for sum types: Syntax (top), Statics (middle) and Editing (bottom).}
+\end{figure}
+
+\begin{figure}
+\judgbox{\performMove{\zexp}{\aMove{\delta}}{\zexp'}}{(Additional movement-action rules:)}
 \begin{displaymath}
 \begin{array}{@{}rcl}
-  \multicolumn{3}{l}{\textbf{Movement Actions for Sum Type Forms}:}
-  \\
+  %\multicolumn{3}{l}{\textbf{Movement Actions for Sum Type Forms}:}
+  %\\
   \TABperformMove
       {\zwsel{\tsum{\htau_1}{\htau_2}}}
       {\aMove{\dChild}}
@@ -194,188 +295,49 @@ $
       {\zwsel{\hcase{{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
 \end{array}
 \end{displaymath}
-\\[2mm]
-\textbf{Action Semantics for Zipper Structure:}
-\begin{mathpar}
-\noindent
-\Infer{}
-{
-  \performAna{\hGamma}{\zexp}{\htau_1}{\alpha}{\zexp'}
-}{
-  \performAna
-  {\hGamma}
-  {\hinj{1}{\zexp }}
-  {\htau_1 + \htau_2}
-  {\alpha}
-  {\hinj{1}{\zexp' }}
-}
-\and
-\Infer{}
-{
-  \performAna{\hGamma}{\zexp}{\htau_2}{\alpha}{\zexp'}
-}{
-  \performAna
-  {\hGamma}
-  {\hinj{2}{\zexp }}
-  {\htau_1 + \htau_2}
-  {\alpha}
-  {\hinj{2}{\zexp' }}
-}
-\and
-\Infer{}
-{
-  \hsyn
-  {\hGamma}
-  {\removeSel{\zexp}}
-  {\htau_0}  
-  \\
-  \performSyn
-  {\hGamma}
-  {\zexp}
-  {\htau_0}
-  {\alpha}
-  {\zexp'}
-  {\htau_1 + \htau_2}
-  \\\\
-  \hana{\hGamma, x:\htau_1}{\hexp_1}{\htau}
-  \\
-  \hana{\hGamma, y:\htau_2}{\hexp_2}{\htau}
-}{
-  \performAna
-  {\hGamma}
-  {\hcase{\zexp }{x}{\hexp_1}{y}{\hexp_2}}
-  {\htau}
-  {\alpha}
-  {\hcase{\zexp'}{x}{\hexp_1}{y}{\hexp_2}}
-}
-\and
-\Infer{}
-{
-  \hsyn
-  {\hGamma}
-  {\removeSel{\zexp}}
-  {\htau_0}  
-  \\
-  \performSyn
-  {\hGamma}
-  {\zexp}
-  {\htau_0}
-  {\alpha}
-  {\zexp'}
-  {\hehole}
-  \\\\
-  \hana{\hGamma, x:\hehole}{\hexp_1}{\htau}
-  \\
-  \hana{\hGamma, y:\hehole}{\hexp_2}{\htau}
-}{
-  \performAna
-  {\hGamma}
-  {\hcase{\zexp }{x}{\hexp_1}{y}{\hexp_2}}
-  {\htau}
-  {\alpha}
-  {\hcase{\zexp'}{x}{\hexp_1}{y}{\hexp_2}}
-}
-%
-\and
-\Infer{}
-{
-  \hsyn
-  {\hGamma}
-  {\hexp}
-  {\htau_1 + \htau_2}
-  \\\\
-  \performAna
-  {\hGamma, x:\htau_1}
-  {\zexp_1}
-  {\htau}
-  {\alpha}
-  {\zexp_1'}
-  \\
-  \hana{\hGamma, y:\htau_2}{\hexp_2}{\htau}
-}{
-  \performAna
-  {\hGamma}
-  {\hcase{\hexp }{x}{\zexp_1}{y}{\hexp_2}}
-  {\htau}
-  {\alpha}
-  {\hcase{\hexp}{x}{\zexp_1'}{y}{\hexp_2}}
-}
-\and
-\Infer{}
-{
-  \hsyn
-  {\hGamma}
-  {\hexp}
-  {\hehole}
-  \\\\
-  \performAna
-  {\hGamma, x:\hehole}
-  {\zexp_1}
-  {\htau}
-  {\alpha}
-  {\zexp_1'}
-  \\
-  \hana{\hGamma, y:\htau_2}{\hexp_2}{\htau}
-}{
-  \performAna
-  {\hGamma}
-  {\hcase{\hexp }{x}{\zexp_1}{y}{\hexp_2}}
-  {\htau}
-  {\alpha}
-  {\hcase{\hexp}{x}{\zexp_1'}{y}{\hexp_2}}
-}
-%
-\and
-\Infer{}
-{
-  \hsyn
-  {\hGamma}
-  {\hexp}
-  {\htau_1 + \htau_2}
-  \\\\
-  \hana{\hGamma, x:\htau_1}{\hexp_1}{\htau}
-  \\
-  \performAna
-  {\hGamma, y:\htau_2}
-  {\zexp_2}
-  {\htau}
-  {\alpha}
-  {\zexp_2'}
-}{
-  \performAna
-  {\hGamma}
-  {\hcase{\hexp }{x}{\hexp_1}{y}{\zexp_2}}
-  {\htau}
-  {\alpha}
-  {\hcase{\hexp}{x}{\hexp_1}{y}{\zexp_2'}}
-}
-%
-\and
-\Infer{}
-{
-  \hsyn
-  {\hGamma}
-  {\hexp}
-  {\hehole}
-  \\\\
-  \hana{\hGamma, x:\htau_1}{\hexp_1}{\htau}
-  \\
-  \performAna
-  {\hGamma, y:\hehole}
-  {\zexp_2}
-  {\htau}
-  {\alpha}
-  {\zexp_2'}
-}{
-  \performAna
-  {\hGamma}
-  {\hcase{\hexp }{x}{\hexp_1}{y}{\zexp_2}}
-  {\htau}
-  {\alpha}
-  {\hcase{\hexp}{x}{\hexp_1}{y}{\zexp_2'}}
-}
-
-\end{mathpar}
-}
-\caption{Hazelnut action semantics for sum type extension.}
+\caption{Movement action semantics for sum type forms.}
 \end{figure}
+
+
+\iffalse
+\begin{displaymath}
+\begin{array}{@{}r@{~}l@{~~~}c@{~~~}ll@{~~}}
+  %\hline
+  \multicolumn{5}{l}{\textbf{Type Construction Actions for Sum Type}:}
+  \\
+  %\hline
+  %\hline
+  %&\textbf{Pre} & \texttt{cons}. & \textbf{Post} & \textbf{Term type}
+  %\\
+  \TABperformTyp{\zwsel{\hehole}}{\aConstructx{\fsum}}
+  {\tsum{\zwsel{\hehole}}{\hehole}}
+  \\[3mm]
+  %\hline
+  \multicolumn{5}{l}{\textbf{Analytical Construction Actions for Sum Type}:}
+  \\
+  %\hline
+  \TABperformAna{\hGamma}{\zwsel{\hehole}}
+              {\tsum{\hehole}{\hehole}}
+              {\aConstructx{\finj{i}}}
+              {\hinj{i}{\zwsel{\hehole}}}
+  \\
+  \TABperformAna{\hGamma}{\zwsel{\hehole}}
+              {\htau, \tincompat{\htau}{ \tsum{\hehole}{\hehole} }}
+              {\aConstructx{\finj{i}}}
+              {\hhole{\hinj{i}{\zwsel{\hehole}}}}
+  \\
+  \TABperformAna{\hGamma}{\zwsel{\hehole}}
+              {\htau}
+              {\aConstructx{\fcase{x}{y}}}
+              {\hcase{\zwsel{\hehole}}{x}{\hehole}{y}{\hehole}}
+  %\\[3mm]
+  %\multicolumn{5}{l}{\textbf{Synthetic Construction Actions for $+$ Type}:}
+  %\\
+  %\multicolumn{5}{l}{\textit{none}}
+  %\\[3mm]
+
+  %\\[3mm]
+  %\multicolumn{5}{l}{\textbf{Synthetic Construction Actions for $+$ Type}:}
+\end{array}
+\end{displaymath}
+\fi

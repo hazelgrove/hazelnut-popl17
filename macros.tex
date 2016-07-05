@@ -1,5 +1,9 @@
 % !TEX root = hazelnut-popl17.tex
 
+% Violet hotdogs; highlight color helps distinguish them
+\newcommand{\llparenthesiscolor}{\textcolor{violet}{\llparenthesis}}
+\newcommand{\rrparenthesiscolor}{\textcolor{violet}{\rrparenthesis}}
+
 % HTyp and HExp
 \newcommand{\hcomplete}[1]{#1~\mathsf{complete}}
 
@@ -7,7 +11,7 @@
 \newcommand{\htau}{\dot{\tau}}
 \newcommand{\tarr}[2]{#1 \rightarrow #2}
 \newcommand{\tnum}{\texttt{num}}
-\newcommand{\tehole}{\llparenthesis\rrparenthesis}
+\newcommand{\tehole}{\llparenthesiscolor\rrparenthesiscolor}
 \newcommand{\tsum}[2]{{#1} + {#2}}
 
 \newcommand{\tcompat}[2]{#1 \sim #2}
@@ -20,8 +24,11 @@
 \newcommand{\hapP}[2]{(#1)~(#2)} % Extra paren around function term
 \newcommand{\hnum}[1]{\underline{#1}}
 \newcommand{\hadd}[2]{#1 + #2}
-\newcommand{\hehole}{\llparenthesis\rrparenthesis}
-\newcommand{\hhole}[1]{\llparenthesis#1\rrparenthesis}
+\newcommand{\hehole}{\llparenthesiscolor\rrparenthesiscolor}
+%\newcommand{\hhole}[1]{\llparenthesiscolor#1\rrparenthesiscolor}
+\newcommand{\hhole}[1]{
+  \setlength{\fboxsep}{0pt}
+  \colorbox{violet!10!white!100}{\ensuremath{\llparenthesiscolor#1\rrparenthesiscolor}}}
 \newcommand{\hindet}[1]{\lceil#1\rceil}
 \newcommand{\hinj}[2]{\texttt{inj}_{#1}({#2})}
 \newcommand{\hcase}[5]{\texttt{case}({#1},{#2}.{#3},{#4}.{#5})}
