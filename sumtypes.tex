@@ -118,7 +118,10 @@ Extensions to \textbf{Editing Semantics} for Sum Types:
   \performAna{\hGamma}{\zwsel{\hehole}}
               {\htau}
               {\aConstruct{\finj{i}}}
-              {\hhole{\hinj{i}{\zwsel{\hehole}}}}
+              {\hhole{
+                  \hinj{i}{\hehole}                  
+                  : \zwsel{\hehole} + \hehole
+              }}              
         }
   \and
   \Infer{}{ }{
