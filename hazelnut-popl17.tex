@@ -148,18 +148,12 @@ Na\"ively, this prohibition on ill-typed edit states would force the programmer 
 % \clearpage
 
 \section{Extending Hazelnut}\label{sec:extending}
-\todo{write this section} Add sum types.
-
-H-expression
-
-Z-expression + Erasure rules
-
-Statics
-
-Movement actions
-
-Construct actions
-
+%% \todo{write this section} Add sum types.
+%% H-expression
+%% Z-expression + Erasure rules
+%% Statics
+%% Movement actions
+%% Construct actions
 \input{sumtypes}
 
 \section{Implementation}
@@ -168,6 +162,25 @@ Construct actions
 
 \section{Related Work}\label{sec:rw}
 %\subsection{Structure Editors}
+
+\paragraph{Gradual typing: Has Matched Relation}
+%
+A. Rastogi, A. Chaudhuri, and B. Hosmer. The ins and outs of gradual type inference.
+\\
+Definition 3.1 is similar to our ``has matched'' relations:
+\\
+\url{https://www.cs.umd.edu/~avik/papers/iogti.pdf}
+
+This paper defines ``has matched'' relation for arrow, just like us:
+\\
+\url{http://cimini.info/publications/Gradualizer_Draft.pdf}
+\\
+They credit this technique to the following paper:
+\\
+\url{http://www.cs.ubc.ca/~rxg/ptsgp.pdf}
+\\
+But, the Rastogi paper came earlier.
+
 
 \todo{TODO: \url{http://research.nii.ac.jp/~hu/pub/hosc07.pdf}}
 
