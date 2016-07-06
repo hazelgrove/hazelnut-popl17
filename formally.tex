@@ -977,7 +977,7 @@ The expression movement judgement is defined as follows.
 Again, additional rules are needed to recurse into the zipper structure, but we will define these zipper rules in an action-independent manner in Sec. \ref{sec:zipper-cases}. 
 \end{subequations}
 
-The rules above are numerous and fairly uninteresting. That makes them quite hazardous -- the editor designer might make a mistake absent-mindedly. One check against this is to prove a lemma that establishes that movement actions move the cursor but do not change the cursor erasure.\todo{make sure ian proved this }
+The rules above are numerous and fairly uninteresting. That makes them quite hazardous -- we might make a mistake absent-mindedly. One check against this is to prove a lemma that establishes that movement actions move the cursor but do not change the cursor erasure.
 \begin{lemma}[Movement Erasure Invariance]\label{lemma:movement-erasure} \todo{make lemmas number with theorems} 
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
 \item If $\performMove{\ztau}{\aMove{\delta}}{\ztau'}$ then $\removeSel{\ztau}=\removeSel{\ztau'}$.
@@ -986,7 +986,66 @@ The rules above are numerous and fairly uninteresting. That makes them quite haz
 \end{lemma}
 \noindent Lemma \ref{lemma:movement-erasure} is useful also in that the relevant cases of Theorem \ref{thrm:actsafe} are straightforward by its application.
 
-A more thorough check would be to establish \emph{reachability}, i.e. that it is possible, through a sequence of movement actions, to move the cursor from any position to any other position within an H-expression.\todo{pending ian progress}
+Another check is to establish \emph{reachability}, i.e. that it is possible, through a sequence of movement actions, to move the cursor from any position to any other position within a well-typed H-expression. 
+
+This requires developing machinery for sequences of actions. There are two possibilities: we can either add a sequencing action, $\alpha; \alpha$, directly to the syntax of actions, or we can define auxiliary syntax for sequences of actions, $\bar{\alpha}$, and ``multi\-step'' action judgements. To keep the core of the action semantics small, we took the latter approach in Figure \ref{fig:multistep}.
+
+\begin{figure}
+$\mathsf{ActionList}$~~$\bar{\alpha} ::= \cdot ~\vert~ \alpha; \bar{\alpha}$\\
+\fbox{$\performTyp{\ztau}{\bar{\alpha}}{\ztau'}$}
+\begin{mathpar}
+\inferrule{ }{
+    \performTyp{\ztau}{\cdot}{\ztau}
+}
+
+\inferrule{
+  \performTyp{\ztau}{\alpha}{\ztau'}\\
+  \performTyp{\ztau'}{\bar{\alpha}}{\ztau''}
+}{
+  \performTyp{\ztau}{\alpha; \bar{\alpha}}{\ztau''}
+}
+\end{mathpar}
+\fbox{$\performSyn{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}{\htau'}$}
+\begin{mathpar}
+\inferrule{ }{
+  \performSyn{\hGamma}{\zexp}{\htau}{\cdot}{\zexp}{\htau}
+}
+
+\inferrule{
+  \performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}\\\\
+  \performSyn{\hGamma}{\zexp'}{\htau'}{\bar{\alpha}}{\zexp''}{\htau''}
+}{
+  \performSyn{\hGamma}{\zexp}{\htau}{\alpha; \bar{\alpha}}{\zexp''}{\htau''}
+}
+\end{mathpar}
+\fbox{$\performAna{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}$}
+\begin{mathpar}
+\inferrule{ }{
+  \performAna{\hGamma}{\zexp}{\htau}{\cdot}{\zexp}
+}
+
+\inferrule{
+  \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}\\\\
+  \performAna{\hGamma}{\zexp'}{\htau}{\bar\alpha}{\zexp''}
+}{
+  \performAna{\hGamma}{\zexp}{\htau}{\alpha; \bar\alpha}{\zexp''}
+}
+\end{mathpar}
+\caption{Multistep Action Performance}
+\label{fig:multistep}
+\end{figure}
+
+With these definitions, we can state reachability as follows:
+
+\begin{theorem}[Reachability] ~
+\begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
+\item If $\removeSel{\ztau}=\removeSel{\ztau'}$ then there exists some $\bar\alpha$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performTyp{\ztau}{\bar\alpha}{\ztau'}$.
+\item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\removeSel{\zexp}=\removeSel{\zexp'}$ then there exists some $\bar{\alpha}$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performAna{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}$. 
+\item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\removeSel{\zexp}=\removeSel{\zexp'}$ then there exists some $\bar{\alpha}$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performSyn{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zexp'}{\htau}$.
+\end{enumerate}
+\end{theorem}
+
+To prove Reachability, we break it into two lemmas. One...\todo{write this}
 
 % \paragraph{Reachability}
 
@@ -1020,9 +1079,9 @@ A more thorough check would be to establish \emph{reachability}, i.e. that it is
 % \end{theorem}
 
 
-\subsubsection{Deletion} The $\aDel$ action replaces the selected subterm with an empty hole.
+\subsubsection{Deletion} The $\aDel$ action replaces the cursor with an empty hole.
 
-Again, the rule for Z-types is self-explanatory:
+The type action rule is self-explanatory:
 \begin{subequations}
 \begin{equation}
   \inferrule{ }{
@@ -1088,15 +1147,7 @@ Deletion within a Z-expression is similarly straightforward:
 % \end{equation}
 \end{subequations}
 
-\paragraph{Deletability}\todo{do we care?}
-The meaning of the deletion action is to remove the entire term in focus,
-and its definition does not depend on the structure of the term being
-deleted. Therefore, there is no theorem to state that acts as a checksum on
-the rules analogous to Theorem \ref{thrm:reach} or \ref{thrm:construct},
-since we could not have forgotten any rules corresponding to the structure
-of the terms.
-
-\subsubsection{Construction}\label{sec:construction} The construction actions, $\aConstruct{\psi}$, are used to construct terms of a shape indicated by $\psi$ into the program at or around the focus.
+\subsubsection{Construction}\label{sec:construction} The construction actions, $\aConstruct{\psi}$, are used to construct terms of a shape indicated by $\psi$ into the program at or around the cursor.
 
 Again, let us begin with type actions. The $\aConstruct{\farr}$ action constructs an arrow type. The focused H-type becomes the argument type, and the focus is placed on an empty return type hole:
 \begin{subequations}
