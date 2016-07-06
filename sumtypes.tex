@@ -1,3 +1,8 @@
+\newcounter{sumtypedef}
+\stepcounter{equation}
+\renewcommand{\thesumtypedef}{\theequation\alph{sumtypedef}}
+
+\newcommand{\Define}[1]{(\refstepcounter{sumtypedef}\thesumtypedef\label{#1})}
 
 In this section, we enrich the core calculus of Hazelnut with an
 additional type constructor for (binary) \emph{sum types}, often
@@ -68,7 +73,8 @@ with a covariant case for sum types.
 
 Finally, we extend the analytical typing
 judgement~$\hana{\hGamma}{\hexp}{\htau}$ with rules for introducing
-and eliminating sum types.
+and eliminating sum types, Rules~\ref{ana-inj} and \ref{ana-case},
+respectively.
 %
 In both the introduction and elimination rules, we use the ``has
 matched'' relation $\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ to
@@ -88,10 +94,14 @@ Figures~\ref{fig:sum-action} and \ref{fig:sum-move} extends Hazelnut's
 action-based editing rules for sum types.
 %
 Conceptually, these extensions consist of four parts: A rule for
-constructing the new type connective~(Figure~\ref{fig:sum-action}
-top), rules for constructing the introduction and elimination
-forms~(Figure~\ref{fig:sum-action} middle), congruence rules for
-editing sub-terms of these forms~(Figure \ref{fig:sum-action} bottom),
+constructing the new type connective~(Rule~\ref{cons-sum}), 
+%
+rules for constructing the introduction and elimination
+forms~(Rules~\ref{cons-inj}, \ref{cons-inj-hole} and \ref{cons-case}),
+%
+congruence rules for editing sub-terms of these
+forms~(Figure \ref{fig:sum-action} bottom, Rules~\ref{inj-act-zip}--\ref{case-act-zip-two}),
+%
 and rules for moving the cursor through the new type and term
 forms~(Figure \ref{fig:sum-move}).  In Figure~\ref{fig:sum-move}, we
 abuse notation by omitting the horizontal over-bars that are typical
@@ -128,14 +138,14 @@ constraints imposed by Hazelnut's meta theory.
 
 \judgbox{\hana{\hGamma}{\hexp}{\htau}}{(Additional analytical typing forms:)}
 \begin{mathpar}
-\Infer{Inj$_i$}
+\Infer{\Define{ana-inj}}
 { \hana{ \hGamma }{ \hexp }{ \htau_i }~~(i\in\{1,2\})
   \\
   \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}
 }
 { \hana{ \hGamma }{ \hinj{i}{\hexp} }{ \htau_{+} } }
 \and
-\Infer{Case}
+\Infer{\Define{ana-case}}
 { \hsyn{ \hGamma }{ \hexp }{ \htau_{+} }
   \\
   \sumhasmatched{\htau_{+}}{\tsum{\htau_1}{\htau_2}}
@@ -153,7 +163,7 @@ constraints imposed by Hazelnut's meta theory.
 %\\[1mm]
 \judgbox{\performTyp{\ztau}{\alpha}{\ztau}}{(Additional type construction action:)}
 \begin{mathpar}
-  \Infer{}{ }
+  \Infer{\Define{cons-sum}}{ }
 {
   \performTyp{\zwsel{\htau}}{\aConstruct{\fsum}}
              {\tsum{{\htau}}{\zwsel{\hehole}}}
@@ -163,7 +173,7 @@ constraints imposed by Hazelnut's meta theory.
 \judgbox{\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}}
 {(Additional analytical actions:)}
 \begin{mathpar}
-  \Infer{}{ \sumhasmatched{\htau}{\tsum{\hehole}{\hehole}} }
+  \Infer{\Define{cons-inj}}{ \sumhasmatched{\htau}{\tsum{\hehole}{\hehole}} }
   {
   \performAna{\hGamma}{\zwsel{\hehole}}
               {\htau_{+}}
@@ -171,7 +181,7 @@ constraints imposed by Hazelnut's meta theory.
               {\hinj{i}{\zwsel{\hehole}}}
   }
   \and
-  \Infer{}{ \tincompat{\htau}{ \tsum{\hehole}{\hehole} } }
+  \Infer{\Define{cons-inj-hole}}{ \tincompat{\htau}{ \tsum{\hehole}{\hehole} } }
         {
   \performAna{\hGamma}{\zwsel{\hehole}}
               {\htau}
@@ -182,7 +192,7 @@ constraints imposed by Hazelnut's meta theory.
               }}              
         }
   \and
-  \Infer{}{ }{
+  \Infer{\Define{cons-case}}{ }{
   \performAna{\hGamma}{\zwsel{\hehole}}
               {\htau}
               {\aConstruct{\fcase{x}{y}}}
@@ -192,7 +202,7 @@ constraints imposed by Hazelnut's meta theory.
 
 \begin{mathpar}
 %% Inj -- Editing injected expression
-\Infer{}
+\Infer{\Define{inj-act-zip}}
 {
   \performAna{\hGamma}{\zexp}{\htau_i}{\alpha}{\zexp'}~~(i\in\{1,2\})
   \\
@@ -207,7 +217,7 @@ constraints imposed by Hazelnut's meta theory.
 }
 \and
 %% Case -- Editing scrutinee
-\Infer{}
+\Infer{\Define{case-act-zip-scrut}}
 {
   \hsyn
   {\hGamma}
@@ -237,7 +247,7 @@ constraints imposed by Hazelnut's meta theory.
 }
 \and
 %% Case -- Editing first branch arm
-\Infer{}
+\Infer{\Define{case-act-zip-one}}
 {
   \hsyn{\hGamma}{\hexp}{\htau_{+}}
   \\
@@ -256,7 +266,7 @@ constraints imposed by Hazelnut's meta theory.
 }
 \and
 %% Case -- Editing second branch arm
-\Infer{}
+\Infer{\Define{case-act-zip-two}}
 {
   \hsyn{\hGamma}{\hexp}{\htau_{+}}
   \\
