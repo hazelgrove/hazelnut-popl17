@@ -516,7 +516,7 @@ In other words, if the cursor erasure of the edit state synthesizes a type, then
 
 We need to make some exceptions in this rule to maintain determinism, because the analytic action semantics handles certain actions explicitly, in a manner that does not coincide with how the synthetic action semantics would handle these cases if allowed to do so via action subsumption. We will see why this is the case in Sec. \ref{sec:construction}. We do so by defining a finite set of actions $\mathcal{A}$ that do not go through subsumption:
 \[
-\mathcal{A} \overset{\tiny\textit{def}}{\Delta} \{\aConstruct{\fasc}, \aConstruct{\flam{x}}\}
+\mathcal{A} \overset{\tiny\textit{def}}{=} \{\aConstruct{\fasc}, \aConstruct{\flam{x}}\}
 \]
 
 Algorithmically, this captures the notion that subsumption should be the case of last resort.
