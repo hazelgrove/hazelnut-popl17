@@ -60,13 +60,13 @@ with the static semantics of sum types.
 First, we introduce the
 relation~$\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ which is a
 simple short-hand relation, analogous in spirit to the
-relation~$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$.  Each allow
-typing and action rules to match type holes with the relevant type
-constructor (when filled with holes).
+relation~$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$.  Each relation
+allows typing and action rules to match type holes with the relevant
+type constructor (when filled with holes).
 %
 Next, we extend the consistency relation~$\tcompat{\htau_1}{\htau_2}$,
 with a covariant case for sum types.
-%
+
 Finally, we extend the analytical typing
 judgement~$\hana{\hGamma}{\hexp}{\htau}$ with rules for introducing
 and eliminating sum types.
@@ -76,10 +76,11 @@ matched'' relation $\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ to
 permit the sum type~$\htau_+$ to be~$\hehole$, or a specific sum type
 that uses the constructor~$\htau_1 + \htau_2$.
 %
-We adhere to the usual directionality for sum types: The introduction
- rule \emph{checks} the term against the sum type, whereas in the
- elimination rule, the scrutinee~$\hexp$ synthesizes the sum type, and
- the branch arms are checked against a final return type.
+We adhere to the usual directionality for sum types in bidirectional
+ systems: The introduction rule \emph{checks} the term against the sum
+ type, whereas in the elimination rule, the scrutinee~$\hexp$
+ synthesizes the sum type, and the branch arms are checked against a
+ final return type~$\htau$.
 %
 
 
@@ -89,7 +90,7 @@ action-based editing rules for sum types.
 %
 Conceptually, these extensions consist of four parts: A rule for
 constructing the new type connective~(Figure~\ref{fig:sum-action}
-top)), rules for constructing the introduction and elimination
+top), rules for constructing the introduction and elimination
 forms~(Figure~\ref{fig:sum-action} middle), congruence rules for
 editing sub-terms of these forms~(Figure \ref{fig:sum-action} bottom),
 and rules for moving the cursor through the new type and term
@@ -184,7 +185,9 @@ action axioms in a table.
               {\aConstruct{\fcase{x}{y}}}
               {\hcase{\zwsel{\hehole}}{x}{\hehole}{y}{\hehole}}
   }
-\and
+\end{mathpar}
+
+\begin{mathpar}
 %% Inj -- Editing injected expression
 \Infer{}
 {
