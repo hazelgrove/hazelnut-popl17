@@ -4,114 +4,6 @@
 
 \newcommand{\Define}[1]{(\refstepcounter{sumtypedef}\thesumtypedef\label{#1})}
 
-In this section, we enrich the core calculus of Hazelnut with an
-additional type constructor for (binary) \emph{sum types}, often
-written~$\tau_1 + \tau_2$.
-%
-Below, we consider how this familiar language form impacts the
-definitions of Hazelnut's core calculus.
-%
-In many cases, we show how the meta theory of Hazelnut forces our hand
-in writing these definitions, ensuring that our rules adhere to the
-broad goals associated with the meta theorems about sensibility,
-determinism, constructability and reachability~(Sec.~\ref{sec:hazel}).
-
-\paragraph{Extensions to Syntax.} 
-%
-As a reminder, the introduction forms for a sum type consists of
-(tagged) \emph{injections}; here, we consider binary sums with first
-and second injections~(we write~$\hinj{i}{\hexp}$, for
-$i\in\{1,2\}$). The elimination form for a sum type consists of case
-analysis~(we write~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$).
-
-Consistent with these new forms, below we extend our previous
-syntantic forms for H-Types, H-Expressions, Z-Types, Z-Expressions and
-Shapes.
-%
-In particular, in H-Types, Z-Types, and Shapes, we include syntax
-below for the new type connective~$+$.
-%
-In H-Expressions, Z-Expressions and Shapes, we include term syntax
-below for the type's introduction and elimination forms, injection and
-case analysis, respectively.
-
-%Extensions to \textbf{Syntax} for Sum Types:
-%\\[2mm]
-\begin{grammar}
-\textsf{HTyp} & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
-\\
-\textsf{HExp} & $\hexp$ & \bnfas & $\cdots 
-\bnfalt \hinj{i}{\hexp}
-\bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
-\\[2mm]
-\textsf{ZTyp} & $\ztau$ & \bnfas & $\cdots \bnfalt \tsum{\ztau}{\htau} \bnfalt \tsum{\htau}{\ztau}$
-\\
-\textsf{ZExp} & $\zexp$ & \bnfas & $\cdots
-\bnfalt \hinj{i}{\zexp}
-\bnfalt \hcase{\zexp}{x}{\hexp}{y}{\hexp}$
-\\
-&& $\bnfalt$ & $\hcase{\hexp}{x}{\zexp}{y}{\hexp}
-\bnfalt\hcase{\hexp}{x}{\hexp}{y}{\zexp}$
-\\[2mm]
-\textsf{Shape} & $\varphi$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
-\end{grammar}
-%\\[2mm]
-
-\paragraph{Extensions to Static Semantics.}
-Figure~\ref{fig:sum-statics} extends the statics semantics of Hazelnut
-with the static semantics of sum types.
-%
-First, we introduce the
-relation~$\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ which is a
-simple short-hand relation, analogous in spirit to the
-relation~$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$.  Each relation
-allows typing and action rules to match type holes with the relevant
-type constructor (when filled with holes).
-%
-Next, we extend the consistency relation~$\tcompat{\htau_1}{\htau_2}$,
-with a covariant case for sum types.
-
-Finally, we extend the analytical typing
-judgement~$\hana{\hGamma}{\hexp}{\htau}$ with rules for introducing
-and eliminating sum types, Rules~\ref{ana-inj} and \ref{ana-case},
-respectively.
-%
-In both the introduction and elimination rules, we use the ``has
-matched'' relation $\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ to
-permit the sum type~$\htau_+$ to be~$\hehole$, or a specific sum type
-that uses the constructor~$\htau_1 + \htau_2$.
-%
-We adhere to the usual directionality for sum types in bidirectional
- systems: The introduction rule \emph{checks} the term against the sum
- type, whereas in the elimination rule, the scrutinee~$\hexp$
- synthesizes the sum type, and the branch arms are checked against a
- final return type~$\htau$.
-%
-
-
-\paragraph{Extensions to Action Semantics.}
-Figures~\ref{fig:sum-action} and \ref{fig:sum-move} extends Hazelnut's
-action-based editing rules for sum types.
-%
-Conceptually, these extensions consist of four parts: A rule for
-constructing the new type connective~(Rule~\ref{cons-sum}), 
-%
-rules for constructing the introduction and elimination
-forms~(Rules~\ref{cons-inj}, \ref{cons-inj-hole} and \ref{cons-case}),
-%
-congruence rules for editing sub-terms of these
-forms~(Figure \ref{fig:sum-action} bottom, Rules~\ref{inj-act-zip}--\ref{case-act-zip-two}),
-%
-and rules for moving the cursor through the new type and term
-forms~(Figure \ref{fig:sum-move}).  In Figure~\ref{fig:sum-move}, we
-abuse notation by omitting the horizontal over-bars that are typical
-of inference rules; instead, we write these movement action axioms in
-a table, for presentation clarity.
-%
-Below, we tour these extensions in further detail, and discuss design
-constraints imposed by Hazelnut's meta theory.
-
-\todo{talk about rules in more detail}
 
 \begin{figure}
 {
@@ -375,6 +267,128 @@ constraints imposed by Hazelnut's meta theory.
 \caption{Movement action semantics for sum type forms.}
 \label{fig:sum-move}
 \end{figure}
+
+
+
+
+
+In this section, we enrich the core calculus of Hazelnut with an
+additional type constructor for (binary) \emph{sum types}, often
+written~$\tau_1 + \tau_2$.
+%
+Below, we consider how this familiar language form impacts the
+definitions of Hazelnut's core calculus.
+%
+In many cases, we show how the meta theory of Hazelnut forces our hand
+in writing these definitions, ensuring that our rules adhere to the
+broad goals associated with the meta theorems about sensibility,
+determinism, constructability and reachability~(Sec.~\ref{sec:hazel}).
+
+\paragraph{Extensions to Syntax.} 
+%
+As a reminder, the introduction forms for a sum type consists of
+(tagged) \emph{injections}; here, we consider binary sums with first
+and second injections~(we write~$\hinj{i}{\hexp}$, for
+$i\in\{1,2\}$). The elimination form for a sum type consists of case
+analysis~(we write~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$).
+
+Consistent with these new forms, below we extend our previous
+syntantic forms for H-Types, H-Expressions, Z-Types, Z-Expressions and
+Shapes.
+%
+In particular, in H-Types, Z-Types, and Shapes, we include syntax
+below for the new type connective~$+$.
+%
+In H-Expressions, Z-Expressions and Shapes, we include term syntax
+below for the type's introduction and elimination forms, injection and
+case analysis, respectively.
+
+%Extensions to \textbf{Syntax} for Sum Types:
+%\\[2mm]
+\begin{grammar}
+\textsf{HTyp} & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
+\\
+\textsf{HExp} & $\hexp$ & \bnfas & $\cdots 
+\bnfalt \hinj{i}{\hexp}
+\bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
+\\[2mm]
+\textsf{ZTyp} & $\ztau$ & \bnfas & $\cdots \bnfalt \tsum{\ztau}{\htau} \bnfalt \tsum{\htau}{\ztau}$
+\\
+\textsf{ZExp} & $\zexp$ & \bnfas & $\cdots
+\bnfalt \hinj{i}{\zexp}
+\bnfalt \hcase{\zexp}{x}{\hexp}{y}{\hexp}$
+\\
+&& $\bnfalt$ & $\hcase{\hexp}{x}{\zexp}{y}{\hexp}
+\bnfalt\hcase{\hexp}{x}{\hexp}{y}{\zexp}$
+\\[2mm]
+\textsf{Shape} & $\varphi$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
+\end{grammar}
+%\\[2mm]
+
+\paragraph{Extensions to Static Semantics.}
+Figure~\ref{fig:sum-statics} extends the statics semantics of Hazelnut
+with the static semantics of sum types.
+%
+First, we introduce the
+relation~$\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ which is a
+simple short-hand relation, analogous in spirit to the
+relation~$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$.  Each relation
+allows typing and action rules to match type holes with the relevant
+type constructor (when filled with holes).
+%
+Next, we extend the consistency relation~$\tcompat{\htau_1}{\htau_2}$,
+with a covariant case for sum types.
+
+Finally, we extend the analytical typing
+judgement~$\hana{\hGamma}{\hexp}{\htau}$ with rules for introducing
+and eliminating sum types, Rules~\ref{ana-inj} and \ref{ana-case},
+respectively.
+%
+In both the introduction and elimination rules, we use the ``has
+matched'' relation $\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ to
+permit the sum type~$\htau_+$ to be~$\hehole$, or a specific sum type
+that uses the constructor~$\htau_1 + \htau_2$.
+%
+We adhere to the usual directionality for sum types in bidirectional
+ systems: The introduction rule \emph{checks} the term against the sum
+ type, whereas in the elimination rule, the scrutinee~$\hexp$
+ synthesizes the sum type, and the branch arms are checked against a
+ final return type~$\htau$.
+%
+
+
+\paragraph{Extensions to Action Semantics.}
+Figures~\ref{fig:sum-action} and \ref{fig:sum-move} extend Hazelnut's
+action-based editing rules for sum types.
+%
+Conceptually, these extensions consist of four parts:
+\begin{enumerate}
+\item 
+An edit rule for
+constructing the new type connective~$+$ (Figure \ref{fig:sum-action} top, Rule~\ref{cons-sum}), 
+%
+\item 
+edit rules for constructing the introduction and elimination
+forms~(Figure \ref{fig:sum-action} middle, Rules~\ref{cons-inj}, \ref{cons-inj-hole} and \ref{cons-case}),
+%
+\item
+congruence rules for editing sub-terms of these
+forms~(Figure \ref{fig:sum-action} bottom, Rules~\ref{inj-act-zip}--\ref{case-act-zip-two}),
+%
+\item 
+and rules for moving the cursor through the new type and term
+forms~(Figure \ref{fig:sum-move}).  
+\end{enumerate}
+In Figure~\ref{fig:sum-move}, we
+abuse notation by omitting the horizontal over-bars that are typical
+of inference rules; instead, we write these movement action axioms in
+a table, for presentation clarity.
+%
+Below, we tour these extensions in further detail, and discuss design
+constraints imposed by Hazelnut's meta theory.
+
+\todo{talk about rules in more detail}
+
 
 
 \iffalse
