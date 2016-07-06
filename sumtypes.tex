@@ -97,18 +97,18 @@ Extensions to \textbf{Editing Semantics} for Sum Types:
 \begin{mathpar}
   \Infer{}{ }
 {
-  \performTyp{\zwsel{\hehole}}{\aConstruct{\fsum}}
-             {\tsum{\zwsel{\hehole}}{\hehole}}
+  \performTyp{\zwsel{\htau}}{\aConstruct{\fsum}}
+             {\tsum{{\htau}}{\zwsel{\hehole}}}
 }
 \end{mathpar}
 
 \judgbox{\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}}
 {(Additional analytical actions:)}
 \begin{mathpar}
-  \Infer{}{ }
+  \Infer{}{ \sumhasmatched{\htau}{\tsum{\hehole}{\hehole}} }
   {
   \performAna{\hGamma}{\zwsel{\hehole}}
-              {\tsum{\hehole}{\hehole}}
+              {\htau_{+}}
               {\aConstruct{\finj{i}}}
               {\hinj{i}{\zwsel{\hehole}}}
   }
