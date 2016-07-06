@@ -294,7 +294,7 @@ Given these rules, it is instructive to derive the following (by subsumption):
 
 \end{subequations}
 \subsection{Z-types and Z-expressions}\label{sec:cursors}
-\newcommand{\cvert}{{\hspace{1.8px}{\vert}\hspace{1.8px}}}
+\newcommand{\cvert}{{\,{\vert}\,}}
 \begin{figure}[t]
 \hspace{-3px}$\arraycolsep=2pt\begin{array}{lllllll}
 \mathsf{ZTyp} & \ztau & ::= &
@@ -323,7 +323,7 @@ Given these rules, it is instructive to derive the following (by subsumption):
 
 Hazelnut's action semantics operates over Z-types, $\ztau$, and Z-expressions, $\zexp$. Figure \ref{fig:zexp-syntax} defines the syntax of Z-types and Z-expressions. A Z-type (resp. Z-expression) represents an H-type (resp. H-expression) with a single superimposed \emph{cursor}.
 
-The only base cases in these inductive grammars are $\zwsel{\htau}$ and $\zwsel{\hexp}$, which identify the H-type or H-expression that the cursor is on. All of the other forms correspond to the recursive forms in the syntax of H-types and H-expressions, and contain exactly one ``hatted'' subterm that identifies the subtree where the cursor will be found. Any other subterm is ``dotted'', i.e. it is either an H-type or H-expression. Taken together, every Z-type and Z-expression contains exactly one cursor by construction. This can be understood as an instance of Huet's \emph{zipper pattern} \cite{JFP::Huet1997} (which, coincidentally, Huet encountered while implementing a structure editor.)
+The only base cases in these inductive grammars are $\zwsel{\htau}$ and $\zwsel{\hexp}$, which identify the H-type or H-expression that the cursor is on. All of the other forms correspond to the recursive forms in the syntax of H-types and H-expressions, and contain exactly one ``hatted'' subterm that identifies the subtree where the focus will be found. Any other sub-term is ``dotted'', i.e. it is either an H-type or H-expression. Taken together, every Z-type and Z-expression contains exactly one focused H-type or H-expression by construction. This can be understood as an instance of Huet's \emph{zipper pattern} \cite{JFP::Huet1997} (which, coincidentally, Huet encountered while implementing a structure editor.)
 
 We write $\removeSel{\ztau}$ for the H-type constructed by erasing the cursor from $\ztau$, which we refer to as the \emph{cursor erasure} of $\ztau$. This straightforward metafunction is defined as follows:
 \begin{align*}
@@ -334,7 +334,7 @@ We write $\removeSel{\ztau}$ for the H-type constructed by erasing the cursor fr
 \removeSel{(\tarr{\htau}{\ztau})} & = \tarr{\htau}{\removeSel{\ztau}}
 \end{align*}
 
-Similarly, we write $\removeSel{\zexp}$ for the H-expression constructed by erasing the cursor from the Z-expression $\zexp$, i.e. the \emph{cursor erasure} of $\zexp$. The definition of this metafunction is analogous, so we omit it for concision (see supplement.)
+Similarly, we write $\removeSel{\zexp}$ for the H-expression constructed by erasing the cursor from the Z-expression $\zexp$, i.e. the cursor erasure of $\zexp$. The definition of this metafunction is analogous, so we omit it for concision (see supplement.)
 % \begin{align*}
 % %\removeSel{(\zlsel{\hexp})} & = \hexp\\
 % \removeSel{(\zwsel{\hexp})} & = \hexp\\
@@ -349,7 +349,60 @@ Similarly, we write $\removeSel{\zexp}$ for the H-expression constructed by eras
 % \removeSel{\hhole{\zexp}} &= \hhole{\removeSel{\zexp}}
 % \end{align*}
 
-\subsection{Action Semantics}\label{sec:actions}
+\subsection{Actions}\label{sec:actions}
+
+
+We now arrive at the heart of Hazelnut: its \emph{bidirectional action semantics}.  
+Figure \ref{fig:action-syntax} defines the syntax of \emph{actions}, $\alpha$, some of which involve \emph{directions}, $\delta$, and \emph{shapes}, $\psi$. 
+
+Expression actions are governed by two mutually defined judgements, 1) the \emph{synthetic action judgement}:
+\[
+\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}
+\]
+and 2) \emph{the analytic action judgement}:
+\[
+\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}
+\]
+
+In some Z-expressions, the cursor is in a type ascription, so we also need a \emph{type action judgement}, pronounced ``performing $\alpha$ on $\ztau$ results in $\ztau'$'':
+\[
+\performTyp{\ztau}{\alpha}{\ztau'}
+\]
+
+
+Before giving the rules for these judgements, let us state two key metatheorems. These metatheorems deeply inform the design of the rules. Their proofs, which are mechanized in Agda, are by straightforward induction, so the reader is encouraged to think about the relevant cases of these proofs as we present the rules, starting in Sec. \ref{sec:movement}.
+
+% The type action judgement appears as a premise in the rules that handle Z-expressions where the cursor is inside a . 
+% \[\begin{array}{ll}
+% %\textbf{Judgement Form} & \textbf{Description}\\
+% & 
+% \end{array}\]
+% \[
+% \begin{array}{l}
+% \fbox{$\performTyp{\ztau}{\alpha}{\ztau'}$} ~~ \text{Performing $\alpha$ on $\ztau$ produces $\ztau'$}\\
+% \fbox{$\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$} \\
+% \quad \text{Performing $\alpha$ on $\zexp$ when $\removeSel{\zexp}$ synthesizes type $\htau$}\\
+% \quad \text{produces $\zexp'$ such that $\removeSel{\zexp'}$ synthesizes type $\htau'$}\\
+% \fbox{$\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}$} \\
+% \quad \text{Performing $\alpha$ on $\zexp$ when analyzing $\removeSel{\zexp}$ against $\htau$}\\
+% \quad \text{produces $\zexp'$, such that $\removeSel{\zexp'}$ can also be analyzed}\\
+% \quad \text{against $\htau$}
+% \end{array}\]
+\subsubsection{Sensibility}
+The expression action judgements obey the following \emph{action sensibility} theorem:
+\begin{theorem}[Action Sensibility]\label{thrm:actsafe} Both of the following hold:\begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
+\item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$ 
+   then
+  $\hsyn{\hGamma}{\removeSel{\zexp'}}{\htau'}$.
+\item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+   $\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}$ then
+  $\hana{\hGamma}{\removeSel{\zexp'}}{\htau}$.
+\end{enumerate}
+\end{theorem}
+\noindent In other words, if an edit state (i.e. a Z-expression) is statically meaningful, i.e. its cursor erasure is well-typed, then performing an action on it leaves the resulting edit state statically meaningful. In particular, the first clause of Theorem \ref{thrm:actsafe} establishes that when an action is performed on an edit state whose cursor erasure synthesizes an H-type, the result is an edit state whose cursor erasure also synthesizes some (possibly different) H-type. The second clause establishes that when an action is performed using the analytic action judgement on an edit state whose cursor erasure analyzes against some H-type, the result is a Z-expression whose cursor erasure also analyzes against the same H-type. % Non-empty holes allow us to avoid top-down program construction becau but rather can construct fragments of the program inside a hole until ready to ``expose'' them to type analysis.
+
+The top-level sequence of actions in Figures \ref{fig:first-example} and \ref{fig:second-example} begin with an empty hole, so the derivation of each edit step must conclude with the synthetic action judgement. The analytic action judgement and the type action judgement appear as premises in the derivations of some of these steps.
+
 \begin{figure}[t]
 \hspace{-3px}$\arraycolsep=3pt\begin{array}{llcllll}
 \mathsf{Action} & \alpha & ::= &
@@ -358,14 +411,14 @@ Similarly, we write $\removeSel{\zexp}$ for the H-expression constructed by eras
   \aDel ~\vert~
   %\aReplace{\htau} ~\vert~
   %\aReplace{\hexp} ~\vert~
-  \aConstruct{\varphi} ~\vert~
+  \aConstruct{\psi} ~\vert~
   \aFinish\\
-\mathsf{Direction} & \delta & ::= &
+\mathsf{Dir} & \delta & ::= &
   \dChild ~\vert~
   \dParent ~\vert~
-  \dNext ~\vert~
-  \dPrev\\
-\mathsf{Shape} & \varphi & ::= &
+  \dNext \\ % ~\vert~
+  % \dPrev\\
+\mathsf{Shape} & \psi & ::= &
   \farr ~\vert~
   \fnum \\
 & & \vert &
@@ -375,43 +428,20 @@ Similarly, we write $\removeSel{\zexp}$ for the H-expression constructed by eras
   \fap ~\vert~
   \farg ~\vert~
   \fnumlit{n} ~\vert~
-  \fplus
+  \fplus\\
+& & \vert & 
+  {\color{gray}\fnehole}
 \end{array}$
 %\textbf{Sort} & & & \textbf{Operational Form} & \textbf{Stylized Form} & \textbf{Description}\\
 \caption{Syntax of actions.}
 \label{fig:action-syntax}
-\vspace{-8px}
 \end{figure}
 
-The syntax of \emph{actions}, $\alpha$, some of which involve \emph{directions}, $\delta$, or \emph{shapes}, $\varphi$, is given in Figure \ref{fig:action-syntax}. Actions are performed on Z-types and Z-expressions according to the \emph{action semantics} of Hazelnut, which is organized around three judgements:\todo{fix spacing}
-\[\arraycolsep=10pt\begin{array}{ll}
-%\textbf{Judgement Form} & \textbf{Description}\\
-\performTyp{\ztau}{\alpha}{\ztau'} & \text{Performing $\alpha$ on $\ztau$ produces $\ztau'$}\\
-\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'} & \text{Performing $\alpha$ on $\zexp$ when $\removeSel{\zexp}$ synthesizes type $\htau$}\\
-& \text{produces $\zexp'$ such that $\removeSel{\zexp'}$ synthesizes type $\htau'$}\\
-\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'} & \text{Performing $\alpha$ on $\zexp$ when analyzing $\removeSel{\zexp}$ against $\htau$}\\
-& \text{produces $\zexp'$, such that $\removeSel{\zexp'}$ can also be analyzed}\\
-& \text{against $\htau$}
-\end{array}\]
-
-As suggested by the descriptions above, the action semantics maintains the following \emph{action sensibility} theorem:
-\begin{theorem}[Action Sensibility] Both of the following hold:
-\label{thrm:actsafe}
-\begin{enumerate}
-\item If $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$ and
-  $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ then
-  $\hsyn{\hGamma}{\removeSel{\zexp'}}{\htau'}$.
-\item If $\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}$ and
-  $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ then
-  $\hana{\hGamma}{\removeSel{\zexp'}}{\htau}$.
-\end{enumerate}
-\end{theorem}
-In words, every action leaves the program in a semantically well-defined state. More specifically, the first clause of Theorem \ref{thrm:actsafe} establishes that actions performed on expressions that synthesize a type can only produce expressions that also synthesize some (possibly different) type. The second clause establishes that actions performed on expressions in analytic position (e.g. those under type ascriptions or in argument position, see above) can only produce expressions that can also be analyzed against the expected type.% Non-empty holes allow us to avoid top-down program construction becau but rather can construct fragments of the program inside a hole until ready to ``expose'' them to type analysis.
-
-It is also useful to maintain a \emph{deterministic} action semantics, i.e. every well-defined action should produce a unique Z-type or Z-expression. Formally, this is stated as follows:
+\subsubsection{Determinism}
+Another useful property that we maintain is \emph{action determinism}, i.e. that performing an action should produce a unique result. Formally, this is established as follows:
 \begin{theorem}[Action Determinism] All of the following hold:
 \label{thrm:actdet}
-\begin{enumerate}
+\begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
 \item If $\performTyp{\ztau}{\alpha}{\ztau'}$ and $\performTyp{\ztau}{\alpha}{\ztau''}$ then $\ztau'=\ztau''$.
 \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
   $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$ and
@@ -436,8 +466,8 @@ It is also useful to maintain a \emph{deterministic} action semantics, i.e. ever
 \end{enumerate}
 \end{theorem}
 
-In order to maintain determinism, we will need to supplement the definition of type compatibility above with a definition for \emph{type incompatibility}, $\tincompat{\htau}{\htau'}$. The key rule establishes that arrow types are incompatible with the $\tnum$ type:
-\begin{subequations}
+In order to maintain determinism, we will need to supplement our definition of type consistency from Figure \ref{fig:type-consistency} with a definition of \emph{type inconsistency}, written $\tincompat{\htau}{\htau'}$. One can define this notion either direrctly as the metatheoretic negation of type consistency, or as a separate inductively defined judgement. The supplement does the latter. The key rule establishes that arrow types are inconsistent with $\tnum$:
+% \begin{subequations}
   % \begin{equation}
   %   \inferrule{
   %     \tincompat{\htau}{\htau'}
@@ -445,11 +475,11 @@ In order to maintain determinism, we will need to supplement the definition of t
   %     \tincompat{\htau'}{\htau}
   %   }
   % \end{equation}
-  \begin{equation}
+  \begin{equation*}
     \inferrule{ }{
       \tincompat{\tnum}{\tarr{\htau_1}{\htau_2}}
     }
-  \end{equation}
+  \end{equation*}
   % \begin{equation}
   %   \inferrule{
   %     \tincompat{\htau_1}{\htau_1'}
@@ -464,25 +494,12 @@ In order to maintain determinism, we will need to supplement the definition of t
   %     \tincompat{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1'}{\htau_2'}}
   %   }
   % \end{equation}
-\end{subequations}
-The remaining rules, given in the appendix, establish that type incompatibility is symmetric and covariant.
-\subsubsection{Subsumption}
+% \end{subequations}
+% The remaining rules, given in the appendix, establish that type incompatibility is symmetric.
+The mechanization proves that this judgemental definition of type inconsistency is indeed the negation of type consistency.\todo{big if true!!!}
 
-The action semantics includes a subsumption rule much like the one from the underlying semantics of H-expressions:
-\begin{equation}
-  \inferrule{
-    \hsyn{\hGamma}{\removeSel{\zexp}}{\htau'}\\
-    \performSyn{\hGamma}{\zexp}{\htau'}{\alpha}{\zexp'}{\htau''}\\
-    \tcompat{\htau}{\htau''}
-  }{
-    \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}
-  }
-\end{equation}
-In other words, if the expression synthesizes a type, then we defer to the synthetic action performance judgement, as long as it produces an expression that synthesizes a type compatible with the type provided for analysis. It is easy to see that this satisfies Theorem 1 by applying the IH and subsumption.
-
-\subsubsection{Relative Movement} Movement actions change the focus but do not change the underlying H-type or H-expression (so action sensibility is easy to show for these rules as well.)
-
-The rules for relative movement within Z-types are given below and should be self-explanatory:
+\subsubsection{Relative Movement}\label{sec:movement} 
+The rules below define relative movement within Z-types. They should be self-explanatory:
 \begin{subequations}
 \begin{equation}
   \inferrule{ }{
@@ -528,17 +545,17 @@ The rules for relative movement within Z-types are given below and should be sel
     }
   }
 \end{equation}
-\begin{equation}
-  \inferrule{ }{
-    \performTyp{
-      \tarr{{\htau_1}}{\zwsel{\htau_2}}
-    }{
-      \aMove{\dPrev}
-    }{
-      {\tarr{\zwsel{\htau_1}}{{\htau_2}}}
-    }
-  }
-\end{equation}
+% \begin{equation}
+%   \inferrule{ }{
+%     \performTyp{
+%       \tarr{{\htau_1}}{\zwsel{\htau_2}}
+%     }{
+%       \aMove{\dPrev}
+%     }{
+%       {\tarr{\zwsel{\htau_1}}{{\htau_2}}}
+%     }
+%   }
+% \end{equation}
 % \begin{equation}
 % \inferrule{
 %   \performTyp{
@@ -578,9 +595,10 @@ The rules for relative movement within Z-types are given below and should be sel
 %   }
 % \end{equation}
 \end{subequations}
+Two more rules are needed to recurse into the zipper structure. We define these zipper rules in an action-independent manner in Sec. \ref{sec:zipper-cases}. 
 % The final two rules above recurse into the zipper structure.
 
-The rules for relative movement within Z-expressions are similar. Movement is type-independent, so we defer to an auxiliary judgement for both the analytic and synthetic judgements:\todo{remove prevSib}
+The rules for relative movement within Z-expressions are similarly straightforward. Movement is type-independent, so we defer to an auxiliary expression movement judgement in both the analytic and synthetic case:\todo{remove prevSib}
 \begin{subequations}
 \begin{equation}
 \inferrule{
@@ -597,7 +615,105 @@ The rules for relative movement within Z-expressions are similar. Movement is ty
 }
 \end{equation}
 \end{subequations}
-For concision, we show only the rules for ascription here:
+% \begin{figure}
+% \judgbox{\performMove{\zexp}{\aMove{\delta}}{\zexp'}}{(Additional movement-action rules:)}
+% \begin{displaymath}
+% \begin{array}{@{}rcl}
+%   %\multicolumn{3}{l}{\textbf{Movement Actions for Sum Type Forms}:}
+%   %\\
+%   \TABperformMove
+%       {\zwsel{\hexp : \htau}}
+%       {\aMove{\dChild}}
+%       {      \zwsel{\hexp} : \htau}
+%   \\
+%   \TABperformMove
+%       {
+%       \zwsel{\hexp} : \htau
+%     }{
+%       \aMove{\dParent}
+%     }{
+%       \zwsel{\hexp : \htau}
+%     }
+%   \\
+%   \TABperformMove
+%     {
+%       \hexp : \zwsel{\htau}
+%     }{
+%       \aMove{\dParent}
+%     }{
+%       \zwsel{\hexp : \htau}
+%     }
+%   \\
+%   \TABperformMove
+%       {
+%       \zwsel{\hexp} : \htau
+%     }{
+%       \aMove{\dNext}
+%     }{
+%       \hexp : \zwsel{\htau}
+%     }
+%   \\[2mm]
+%   \TABperformMove
+%       {      {\tsum{{\htau_1}}{{\zwsel{\htau_2}}}}}
+%       {\aMove{\dParent}}
+%       {\zwsel{\tsum{{\htau_1}}{\htau_2}}}
+%   \\[2mm]
+%   \TABperformMove
+%       {\zwsel{\hinj{i}{\hexp}}}
+%       {\aMove{\dChild}}
+%       {\hinj{i}{\zwsel{\hexp}}}      
+%   \\
+%   \TABperformMove
+%       {\hinj{i}{\zwsel{\hexp}}}      
+%       {\aMove{\dParent}}
+%       {\zwsel{\hinj{i}{\hexp}}}
+%   \\[2mm]
+%   \TABperformMove
+%       {\zwsel{\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}}}
+%       {\aMove{\dChild}}
+%       {      {\hcase{\zwsel{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
+%   \\
+%   \TABperformMove
+%       {      {\hcase{\zwsel{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
+%       {\aMove{\dNext}}
+%       {      {\hcase{{\hexp}}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
+%   \\
+%   \TABperformMove
+%       {      {\hcase{{\hexp}}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
+%       {\aMove{\dNext}}
+%       {      {\hcase{{\hexp}}{x}{{\hexp_1}}{y}{\zwsel{\hexp_2}}}}
+%   \\
+%   \TABperformMove
+%       {      {\hcase{{\hexp}}{x}{{\hexp_1}}{y}{\zwsel{\hexp_2}}}}
+%       {\aMove{\dPrev}}
+%       {      {\hcase{{\hexp}}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
+%   \\
+%   \TABperformMove
+%       {      {\hcase{{\hexp}}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
+%       {\aMove{\dPrev}}
+%       {      {\hcase{{\zwsel{\hexp}}}{x}{{\hexp_1}}{y}{{\hexp_2}}}}
+%   \\
+%   \TABperformMove
+%       {      {\hcase{\zwsel{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
+%       {\aMove{\dParent}}
+%       {\zwsel{\hcase{{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
+%   \\
+%   \TABperformMove
+%       {      {\hcase{{\hexp}}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
+%       {\aMove{\dParent}}
+%       {\zwsel{\hcase{{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
+%   \\
+%   \TABperformMove
+%       {      {\hcase{{\hexp}}{x}{\hexp_1}{y}{\zwsel{\hexp_2}}}}
+%       {\aMove{\dParent}}
+%       {\zwsel{\hcase{{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
+% \end{array}
+% \end{displaymath}
+% \caption{Movement action semantics for sum type forms.}
+% \end{figure}
+The expression movement judgement is defined as follows.
+
+\paragraph{Ascription}
 \begin{subequations}
   \begin{equation}
     \label{r:movefirstchild}
@@ -646,57 +762,59 @@ For concision, we show only the rules for ascription here:
     }
   }
 \end{equation}
-\begin{equation}
-  \label{r:moveprevsib}
-  \inferrule{ }{
-    \performTyp{
-      \hexp : \zwsel{\htau}
-    }{
-      \aMove{\dPrev}
-    }{
-      \zwsel{\hexp} : \htau
-    }
-  }
-\end{equation}
-\begin{equation}
-\inferrule{
-  \performTyp{
-    \zexp
-  }{
-    \aMove{\delta}
-  }{
-    \zexp'
-  }
-}{
-  \performTyp{
-    \zexp : \htau
-  }{
-    \aMove{\delta}
-  }{
-    \zexp' : \htau
-  }
-}
-\end{equation}
-\begin{equation}
-  \inferrule{
-    \performTyp{
-      \ztau
-    }{
-      \aMove{\delta}
-    }{
-      \ztau'
-    }
-  }{
-    \performTyp{
-      \hexp : \ztau
-    }{
-      \aMove{\delta}
-    }{
-      \hexp : \ztau'
-    }
-  }
-\end{equation}
-and this for the example\todo{revise}
+% \begin{equation}
+%   \label{r:moveprevsib}
+%   \inferrule{ }{
+%     \performTyp{
+%       \hexp : \zwsel{\htau}
+%     }{
+%       \aMove{\dPrev}
+%     }{
+%       \zwsel{\hexp} : \htau
+%     }
+%   }
+% \end{equation}
+% \begin{equation}
+% \inferrule{
+%   \performTyp{
+%     \zexp
+%   }{
+%     \aMove{\delta}
+%   }{
+%     \zexp'
+%   }
+% }{
+%   \performTyp{
+%     \zexp : \htau
+%   }{
+%     \aMove{\delta}
+%   }{
+%     \zexp' : \htau
+%   }
+% }
+% \end{equation}
+% \begin{equation}
+%   \inferrule{
+%     \performTyp{
+%       \ztau
+%     }{
+%       \aMove{\delta}
+%     }{
+%       \ztau'
+%     }
+%   }{
+%     \performTyp{
+%       \hexp : \ztau
+%     }{
+%       \aMove{\delta}
+%     }{
+%       \hexp : \ztau'
+%     }
+%   }
+% \end{equation}
+
+
+\paragraph{Lambda}
 \begin{equation}\label{r:movefirstchild-lam}
 \inferrule{ }{
   \performMove{
@@ -708,7 +826,40 @@ and this for the example\todo{revise}
   }
 }
 \end{equation}
-
+\begin{equation}
+  \inferrule{ }{
+    \performMove{
+      \hlam{x}{\zwsel{\hexp}}
+    }{
+      \aMove{\dParent}
+    }{
+      \zwsel{\hlam{x}{\hexp}}
+    }
+  }
+\end{equation}
+\paragraph{Application}
+\begin{equation}
+  \inferrule{ }{
+    \performMove{
+      \zwsel{\hap{\hexp_1}{\hexp_2}}
+    }{
+      \aMove{\dChild}
+    }{
+      \hap{\zwsel{\hexp_1}}{\hexp_2}
+    }
+  }
+\end{equation}
+\begin{equation}
+  \inferrule{ }{
+    \performMove{
+      \hap{\zwsel{\hexp_1}}{\hexp_2}
+    }{
+      \aMove{\dParent}
+    }{
+      \zwsel{\hap{\hexp_1}{\hexp_2}}
+    }
+  }
+\end{equation}
 \begin{equation}\label{r:moveparent-ap2}
   \inferrule{ }{
     \performMove{
@@ -720,7 +871,98 @@ and this for the example\todo{revise}
     }
   }
 \end{equation}
+\begin{equation}
+  \inferrule{ }{
+    \performMove{
+      \hap{\zwsel{\hexp_1}}{\hexp_2}
+    }{
+      \aMove{\dNext}
+    }{
+      \hap{\hexp_1}{\zwsel{\hexp_2}}
+    }
+  }
+\end{equation}
+% \begin{equation}
+%   \inferrule{ }{
+%     \performMove{
+%       \hap{\hexp_1}{\zwsel{\hexp_2}}
+%     }{
+%       \aMove{\dPrev}
+%     }{
+%       \hap{\zwsel{\hexp_1}}{\hexp_2}
+%     }
+%   }
+% \end{equation}
 
+\paragraph{Plus}
+\begin{equation}
+  \inferrule{ }{
+    \performMove{
+      \zwsel{\hadd{\hexp_1}{\hexp_2}}
+    }{
+      \aMove{\dChild}
+    }{
+      \hadd{\zwsel{\hexp_1}}{\hexp_2}
+    }
+  }
+\end{equation}
+\begin{equation}
+  \inferrule{ }{
+    \performMove{
+      \hadd{\zwsel{\hexp_1}}{\hexp_2}
+    }{
+      \aMove{\dParent}
+    }{
+      \zwsel{\hadd{\hexp_1}{\hexp_2}}
+    }
+  }
+\end{equation}
+\begin{equation}
+  \inferrule{ }{
+    \performMove{
+      \hadd{{\hexp_1}}{\zwsel{\hexp_2}}
+    }{
+      \aMove{\dParent}
+    }{
+      \zwsel{\hadd{\hexp_1}{\hexp_2}}
+    }
+  }
+\end{equation}
+\begin{equation}
+  \inferrule{ }{
+    \performMove{
+      \hadd{\zwsel{\hexp_1}}{\hexp_2}
+    }{
+      \aMove{\dNext}
+    }{
+      \hadd{\hexp_1}{\zwsel{\hexp_2}}
+    }
+  }
+\end{equation}
+% \begin{equation}
+%   \inferrule{ }{
+%     \performMove{
+%       \hadd{\hexp_1}{\zwsel{\hexp_2}}
+%     }{
+%       \aMove{\dPrev}
+%     }{
+%       \hadd{\zwsel{\hexp_1}}{\hexp_2}
+%     }
+%   }
+% \end{equation}
+
+\paragraph{Non-Empty Hole}
+\begin{equation}
+\inferrule{ }{
+  \performMove{
+    \zwsel{\hhole{\hexp}}
+  }{
+    \aMove{\dChild}
+  }{
+    \hhole{\zwsel{\hexp}}
+  }
+}
+\end{equation}
 \begin{equation}\label{r:moveparent-hole}
   \inferrule{ }{
     \performMove{
@@ -732,38 +974,50 @@ and this for the example\todo{revise}
     }
   }
 \end{equation}
+Again, additional rules are needed to recurse into the zipper structure, but we will define these zipper rules in an action-independent manner in Sec. \ref{sec:zipper-cases}. 
 \end{subequations}
 
-\paragraph{Reachability}
-
-We give the following theorem to demonstrate that the rules for movement do
-indeed capture the process of moving the focus to any editable position
-within a term. Intuitively, given two zippered expressions that are the
-same up to the erasure of focus, its proof gives a list of composable
-actions that, when applied to the first term produces the second.
-
-As a consequence of applying Theorem \ref{thrm:actsafe} inductively at
-every action in such a list, it is possible consider moving to an ill-typed
-term. Therefore the statement here matches the mutually recursive structure
-of the bidirectional typing judgements.
-
-\begin{theorem}[Reachability]\todo{why $\htau$ and not $\ztau$?}
-\label{thrm:reach}
-Both of the following hold:
-\begin{enumerate}
-  \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
-   $\hsyn{\hGamma}{\removeSel{\zexp'}}{\htau}$ and $\removeSel{\zexp}
-   = \removeSel{\zexp'}$ then $\exists L \in \mathit{list}
-   ~\mathtt{action}$ such that $\mathit{iterate}~ L~ \zexp
-   = \zexp'$.
-
-  \item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and
-   $\hana{\hGamma}{\removeSel{\zexp'}}{\htau}$ and $\removeSel{\zexp}
-   = \removeSel{\zexp'}$ then $\exists L \in \mathit{list}
-   ~\mathtt{action}$ such that $\mathit{iterate}~ L~ \zexp
-   = \zexp'$.
+The rules above are numerous and fairly uninteresting. That makes them quite hazardous -- the editor designer might make a mistake absent-mindedly. One check against this is to prove a lemma that establishes that movement actions move the cursor but do not change the cursor erasure.\todo{make sure ian proved this }
+\begin{lemma}[Movement Erasure Invariance]\label{lemma:movement-erasure} \todo{make lemmas number with theorems} 
+\begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
+\item If $\performMove{\ztau}{\aMove{\delta}}{\ztau'}$ then $\removeSel{\ztau}=\removeSel{\ztau'}$.
+\item If $\performMove{\zexp}{\aMove{\delta}}{\zexp'}$ then $\removeSel{\zexp}=\removeSel{\zexp'}$.
 \end{enumerate}
-\end{theorem}
+\end{lemma}
+\noindent Lemma \ref{lemma:movement-erasure} is useful also in that the relevant cases of Theorem \ref{thrm:actsafe} are straightforward by its application.
+
+A more thorough check would be to establish \emph{reachability}, i.e. that it is possible, through a sequence of movement actions, to move the cursor from any position to any other position within an H-expression.\todo{pending ian progress}
+
+% \paragraph{Reachability}
+
+% We give the following theorem to demonstrate that the rules for movement do
+% indeed capture the process of moving the focus to any editable position
+% within a term. Intuitively, given two zippered expressions that are the
+% same up to the erasure of focus, its proof gives a list of composable
+% actions that, when applied to the first term produces the second.
+
+% As a consequence of applying Theorem \ref{thrm:actsafe} inductively at
+% every action in such a list, it is possible consider moving to an ill-typed
+% term. Therefore the statement here matches the mutually recursive structure
+% of the bidirectional typing judgements.
+
+% \begin{theorem}[Reachability]\todo{why $\htau$ and not $\ztau$?}
+% \label{thrm:reach}
+% Both of the following hold:
+% \begin{enumerate}
+%   \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+%    $\hsyn{\hGamma}{\removeSel{\zexp'}}{\htau}$ and $\removeSel{\zexp}
+%    = \removeSel{\zexp'}$ then $\exists L \in \mathit{list}
+%    ~\mathtt{action}$ such that $\mathit{iterate}~ L~ \zexp
+%    = \zexp'$.
+
+%   \item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+%    $\hana{\hGamma}{\removeSel{\zexp'}}{\htau}$ and $\removeSel{\zexp}
+%    = \removeSel{\zexp'}$ then $\exists L \in \mathit{list}
+%    ~\mathtt{action}$ such that $\mathit{iterate}~ L~ \zexp
+%    = \zexp'$.
+% \end{enumerate}
+% \end{theorem}
 
 
 \subsubsection{Deletion} The $\aDel$ action replaces the selected subterm with an empty hole.
@@ -842,7 +1096,7 @@ the rules analogous to Theorem \ref{thrm:reach} or \ref{thrm:construct},
 since we could not have forgotten any rules corresponding to the structure
 of the terms.
 
-\subsubsection{Construction} The construction actions, $\aConstruct{\varphi}$, are used to construct terms of a shape indicated by $\varphi$ into the program at or around the focus.
+\subsubsection{Construction}\label{sec:construction} The construction actions, $\aConstruct{\psi}$, are used to construct terms of a shape indicated by $\psi$ into the program at or around the focus.
 
 Again, let us begin with type actions. The $\aConstruct{\farr}$ action constructs an arrow type. The focused H-type becomes the argument type, and the focus is placed on an empty return type hole:
 \begin{subequations}
@@ -877,12 +1131,12 @@ The $\aConstruct{\fnum}$ action replaces an empty Z-type hole with the $\tnum$ t
 %   \begin{equation}
 %     \label{r:contarrL}
 %   \inferrule{
-%     \performTyp{\ztau}{\aConstruct{\varphi}}{\ztau'}
+%     \performTyp{\ztau}{\aConstruct{\psi}}{\ztau'}
 %   }{
 %     \performTyp{
 %       \tarr{\ztau}{\htau}
 %     }{
-%       \aConstruct{\varphi}
+%       \aConstruct{\psi}
 %     }{
 %       \tarr{\ztau'}{\htau}
 %     }
@@ -891,12 +1145,12 @@ The $\aConstruct{\fnum}$ action replaces an empty Z-type hole with the $\tnum$ t
 %   \begin{equation}
 %     \label{r:contarrR}
 %   \inferrule{
-%     \performTyp{\ztau}{\aConstruct{\varphi}}{\ztau'}
+%     \performTyp{\ztau}{\aConstruct{\psi}}{\ztau'}
 %   }{
 %     \performTyp{
 %       \tarr{\htau}{\ztau}
 %     }{
-%       \aConstruct{\varphi}
+%       \aConstruct{\psi}
 %     }{
 %       \tarr{\htau}{\ztau'}
 %     }
@@ -1132,13 +1386,49 @@ If the focused non-empty hole appears in analytic position, then it can only be 
 \end{equation}
 \end{subequations}
 
+
+\paragraph{Constructibility}\todo{why is this with the zipper rules not the
+    construct rules?}
+
+We give the following theorem to demonstrate that the rules for the action
+$\aConstruct{\psi}$ do indeed capture the process of building any term
+of the form $\psi$. Intuitively, its proof gives a list of composable
+actions that, when applied one sequentially to an empty hole in focus,
+build any well-typed expression.
+
+As with Theorem \ref{thrm:reach}, the statement of this theorem must match
+the mutually recursive structure of the bidirectional typing judgements.
+
+\begin{theorem}[Constructability]\todo{why $\htau$ and not $\ztau$?}
+\label{thrm:construct}
+Both of the following hold:
+\begin{enumerate}
+  \item If $\hsyn{\hGamma}{\hexp}{\htau}$ then $\exists \zexp'$ $\exists
+      L \in \mathit{list} ~\mathtt{action}$ such that
+      $\mathit{iterate}~ L~ \zwsel{\hhole{}} = \zexp'$ and
+      $\removeSel{\zexp'} = \hexp$
+
+  \item If $\hana{\hGamma}{\hexp}{\htau}$ then $\exists \zexp'$ $\exists
+      L \in \mathit{list} ~\mathtt{action}$ such that $\mathit{iterate}~
+      L~ \zwsel{\hhole{}} = \zexp'$ and $\removeSel{\zexp'} = \hexp$
+\end{enumerate}
+\end{theorem}
+
+Because actions are defined on the zippered form of expressions, we argue
+that we can construct a term that is the same as the target up to the
+erasure of focus rather than on the nose. Since any form inside a zippered
+term may be in focus, there are linearly many such terms for a given
+$\hexp$---Theorem \ref{thrm:construct} can be composed with
+Theorem \ref{thrm:reach} to reach any one that might be desired in
+particular.
+
 \paragraph{Finishability}\todo{do we care?}
 As with deletion, since the meaning of the finish action does not depend on
 the structure of the term being finished other than requiring that it must
 be one of the two hole forms, there is no checksum theorem to state for
 this action.
 
-\subsubsection{Zipper Cases} The rules given so far handle the base cases, where the action has ``reached'' the focused expression. We also need to define the recursive cases, which propagate the action into the subtree where the focus appears. These rules follow the structure of the corresponding rules in the statics of H-expressions.
+\subsubsection{Zipper Cases}\label{sec:zipper-cases} The rules given so far handle the base cases, where the action has ``reached'' the focused expression. We also need to define the recursive cases, which propagate the action into the subtree where the focus appears. These rules follow the structure of the corresponding rules in the statics of H-expressions.
 
 \begin{subequations}
 For example, when the focus is in the expression position of an ascription, we use the analytic action performance judgement:
@@ -1361,38 +1651,22 @@ Finally, if the focus is inside a non-empty hole, we special case the situation 
   }
 \end{equation}
 
-\paragraph{Constructibility}\todo{why is this with the zipper rules not the
-    construct rules?}
+\subsubsection{Action Subsumption}\label{sec:action-subsumption}
 
-We give the following theorem to demonstrate that the rules for the action
-$\aConstruct{\varphi}$ do indeed capture the process of building any term
-of the form $\varphi$. Intuitively, its proof gives a list of composable
-actions that, when applied one sequentially to an empty hole in focus,
-build any well-typed expression.
+The bidirectional action semantics includes a subsumption rule similar to the subsumption rule of the bidirectional static semantics:
+\begin{equation}
+  \inferrule{
+    \hsyn{\hGamma}{\removeSel{\zexp}}{\htau'}\\
+    \performSyn{\hGamma}{\zexp}{\htau'}{\alpha}{\zexp'}{\htau''}\\
+    \tcompat{\htau}{\htau''}\\\\
+    \alpha \neq \aConstruct{\fasc}\\
+    \alpha \neq \aConstruct{\flam{x}}
+  }{
+    \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}
+  }
+\end{equation}
+In other words, if the cursor erasure of the edit state synthesizes a type, then we defer to the synthetic action performance judgement, as long as it produces an expression that synthesizes a type compatible with the type provided for analysis. It is easy to see that this satisfies Theorem 1 by applying the IH and the typing subsumption rule.
 
-As with Theorem \ref{thrm:reach}, the statement of this theorem must match
-the mutually recursive structure of the bidirectional typing judgements.
+We need to specify two exceptions in this rule, because the analytic action semantics handles these cases explicitly, in a manner that does not coincide with how the synthetic action semantics would handle these cases if allowed to do so via action subsumption. We will see why this is the case in Sec. \ref{sec:construction}. Algorithmically, this captures the notion that subsumption should be the case of last resort when pattern matching sequentially.
 
-\begin{theorem}[Constructability]\todo{why $\htau$ and not $\ztau$?}
-\label{thrm:construct}
-Both of the following hold:
-\begin{enumerate}
-  \item If $\hsyn{\hGamma}{\hexp}{\htau}$ then $\exists \zexp'$ $\exists
-      L \in \mathit{list} ~\mathtt{action}$ such that
-      $\mathit{iterate}~ L~ \zwsel{\hhole{}} = \zexp'$ and
-      $\removeSel{\zexp'} = \hexp$
-
-  \item If $\hana{\hGamma}{\hexp}{\htau}$ then $\exists \zexp'$ $\exists
-      L \in \mathit{list} ~\mathtt{action}$ such that $\mathit{iterate}~
-      L~ \zwsel{\hhole{}} = \zexp'$ and $\removeSel{\zexp'} = \hexp$
-\end{enumerate}
-\end{theorem}
-
-Because actions are defined on the zippered form of expressions, we argue
-that we can construct a term that is the same as the target up to the
-erasure of focus rather than on the nose. Since any form inside a zippered
-term may be in focus, there are linearly many such terms for a given
-$\hexp$---Theorem \ref{thrm:construct} can be composed with
-Theorem \ref{thrm:reach} to reach any one that might be desired in
-particular.
 \end{subequations}
