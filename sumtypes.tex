@@ -344,10 +344,10 @@ judgement~$\hana{\hGamma}{\hexp}{\htau}$ with rules for introducing
 and eliminating sum types, Rules~\ref{ana-inj} and \ref{ana-case},
 respectively.
 %
-In both the introduction and elimination rules, we use the ``has
-matched'' relation $\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ to
-permit the sum type~$\htau_+$ to be~$\hehole$, or a specific sum type
-that uses the constructor~$\htau_1 + \htau_2$.
+In both rules, we use the ``has matched'' relation
+$\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ to permit the sum
+type~$\htau_+$ to be either a type hole~$\hehole$, or a specific sum
+type that uses the constructor~$\htau_1 + \htau_2$.
 %
 We adhere to the usual directionality for sum types in bidirectional
  systems: The introduction rule \emph{checks} the term against the sum
