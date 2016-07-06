@@ -978,7 +978,7 @@ Again, additional rules are needed to recurse into the zipper structure, but we 
 \end{subequations}
 
 The rules above are numerous and fairly uninteresting. That makes them quite hazardous -- we might make a mistake absent-mindedly. One check against this is to prove a lemma that establishes that movement actions move the cursor but do not change the cursor erasure.
-\begin{lemma}[Movement Erasure Invariance]\label{lemma:movement-erasure} \todo{make lemmas number with theorems} 
+\begin{lemma}[Movement Erasure Invariance]\label{lemma:movement-erasure}
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
 \item If $\performMove{\ztau}{\aMove{\delta}}{\ztau'}$ then $\removeSel{\ztau}=\removeSel{\ztau'}$.
 \item If $\performMove{\zexp}{\aMove{\delta}}{\zexp'}$ then $\removeSel{\zexp}=\removeSel{\zexp'}$.
@@ -1035,9 +1035,11 @@ $\mathsf{ActionList}$~~$\bar{\alpha} ::= \cdot ~\vert~ \alpha; \bar{\alpha}$\\
 \label{fig:multistep}
 \end{figure}
 
+A simple auxiliary judgement, $\bar\alpha~\mathsf{movements}$, defined in the supplement, establishes that $\bar\alpha$ consists only of actions of the form $\aMove{\delta}$.\todo{define this in supplement}
+
 With these definitions, we can state reachability as follows:
 
-\begin{theorem}[Reachability] ~
+\begin{theorem}[Reachability]\label{thrm:reachability} ~
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
 \item If $\removeSel{\ztau}=\removeSel{\ztau'}$ then there exists some $\bar\alpha$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performTyp{\ztau}{\bar\alpha}{\ztau'}$.
 \item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\removeSel{\zexp}=\removeSel{\zexp'}$ then there exists some $\bar{\alpha}$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performAna{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}$. 
@@ -1045,7 +1047,23 @@ With these definitions, we can state reachability as follows:
 \end{enumerate}
 \end{theorem}
 
-To prove Reachability, we break it into two lemmas. One...\todo{write this}
+The simplest way to prove Theorem \ref{thrm:reachability} is to  break it into two lemmas. Lemma \ref{lemma:reach-up} establishes that you can always move the cursor to the outermost position in an expression. This serves as a check on our $\aMove{\dParent}$ rules.
+\begin{lemma}[Reach Up]\label{lemma:reach-up} ~
+\begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
+\item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performTyp{\ztau}{\bar\alpha}{\zwsel{\htau}}$.
+\item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performAna{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}$. 
+\item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performSyn{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}{\htau}$.
+\end{enumerate}
+\end{lemma}
+Lemma \ref{lemma:reach-down} establishes that you can always move the cursor from the outermost position to any other position. This serves as a check on our $\aMove{\dChild}$ and $\aMove{\dNext}$ rules. 
+\begin{lemma}[Reach Down]\label{lemma:reach-down} ~
+\begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
+\item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performTyp{\zwsel{\htau}}{\bar\alpha}{\ztau}$.
+\item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performAna{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}$.
+\item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ nand $\performSyn{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}{\htau}$.
+\end{enumerate}
+\end{lemma}
+Theorem \ref{thrm:reachability} follows by straightforward composition of these two lemmas. (The witness to the existential is not, of course, the shortest path between any two cursor locations.)
 
 % \paragraph{Reachability}
 
