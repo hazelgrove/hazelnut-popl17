@@ -370,7 +370,7 @@ In some Z-expressions, the cursor is in a type ascription, so we also need a \em
 \]
 
 
-Before giving the rules for these judgements, let us state two key metatheorems. These metatheorems deeply inform the design of the rules. Their proofs, which are mechanized in Agda, are by straightforward induction, so the reader is encouraged to think about the relevant cases of these proofs as we present the rules, starting in Sec. \ref{sec:movement}.
+Before giving the rules for these judgements, let us state two key metatheorems. These metatheorems deeply inform the design of the rules. Their proofs, which are mechanized in Agda, are by straightforward induction, so the reader is encouraged to think about the relevant cases of these proofs as we present the rules, starting in Sec. \ref{sec:action-subsumption}.
 
 % The type action judgement appears as a premise in the rules that handle Z-expressions where the cursor is inside a . 
 % \[\begin{array}{ll}
@@ -496,7 +496,30 @@ In order to maintain determinism, we will need to supplement our definition of t
   % \end{equation}
 % \end{subequations}
 % The remaining rules, given in the appendix, establish that type incompatibility is symmetric.
-The mechanization proves that this judgemental definition of type inconsistency is indeed the negation of type consistency.\todo{big if true!!!}
+The mechanization proves that this judgemental definition of type inconsistency is indeed the negation of type consistency.
+
+
+\subsubsection{Action Subsumption}\label{sec:action-subsumption}
+
+The bidirectional action semantics includes a subsumption rule similar to the subsumption rule, Rule (\ref{rule:ana-subsume}), in the statics:
+\begin{equation}
+  \inferrule{
+    \hsyn{\hGamma}{\removeSel{\zexp}}{\htau'}\\
+    \performSyn{\hGamma}{\zexp}{\htau'}{\alpha}{\zexp'}{\htau''}\\
+    \tcompat{\htau}{\htau''}\\\\
+    \alpha \notin \mathcal{A}
+  }{
+    \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}
+  }
+\end{equation}
+In other words, if the cursor erasure of the edit state synthesizes a type, then we defer to the synthetic action judgement, as long as the type of the resulting cursor erasure is consistent with the type provided for analysis. It is easy to see that this satisfies Theorem 1 by applying the IH and the Rule (\ref{rule:ana-subsume}).
+
+We need to make some exceptions in this rule to maintain determinism, because the analytic action semantics handles certain actions explicitly, in a manner that does not coincide with how the synthetic action semantics would handle these cases if allowed to do so via action subsumption. We will see why this is the case in Sec. \ref{sec:construction}. We do so by defining a finite set of actions $\mathcal{A}$ that do not go through subsumption:
+\[
+\mathcal{A} \overset{\tiny\textit{def}}{\Delta} \{\aConstruct{\fasc}, \aConstruct{\flam{x}}\}
+\]
+
+Algorithmically, this captures the notion that subsumption should be the case of last resort.
 
 \subsubsection{Relative Movement}\label{sec:movement} 
 The rules below define relative movement within Z-types. They should be self-explanatory:
@@ -598,7 +621,7 @@ The rules below define relative movement within Z-types. They should be self-exp
 Two more rules are needed to recurse into the zipper structure. We define these zipper rules in an action-independent manner in Sec. \ref{sec:zipper-cases}. 
 % The final two rules above recurse into the zipper structure.
 
-The rules for relative movement within Z-expressions are similarly straightforward. Movement is type-independent, so we defer to an auxiliary expression movement judgement in both the analytic and synthetic case:\todo{remove prevSib}
+The rules for relative movement within Z-expressions are similarly straightforward. Movement is type-independent, so we defer to an auxiliary expression movement judgement in both the analytic and synthetic case:\todo{remove prevSib in supplement too}
 \begin{subequations}
 \begin{equation}
 \inferrule{
@@ -978,22 +1001,23 @@ Again, additional rules are needed to recurse into the zipper structure, but we 
 \end{subequations}
 
 The rules above are numerous and fairly uninteresting. That makes them quite hazardous -- we might make a mistake absent-mindedly. One check against this is to prove a lemma that establishes that movement actions move the cursor but do not change the cursor erasure.
-\begin{lemma}[Movement Erasure Invariance]\label{lemma:movement-erasure}
-\begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
+
+\begin{lemma}[Movement Erasure Invariance]\label{lemma:movement-erasure} ~
+\begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px] 
 \item If $\performMove{\ztau}{\aMove{\delta}}{\ztau'}$ then $\removeSel{\ztau}=\removeSel{\ztau'}$.
 \item If $\performMove{\zexp}{\aMove{\delta}}{\zexp'}$ then $\removeSel{\zexp}=\removeSel{\zexp'}$.
 \end{enumerate}
 \end{lemma}
 \noindent Lemma \ref{lemma:movement-erasure} is useful also in that the relevant cases of Theorem \ref{thrm:actsafe} are straightforward by its application.
 
-Another check is to establish \emph{reachability}, i.e. that it is possible, through a sequence of movement actions, to move the cursor from any position to any other position within a well-typed H-expression. 
+Another useful check is to establish \emph{reachability}, i.e. that it is possible, through a sequence of movement actions, to move the cursor from any position to any other position within a well-typed H-expression. 
 
-This requires developing machinery for sequences of actions. There are two possibilities: we can either add a sequencing action, $\alpha; \alpha$, directly to the syntax of actions, or we can define auxiliary syntax for sequences of actions, $\bar{\alpha}$, and ``multi\-step'' action judgements. To keep the core of the action semantics small, we took the latter approach in Figure \ref{fig:multistep}.
+This requires developing machinery for reasoning about sequences of actions. There are two possibilities: we can either add a sequencing action, $\alpha; \alpha$, directly to the syntax of actions, or we can define a syntax for lists of actions, $\bar{\alpha}$, together with iterated action judgements. To keep the core of the action semantics small, we take the latter approach in Figure \ref{fig:multistep}.\todo{put stars on these?}
 
 \begin{figure}
-$\mathsf{ActionList}$~~$\bar{\alpha} ::= \cdot ~\vert~ \alpha; \bar{\alpha}$\\
+$\mathsf{ActionList}$~~$\bar{\alpha} ::= \cdot ~\vert~ \alpha; \bar{\alpha}$\vspace{4px}\\
 \fbox{$\performTyp{\ztau}{\bar{\alpha}}{\ztau'}$}
-\begin{mathpar}
+\vspace{-10px}\begin{mathpar}
 \inferrule{ }{
     \performTyp{\ztau}{\cdot}{\ztau}
 }
@@ -1006,7 +1030,7 @@ $\mathsf{ActionList}$~~$\bar{\alpha} ::= \cdot ~\vert~ \alpha; \bar{\alpha}$\\
 }
 \end{mathpar}
 \fbox{$\performSyn{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}{\htau'}$}
-\begin{mathpar}
+\vspace{-10px}\begin{mathpar}
 \inferrule{ }{
   \performSyn{\hGamma}{\zexp}{\htau}{\cdot}{\zexp}{\htau}
 }
@@ -1019,7 +1043,7 @@ $\mathsf{ActionList}$~~$\bar{\alpha} ::= \cdot ~\vert~ \alpha; \bar{\alpha}$\\
 }
 \end{mathpar}
 \fbox{$\performAna{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}$}
-\begin{mathpar}
+\vspace{-10px}\begin{mathpar}
 \inferrule{ }{
   \performAna{\hGamma}{\zexp}{\htau}{\cdot}{\zexp}
 }
@@ -1031,7 +1055,7 @@ $\mathsf{ActionList}$~~$\bar{\alpha} ::= \cdot ~\vert~ \alpha; \bar{\alpha}$\\
   \performAna{\hGamma}{\zexp}{\htau}{\alpha; \bar\alpha}{\zexp''}
 }
 \end{mathpar}
-\caption{Multistep Action Performance}
+\caption{Iterated Action Judgements}
 \label{fig:multistep}
 \end{figure}
 
@@ -1097,10 +1121,9 @@ Theorem \ref{thrm:reachability} follows by straightforward composition of these 
 % \end{theorem}
 
 
-\subsubsection{Deletion} The $\aDel$ action replaces the cursor with an empty hole.
+\subsubsection{Deletion} The $\aDel$ action inserts an empty hole at the cursor, deleting what was there before.
 
-The type action rule is self-explanatory:
-\begin{subequations}
+The type action rule for $\aDel$ is self-explanatory:
 \begin{equation}
   \inferrule{ }{
     \performTyp{
@@ -1126,7 +1149,6 @@ The type action rule is self-explanatory:
 %     \performTyp{\tarr{\htau}{\ztau}}{\aDel}{\tarr{\htau}{\ztau'}}
 %   }
 % \end{equation}
-\end{subequations}
 
 Deletion within a Z-expression is similarly straightforward:
 \begin{subequations}
@@ -1165,9 +1187,9 @@ Deletion within a Z-expression is similarly straightforward:
 % \end{equation}
 \end{subequations}
 
-\subsubsection{Construction}\label{sec:construction} The construction actions, $\aConstruct{\psi}$, are used to construct terms of a shape indicated by $\psi$ into the program at or around the cursor.
+\subsubsection{Construction}\label{sec:construction} The construction actions, $\aConstruct{\psi}$, are used to construct terms of a shape indicated by $\psi$ at the cursor.
 
-Again, let us begin with type actions. The $\aConstruct{\farr}$ action constructs an arrow type. The focused H-type becomes the argument type, and the focus is placed on an empty return type hole:
+Again, let us begin with type actions. The $\aConstruct{\farr}$ action constructs an arrow type. The H-type under the cursor becomes the argument type, and the cursor is placed on an empty return type hole:
 \begin{subequations}
   \begin{equation}
     \label{r:contarr}
@@ -1182,7 +1204,7 @@ Again, let us begin with type actions. The $\aConstruct{\farr}$ action construct
   }
 \end{equation}
 
-The $\aConstruct{\fnum}$ action replaces an empty Z-type hole with the $\tnum$ type:
+The $\aConstruct{\fnum}$ action replaces an empty type hole under the cursor with the $\tnum$ type:
   \begin{equation}
     \label{r:contnum}
   \inferrule{ }{
@@ -1229,28 +1251,29 @@ The $\aConstruct{\fnum}$ action replaces an empty Z-type hole with the $\tnum$ t
 
 \begin{subequations}
 
-Moving on to expression actions, we start to see more interesting rules. The $\aConstruct{\fasc}$ action operates differently depending on whether the focused expression synthesizes a type or is being analyzed against a type. In the first case, the ascribed type is the synthesized type:
+Moving on to expression actions, we start to see some more interesting rules. The $\aConstruct{\fasc}$ action operates differently depending on whether the H-expression under the cursor synthesizes a type or is being analyzed against a type.In the first case, the ascribed type is the synthesized type:
 \begin{equation}
   \label{r:constructasc}
   \inferrule{ }{
     \performSyn{\hGamma}{\zwsel{\hexp}}{\htau}{\aConstruct{\fasc}}{\hexp : \zwsel{\htau}}{\htau}
   }
 \end{equation}
-In the second case, the ascribed type is the type provided for analysis:
+In the second case, the ascribed type is the provided type:
 \begin{equation}
   \inferrule{ }{
     \performAna{\hGamma}{\zwsel{\hexp}}{\htau}{\aConstruct{\fasc}}{\hexp : \zwsel{\htau}}
   }
 \end{equation}
+This rule should supercede the subsumption rule, so we must list $\aConstruct{\fasc}$ in \todo{do not subsume set}.
 
-The $\aConstruct{\fvar{x}}$ action places the variable $x$ into the focused empty hole. If that hole is being asked to synthesize a type, then the result of the action synthesizes the type assigned to $x$ in the context:
+The $\aConstruct{\fvar{x}}$ action places the variable $x$ into an empty hole. If that hole is being asked to synthesize a type, then the result synthesizes the hypothesized type:
 \begin{equation}
   \label{r:conevar}
   \inferrule{ }{
     \performSyn{\hGamma, x : \htau}{\zwsel{\hehole}}{\tehole}{\aConstruct{\fvar{x}}}{\zwsel{x}}{\htau}
   }
 \end{equation}
-If the focused empty hole is being analyzed against a type that is inconsistent with the type assigned to $x$ by the context, $x$ is placed inside a hole:
+If the hole is being analyzed against a type that is consistent with the hypothesized type, then the action semantics goes through the {action subsumption rule} described in Sec. \ref{sec:action-subsumption}. If the hole is being analyzed against a type that is inconsistent with the hypothesized type, $x$ is placed inside a hole:
 \begin{equation}
  \label{r:conevar2}
   \inferrule{
@@ -1259,9 +1282,7 @@ If the focused empty hole is being analyzed against a type that is inconsistent 
     \performAna{\hGamma, x : \htau'}{\zwsel{\hehole}}{\htau}{\aConstruct{\fvar{x}}}{\hhole{\zwsel{x}}}
   }
 \end{equation}
-The rule above featured in the example in Section \ref{sec:example}.
-
-Notice that no rule was necessary for the case where the hole was being analyzed against a type compatible with the variable's type, because this case is handled by the action subsumption rule.
+The rule above featured on Line 15 of Figure \ref{fig:second-example}.
 
 The $\aConstruct{\flam{x}}$ action places a lambda term binding $x$ into an empty hole. If the focused empty hole is being asked to synthesize a type, then the result of the action is a lambda ascribed the type $\tarr{\tehole}{\tehole}$, with the focus in the argument type position:
 \begin{equation}
@@ -1720,22 +1741,5 @@ Finally, if the focus is inside a non-empty hole, we special case the situation 
   }
 \end{equation}
 
-\subsubsection{Action Subsumption}\label{sec:action-subsumption}
-
-The bidirectional action semantics includes a subsumption rule similar to the subsumption rule of the bidirectional static semantics:
-\begin{equation}
-  \inferrule{
-    \hsyn{\hGamma}{\removeSel{\zexp}}{\htau'}\\
-    \performSyn{\hGamma}{\zexp}{\htau'}{\alpha}{\zexp'}{\htau''}\\
-    \tcompat{\htau}{\htau''}\\\\
-    \alpha \neq \aConstruct{\fasc}\\
-    \alpha \neq \aConstruct{\flam{x}}
-  }{
-    \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}
-  }
-\end{equation}
-In other words, if the cursor erasure of the edit state synthesizes a type, then we defer to the synthetic action performance judgement, as long as it produces an expression that synthesizes a type compatible with the type provided for analysis. It is easy to see that this satisfies Theorem 1 by applying the IH and the typing subsumption rule.
-
-We need to specify two exceptions in this rule, because the analytic action semantics handles these cases explicitly, in a manner that does not coincide with how the synthetic action semantics would handle these cases if allowed to do so via action subsumption. We will see why this is the case in Sec. \ref{sec:construction}. Algorithmically, this captures the notion that subsumption should be the case of last resort when pattern matching sequentially.
 
 \end{subequations}
