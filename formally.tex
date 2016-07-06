@@ -502,23 +502,30 @@ The mechanization proves that this judgemental definition of type inconsistency 
 \subsubsection{Action Subsumption}\label{sec:action-subsumption}
 
 The bidirectional action semantics includes a subsumption rule similar to the subsumption rule, Rule (\ref{rule:ana-subsume}), in the statics:
-\begin{equation}
+\begin{equation}\label{rule:action-subsume}
   \inferrule{
     \hsyn{\hGamma}{\removeSel{\zexp}}{\htau'}\\
     \performSyn{\hGamma}{\zexp}{\htau'}{\alpha}{\zexp'}{\htau''}\\
     \tcompat{\htau}{\htau''}\\\\
-    \alpha \notin \mathcal{A}
+    \alpha~\mathsf{subsumes}
   }{
     \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}
   }
 \end{equation}
-In other words, if the cursor erasure of the edit state synthesizes a type, then we defer to the synthetic action judgement, as long as the type of the resulting cursor erasure is consistent with the type provided for analysis. It is easy to see that this satisfies Theorem 1 by applying the IH and the Rule (\ref{rule:ana-subsume}).
+In other words, if the cursor erasure of the edit state synthesizes a type, then we defer to the synthetic action judgement, as long as the type of the resulting cursor erasure is consistent with the type provided for analysis. 
 
-We need to make some exceptions in this rule to maintain determinism, because the analytic action semantics handles certain actions explicitly, in a manner that does not coincide with how the synthetic action semantics would handle these cases if allowed to do so via action subsumption. We will see why this is the case in Sec. \ref{sec:construction}. We do so by defining a finite set of actions $\mathcal{A}$ that do not need to go through subsumption:
-\[
-\mathcal{A} \overset{\tiny\textit{def}}{=} \{\aConstruct{\fasc}, \aConstruct{\flam{x}}\}
-\]
+We need to make some exceptions in this rule to maintain determinism, because certain construction actions, described in Sec. \ref{sec:construction}, behave slightly differently depending on whether a type is known. We do so by defining a simple judgement $\alpha~\mathsf{subsumes}$ that excludes these action forms:\todo{put into supp}
+\begin{mathpar}
+\inferrule{
+  \alpha \neq \aConstruct{\fasc}\\
+  (\forall x) \alpha \neq \aConstruct{\flam{x}} 
+}{
+  \alpha~\mathsf{subsumes}
+}
+\end{mathpar}
 Algorithmically, this captures the notion that subsumption should be the case of last resort.
+
+The case involving Rule (\ref{rule:action-subsume}) in the proof of Theorem \ref{thrm:actsafe} goes through by induction and static subsumption, i.e. Rule (\ref{rule:ana-subsume}).
 
 \subsubsection{Relative Movement}\label{sec:movement} 
 The rules below define relative movement within Z-types. They should be self-explanatory:
@@ -1250,7 +1257,7 @@ The $\aConstruct{\fnum}$ action replaces an empty type hole under the cursor wit
 
 \begin{subequations}
 
-Moving on to expression actions, we start to see some more interesting rules. The $\aConstruct{\fasc}$ action operates differently depending on whether the H-expression under the cursor synthesizes a type or is being analyzed against a type.In the first case, the ascribed type is the synthesized type:
+Moving on to expression actions, we start to see some more interesting rules. The $\aConstruct{\fasc}$ action operates differently depending on whether the H-expression under the cursor synthesizes a type or is being analyzed against a type. In the first case, the ascribed type is the synthesized type:
 \begin{equation}
   \label{r:constructasc}
   \inferrule{ }{
@@ -1263,7 +1270,7 @@ In the second case, the ascribed type is the provided type:
     \performAna{\hGamma}{\zwsel{\hexp}}{\htau}{\aConstruct{\fasc}}{\hexp : \zwsel{\htau}}
   }
 \end{equation}
-This rule should supercede the subsumption rule, so we must list $\aConstruct{\fasc}$ in \todo{do not subsume set}.
+This rule should supercede the subsumption rule, so we must list $\aConstruct{\fasc}$ in $\mathcal{A}$.
 
 The $\aConstruct{\fvar{x}}$ action places the variable $x$ into an empty hole. If that hole is being asked to synthesize a type, then the result synthesizes the hypothesized type:
 \begin{equation}
