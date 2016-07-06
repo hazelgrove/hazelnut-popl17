@@ -35,18 +35,16 @@ Extensions to \textbf{Syntax} for Sum Types:
 \bnfalt \hinj{i}{\hexp}
 \bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
 \\
-\textsf{Shape} & $\varphi$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
-\\
 \textsf{ZTyp} & $\ztau$ & \bnfas & $\cdots \bnfalt \tsum{\ztau}{\htau} \bnfalt \tsum{\htau}{\ztau}$
 \\
 \textsf{ZExp} & $\zexp$ & \bnfas & $\cdots
 \bnfalt \hinj{i}{\zexp}
-\bnfalt \hcase{\zexp}{x}{\hexp}{y}{\hexp}
-$
+\bnfalt \hcase{\zexp}{x}{\hexp}{y}{\hexp}$
 \\
-&&& $
-\bnfaltbrk \hcase{\hexp}{x}{\zexp}{y}{\hexp}
-\bnfalt    \hcase{\hexp}{x}{\hexp}{y}{\zexp}$
+&& $\bnfalt$ & $\hcase{\hexp}{x}{\zexp}{y}{\hexp}
+\bnfalt\hcase{\hexp}{x}{\hexp}{y}{\zexp}$
+\\
+\textsf{Shape} & $\varphi$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
 \end{grammar}
 %\\[2mm]
 Extensions to \textbf{Static Semantics} for Sum Types:
@@ -91,7 +89,7 @@ Extensions to \textbf{Static Semantics} for Sum Types:
 { \hana{ \hGamma }{ \hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2} }{ \htau } }
 \end{mathpar}
 \\[1mm]
-Extensions to \textbf{Editing Semantics} for Sum Types:
+Extensions to \textbf{Action Semantics} for Sum Types:
 \\[1mm]
 \judgbox{\performTyp{\ztau}{\alpha}{\ztau}}{(Additional type construction action:)}
 \begin{mathpar}

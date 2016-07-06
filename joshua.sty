@@ -559,15 +559,12 @@
 % 
 
 \ifnum\OPTIONConf=1
-  \newcommand{\judgboxfontsize}[1]{\large #1}
+  %\newcommand{\judgboxfontsize}[1]{\large #1}
+  \newcommand{\judgboxfontsize}[1]{#1}
 \else
-  \newcommand{\judgboxfontsize}[1]{\fontsz{9pt}{#1}}
+  %\newcommand{\judgboxfontsize}[1]{\fontsz{9pt}{#1}}
+  \newcommand{\judgboxfontsize}[1]{#1}
 \fi
-
-\newcommand{\judgbox}[2]{%
-      {\raggedright \textgraybox{\judgboxfontsize{\ensuremath{#1}}}\!\begin{tabular}[c]{l} #2 \end{tabular} %
-      \ifnum\OPTIONConf=1 \\[-2.1ex] \else \\[-1.8ex] \fi%
-}}
 
 % Horribly named variants of \judgbox.  The \judgbox spacing is supposed
 % to be tuned for a following mathpar.  But sometimes I define
