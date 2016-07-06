@@ -84,6 +84,20 @@ We adhere to the usual directionality for sum types: The introduction
 
 
 \paragraph{Extensions to Action Semantics.}
+Figures~\ref{fig:sum-action} and \ref{fig:sum-move} extends Hazelnut's
+action-based editing rules for sum types.
+%
+Conceptually, these extensions consist of four parts: A rule for
+constructing the new type connective~(Figure~\ref{fig:sum-action}
+top)), rules for constructing the introduction and elimination
+forms~(Figure~\ref{fig:sum-action} middle), congruence rules for
+editing sub-terms of these forms~(Figure \ref{fig:sum-action} bottom),
+and rules for moving the cursor through the new type and term
+forms~(Figure \ref{fig:sum-move}).  In Figure~\ref{fig:sum-move}, for
+presentation we abuse notation by omitting the horizontal over-bars
+that are typical of inference rules and by instead writing movement
+action axioms in a table.
+
 
 \begin{figure}
 {
@@ -257,7 +271,7 @@ We adhere to the usual directionality for sum types: The introduction
 \end{mathpar}
 }
 \caption{Sum types: Actions (Construction \& Zipper Cases).}
-\label{fig:sum-zipper}
+\label{fig:sum-action}
 \end{figure}
 
 \begin{figure}
@@ -343,6 +357,7 @@ We adhere to the usual directionality for sum types: The introduction
 \end{array}
 \end{displaymath}
 \caption{Movement action semantics for sum type forms.}
+\label{fig:sum-move}
 \end{figure}
 
 
