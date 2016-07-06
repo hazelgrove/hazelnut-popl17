@@ -98,7 +98,11 @@ forms~(Figure \ref{fig:sum-move}).  In Figure~\ref{fig:sum-move}, for
 presentation we abuse notation by omitting the horizontal over-bars
 that are typical of inference rules and by instead writing movement
 action axioms in a table.
+%
+Below, we tour these extensions in further detail, and discuss design
+constraints imposed by Hazelnut's meta theory.
 
+\todo{talk about rules in more detail}
 
 \begin{figure}
 {
@@ -113,7 +117,7 @@ action axioms in a table.
 {\sumhasmatched{\htau_1 + \htau_2}{\htau_1 + \htau_2}}
 \end{mathpar}
 
-\judgbox{\tcompat{\htau_1}{\htau_2}}{(Additional compatibility form:)}
+\judgbox{\tcompat{\htau_1}{\htau_2}}{(Additional type consistency form:)}
 \begin{mathpar}
   \Infer{}{
     \tcompat{\htau_1}{\htau_1'} 
