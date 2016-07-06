@@ -68,6 +68,12 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 % known bug: http://tex.stackexchange.com/questions/1522/pdfendlink-ended-up-in-different-nesting-level-than-pdfstartlink
 
 \usepackage{enumitem}
+\makeatletter
+\def\thm@space@setup{%
+  \thm@preskip=4px plus 1cm minus 2px
+  \thm@postskip=\thm@preskip % or whatever, if you don't want them to be equal
+}
+\makeatother
 
 \usepackage{todonotes}
 \usepackage{xcolor}
