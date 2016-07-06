@@ -1,24 +1,37 @@
 
-
-\paragraph{Syntax.} 
+In this section, we enrich the core calculus of Hazelnut, initially
+presented as consisting of arrow and a base type (numbers), which an
+additional type constructor for (binary) \emph{sum types}, often
+written~$\tau_1 + \tau_2$.
 %
-To accomodate the new type connective~$\tau + \tau$, we extend our
-previous syntantic forms for H-Types, H-Expressions, Actions, Z-Types
-and Z-Expressions.
+Below, we consider how this familiar language form impacts the
+definitions of Hazelnut's core calculus.
 %
-In particular,
-in H-Types, Shapes and Z-Types, we include syntax for the type connective.
+In many cases, we show how the meta theory of Hazelnut forces our hand
+in writing these definitions, ensuring that our rules adhere to the
+broad goals associated with the meta theorems about sensibility,
+determinism, constructability and reachability~(Sec.~\ref{sec:hazel}).
+
+\paragraph{Extensions to Syntax.} 
 %
-In H-Expressions, Shapes and Z-Expressions, we include term syntax
-for the type's introduction and elimination forms, injection and case
-analysis, respectively.
+As a reminder, the introduction forms for a sum type consists of
+(tagged) \emph{injections}; here, we consider binary sums with first
+and second injections~(we write~$\hinj{i}{\hexp}$, for
+$i\in\{1,2\}$). The elimination form for a sum type consists of case
+analysis~(we write~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$).
 
+Consistent with these new forms, below we extend our previous
+syntantic forms for H-Types, H-Expressions, Z-Types, Z-Expressions and
+Shapes.
+%
+In particular, in H-Types, Z-Types, and Shapes, we include syntax
+below for the new type connective~$+$.
+%
+In H-Expressions, Z-Expressions and Shapes, we include term syntax
+below for the type's introduction and elimination forms, injection and
+case analysis, respectively.
 
-
-\begin{figure}
-{
-%\small
-Extensions to \textbf{Syntax} for Sum Types:
+%Extensions to \textbf{Syntax} for Sum Types:
 %\\[2mm]
 \begin{grammar}
 \textsf{HTyp} & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
@@ -26,7 +39,7 @@ Extensions to \textbf{Syntax} for Sum Types:
 \textsf{HExp} & $\hexp$ & \bnfas & $\cdots 
 \bnfalt \hinj{i}{\hexp}
 \bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
-\\
+\\[2mm]
 \textsf{ZTyp} & $\ztau$ & \bnfas & $\cdots \bnfalt \tsum{\ztau}{\htau} \bnfalt \tsum{\htau}{\ztau}$
 \\
 \textsf{ZExp} & $\zexp$ & \bnfas & $\cdots
@@ -35,12 +48,47 @@ Extensions to \textbf{Syntax} for Sum Types:
 \\
 && $\bnfalt$ & $\hcase{\hexp}{x}{\zexp}{y}{\hexp}
 \bnfalt\hcase{\hexp}{x}{\hexp}{y}{\zexp}$
-\\
+\\[2mm]
 \textsf{Shape} & $\varphi$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
 \end{grammar}
 %\\[2mm]
-Extensions to \textbf{Static Semantics} for Sum Types:
-\\[1mm]
+
+\paragraph{Extensions to Static Semantics.}
+Figure~\ref{fig:sum-statics} extends the statics semantics of Hazelnut
+with the static semantics of sum types.
+%
+First, we introduce the
+relation~$\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ which is a
+simple short-hand relation, analogous in spirit to the
+relation~$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$.  Each allow
+typing and action rules to match type holes with the relevant type
+constructor (when filled with holes).
+%
+Next, we extend the consistency relation~$\tcompat{\htau_1}{\htau_2}$,
+with a covariant case for sum types.
+%
+Finally, we extend the analytical typing
+judgement~$\hana{\hGamma}{\hexp}{\htau}$ with rules for introducing
+and eliminating sum types.
+%
+In both the introduction and elimination rules, we use the ``has
+matched'' relation $\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ to
+permit the sum type~$\htau_+$ to be~$\hehole$, or a specific sum type
+that uses the constructor~$\htau_1 + \htau_2$.
+%
+We adhere to the usual directionality for sum types: The introduction
+ rule \emph{checks} the term against the sum type, whereas in the
+ elimination rule, the scrutinee~$\hexp$ synthesizes the sum type, and
+ the branch arms are checked against a final return type.
+%
+
+
+\paragraph{Extensions to Action Semantics.}
+
+\begin{figure}
+{
+%Extensions to \textbf{Static Semantics} for Sum Types:
+%\\[1mm]
 \judgbox{\sumhasmatched{\htau}{\htau_1+\htau_2}}{$\htau$ has matched $\htau_1+\htau_2$}
 \begin{mathpar}
 \Infer{}{ }
@@ -80,9 +128,11 @@ Extensions to \textbf{Static Semantics} for Sum Types:
 }
 { \hana{ \hGamma }{ \hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2} }{ \htau } }
 \end{mathpar}
-\\[1mm]
-Extensions to \textbf{Action Semantics} for Sum Types:
-\\[1mm]
+\caption{Sum types: Static Semantics.}
+\label{fig:sum-statics}
+\vspace{5mm}
+%Extensions to \textbf{Action Semantics} for Sum Types:
+%\\[1mm]
 \judgbox{\performTyp{\ztau}{\alpha}{\ztau}}{(Additional type construction action:)}
 \begin{mathpar}
   \Infer{}{ }
@@ -206,7 +256,8 @@ Extensions to \textbf{Action Semantics} for Sum Types:
 
 \end{mathpar}
 }
-\caption{Hazelnut extensions for sum types: Syntax (top), Statics (middle) and Editing (bottom).}
+\caption{Sum types: Actions (Construction \& Zipper Cases).}
+\label{fig:sum-zipper}
 \end{figure}
 
 \begin{figure}
