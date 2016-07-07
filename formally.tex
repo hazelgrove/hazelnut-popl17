@@ -370,8 +370,6 @@ In some Z-expressions, the cursor is in a type ascription, so we also need a \em
 \]
 
 
-Before giving the rules for these judgements, let us state two key metatheorems. These metatheorems deeply inform the design of the rules. Their proofs, which are mechanized in Agda, are by straightforward induction, so the reader is encouraged to think about the relevant cases of these proofs as we present the rules, starting in Sec. \ref{sec:action-subsumption}.
-
 % The type action judgement appears as a premise in the rules that handle Z-expressions where the cursor is inside a . 
 % \[\begin{array}{ll}
 % %\textbf{Judgement Form} & \textbf{Description}\\
@@ -389,7 +387,9 @@ Before giving the rules for these judgements, let us state two key metatheorems.
 % \quad \text{against $\htau$}
 % \end{array}\]
 \subsubsection{Sensibility}
-The expression action judgements obey the following \emph{action sensibility} theorem:
+
+
+Before giving the rules for these judgements, let us state the key metatheorem: \emph{sensibility}. This metatheorem deeply inform the design of the rules, given starting in Sec. \ref{sec:action-subsumption}. Its proof, which is mechanized in Agda, is by straightforward induction, so the reader is encouraged to think about the relevant cases of these proofs as we present the rules. 
 \begin{theorem}[Action Sensibility]\label{thrm:actsafe} Both of the following hold:\begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
 \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$ 
    then
@@ -436,17 +436,17 @@ The expression action judgements obey the following \emph{action sensibility} th
 \label{fig:action-syntax}
 \end{figure}
 
-\subsubsection{Determinism}
-Another useful property that we maintain is \emph{action determinism}, i.e. that performing an action should produce a unique result. Formally, this is established as follows:
-\begin{theorem}[Action Determinism] All of the following hold:
-\label{thrm:actdet}
-\begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
-\item If $\performTyp{\ztau}{\alpha}{\ztau'}$ and $\performTyp{\ztau}{\alpha}{\ztau''}$ then $\ztau'=\ztau''$.
-\item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
-  $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$ and
-  $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}{\htau''}$ then
-  $\zexp' = \zexp''$ and $\htau' = \htau''$.
-% \item If all of
+% \subsubsection{Determinism}
+% Another useful property that we maintain is \emph{action determinism}, i.e. that performing an action should produce a unique result. Formally, this is established as follows:
+% \begin{theorem}[Action Determinism] All of the following hold:
+% \label{thrm:actdet}
+% \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
+% \item If $\performTyp{\ztau}{\alpha}{\ztau'}$ and $\performTyp{\ztau}{\alpha}{\ztau''}$ then $\ztau'=\ztau''$.
+% \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+%   $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$ and
+%   $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}{\htau''}$ then
+%   $\zexp' = \zexp''$ and $\htau' = \htau''$.
+% % \item If all of
 
 %   \begin{quote}
 %     \begin{enumerate}
@@ -458,14 +458,15 @@ Another useful property that we maintain is \emph{action determinism}, i.e. that
 %     \end{enumerate}
 %   \end{quote}
 %   hold, then $\zexp' = \zexp''$.
-\item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and
-  $\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}$ and
-  $\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}$ then $\zexp' =
-  \zexp''$.
-\end{enumerate}
-\end{theorem}
+% % \item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+% %   $\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}$ and
+% %   $\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}$ then $\zexp' =
+% %   \zexp''$.
+% % \end{enumerate}
+% \end{theorem}
 
-In order to maintain determinism, we will need to supplement our definition of type consistency from Figure \ref{fig:type-consistency} with a definition of \emph{type inconsistency}, written $\tincompat{\htau}{\htau'}$. One can define this notion either direrctly as the metatheoretic negation of type consistency, or as a separate inductively defined judgement. The supplement does the latter. The key rule establishes that arrow types are inconsistent with $\tnum$:
+\subsubsection{Type Inconsistency}
+In order to define the action semantics, we will need to supplement our definition of type consistency from Figure \ref{fig:type-consistency} with a definition of \emph{type inconsistency}, written $\tincompat{\htau}{\htau'}$. One can define this notion either direrctly as the metatheoretic negation of type consistency, or as a separate inductively defined judgement. The supplement does the latter. The key rule establishes that arrow types are inconsistent with $\tnum$:
 % \begin{subequations}
   % \begin{equation}
   %   \inferrule{
@@ -505,33 +506,33 @@ The bidirectional action semantics includes a subsumption rule similar to the su
   \inferrule{
     \hsyn{\hGamma}{\removeSel{\zexp}}{\htau'}\\
     \performSyn{\hGamma}{\zexp}{\htau'}{\alpha}{\zexp'}{\htau''}\\
-    \tcompat{\htau}{\htau''}\\\\
-    \zexp, \alpha~\mathsf{subsumes}
+    \tcompat{\htau}{\htau''}%\\\\
+    % \zexp, \alpha~\mathsf{subsumes}
   }{
     \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}
   }
 \end{equation}
 In other words, if the cursor erasure of the edit state synthesizes a type, then we defer to the synthetic action judgement, as long as the type of the resulting cursor erasure is consistent with the type provided for analysis.  The case involving Rule (\ref{rule:action-subsume}) in the proof of Theorem \ref{thrm:actsafe} goes through by induction and static subsumption, i.e. Rule (\ref{rule:ana-subsume}).
 
-We need to make some exceptions in this rule to maintain determinism, because certain construction actions, described in Sec. \ref{sec:construction}, behave slightly differently depending on whether a type is known. We do so by defining a simple judgement $\alpha~\mathsf{subsumes}$ that excludes these action forms:\todo{put into supp}
-\begin{subequations}
-\begin{equation}\label{rule:subsumes}
-\inferrule{
-  \alpha \neq \aConstruct{\fasc}\\
-  (\forall x) \alpha \neq \aConstruct{\flam{x}} 
-}{
-  \zexp, \alpha~\mathsf{subsumes}
-}
-\end{equation}
-\begin{equation}\label{rule:subsumes}
-\inferrule{
-  \zexp \neq \zwsel{\hexp}
-}{
-  \zexp, \alpha~\mathsf{subsumes}
-}
-\end{equation}
-\end{subequations}
-Algorithmically, this captures the notion that subsumption should be the case of last resort.
+% We need to make some exceptions in this rule to maintain determinism, because certain construction actions, described in Sec. \ref{sec:construction}, behave slightly differently depending on whether a type is known. We do so by defining a simple judgement $\alpha~\mathsf{subsumes}$ that excludes these action forms:\todo{put into supp}
+% \begin{subequations}
+% \begin{equation}\label{rule:subsumes}
+% \inferrule{
+%   \alpha \neq \aConstruct{\fasc}\\
+%   (\forall x) \alpha \neq \aConstruct{\flam{x}} 
+% }{
+%   \zexp, \alpha~\mathsf{subsumes}
+% }
+% \end{equation}
+% \begin{equation}\label{rule:subsumes}
+% \inferrule{
+%   \zexp \neq \zwsel{\hexp}
+% }{
+%   \zexp, \alpha~\mathsf{subsumes}
+% }
+% \end{equation}
+% \end{subequations}
+% Algorithmically, this captures the notion that subsumption should be the case of last resort.
 
 \subsubsection{Relative Movement}\label{sec:movement} 
 The rules below define relative movement within Z-types. They should be self-explanatory:
@@ -1278,7 +1279,7 @@ In the second case, the type provided for analysis appears in the ascription:
     \performAna{\hGamma}{\zwsel{\hexp}}{\htau}{\aConstruct{\fasc}}{\hexp : \zwsel{\htau}}
   }
 \end{equation}
-This rule should supercede the subsumption rule, so we excluded $\aConstruct{\fasc}$ from subsumption in Rule (\ref{rule:subsumes}).
+% This rule should supercede the subsumption rule, so we excluded $\aConstruct{\fasc}$ from subsumption in Rule (\ref{rule:subsumes}).
 
 \paragraph{Variables} The $\aConstruct{\fvar{x}}$ action places the variable $x$ into an empty hole. If that hole is being asked to synthesize a type, then the result synthesizes the hypothesized type:
 \begin{equation}
@@ -1312,7 +1313,7 @@ The rule above featured on Line 15 of Figure \ref{fig:second-example}.
   }
 \end{equation}
 The type ascription is necessary because lambda expressions do not synthesize a type. If the focused empty hole is being analyzed against a type with matched arrow type, then no ascription is necessary:\todo{supp}
-\begin{equation}
+\begin{equation}\label{rule:performAna-lam-1}
   \inferrule{
     \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}
   }{
@@ -1324,11 +1325,11 @@ The type ascription is necessary because lambda expressions do not synthesize a 
       {\hlam{x}{\zwsel{\hehole}}}
   }
 \end{equation}
-Because the ascription is omitted here but included in Rule (\ref{r:conelamhole}), we must exclude all $\aConstruct{\flam{x}}$ actions from subsumption in Rule (\ref{rule:subsumes}).
+% Because the ascription is omitted here but included in Rule (\ref{r:conelamhole}), we must exclude all $\aConstruct{\flam{x}}$ actions from subsumption in Rule (\ref{rule:subsumes}).
 
 Finally, if the empty hole is being analyzed against a type that has no matched arrow type, expressed in the premise as inconsistency with $\tarr{\tehole}{\tehole}$, then a lambda ascribed the type $\tarr{\tehole}{\tehole}$
 is inserted inside a hole, which defers the type inconsistency as previously discussed:\todo{supp}
-\begin{equation}
+\begin{equation}\label{rule:performAna-construct-lam-2}
   \inferrule{
     \tincompat{\htau}{\tarr{\tehole}{\tehole}}
   }{
@@ -1466,8 +1467,6 @@ To check that we have defined ``enough'' construct actions, we need to establish
 \item If $\hsyn{\hGamma}{\hexp}{\htau}$ then there exists $\bar\alpha$ such that $\performSyn{\hGamma}{\zwsel{\hhole{}}}{\tehole}{\bar\alpha}{\zwsel{\hexp}}{\htau}$.
 \end{enumerate}
 \end{theorem}
-
-Witnesses...\todo{talk about this}
 
 \subsubsection{Finishing}
 The final action we need to consider is $\aFinish$, which finishes the non-empty hole under the cursor.
