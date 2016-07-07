@@ -1,36 +1,24 @@
 % !TEX root = hazelnut-popl17.tex
 \subsection{Implementation Concepts}
-Central to any implementation of Hazelnut is a stream of edit states whose cursor erasures synthesize types according to the synthetic action judgement under an empty context, $\performSyn{\emptyset}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$. The middle row of Figure \ref{fig:impl-overview} diagrams this stream of edit states. By Theorem \ref{thrm:actsafe}, the editor does not need to typecheck each edit state (though in some of the rules, e.g. Rule (\ref{rule:zipper-asc}) which handles the situation where the type in a type ascription changes, portions of the program do need to be typechecked.) For example, the reader is encouraged to re-examine the examples in Figure \ref{fig:first-example} and \ref{fig:second-example} -- the cursor erasure of each edit state synthesizes a type.
+Central to any implementation of Hazelnut is a stream of edit states whose cursor erasures synthesize types under an empty context according to the synthetic action judgement, $\performSyn{\emptyset}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$. The middle row of Figure \ref{fig:impl-overview} diagrams this stream of edit states. By Theorem \ref{thrm:actsafe}, the editor does not need to typecheck each edit state (though in some of the rules, e.g. Rule (\ref{rule:zipper-asc}) which handles the situation where the type in a type ascription changes, portions of the program do need to be typechecked.) For example, the reader is encouraged to re-examine the examples in Figure \ref{fig:first-example} and \ref{fig:second-example} -- the cursor erasure of each edit state synthesizes a type.
 
-The programmer examines a view generated from each edit state and produces actions in some implementation-defined manner (e.g. using a keyboard, mouse, touchscreen, voice interface, or neural implant.) Each new action causes a new abstract edit state to arise according to an implementation of the action semantics. This then causes a new to arise. This is a simple event-based functional reactive programming model \cite{Wan:2000:FRP:349299.349331}. 
+The programmer examines a view generated from each edit state and produces actions in some implementation-defined manner (e.g. using a keyboard, mouse, touchscreen, voice interface, or neural implant.) Each new action causes a new abstract edit state to arise according to an implementation of the action semantics. This then causes a new view to arise. This is a simple event-based functional reactive programming model \cite{Wan:2000:FRP:349299.349331}. 
 
-If an action is not well-defined according to the action semantics, the implementation must reject it. In fact, an implementation is encouraged to present an ``action palette'' that either hides or visibly disables actions that are not well-defined (see below.)
+If an action is not well-defined according to Hazelnut's action semantics, the implementation must reject it. In fact, the implementation is encouraged to present an ``action palette'' that either hides or visibly disables actions that are not well-defined (see below.)
 
 
-
-The key question that must be answered for any implementation strategy is: how do we model a stream of actions from a user? Let us assume that these actions are chosen (using some input device, preferably, a keyboard) from some ``palette'' that never presents the user with actions that are not semantically well-defined, according to the action semantics defined earlier.
-%In a traditional editor, the input from the user is a stream of characters, and there are no guarantees that at any point that the program is syntactically well-formed, so the designer leaves editing as an .
-%In contrast, in a structure editor, the input from the user is a stream of operations.
-As such, each new action will ``atomically'' generate a new Z-expression. 
-This insight leads us to conclude that a natural way to implement this editor would be using event-based Functional Reactive Programming~\cite{Wan:2000:FRP:349299.349331} (FRP).
-Figure~\ref{fig:FRP} illustrates the concept of an FRP-based implementation of a  structure editor organized like Hazelnut.
-The input from the user is a stream of actions.  Each action results in a change to the underlying abstract model (i.e., a new Z-expression is created after each action.)
-Each model change results in an updated \emph{view} which is then presented to the user.  The user can then consider this new view when they choose a new action as input.
-
-\subsection{HZ}
-We explore the concepts presented in the paper in HZ, our implementation of Hazelnut.
-In order to reach a wide audience, we decided to implement HZ in the web browser.
-In order to take advantage of all the benefits of FRP, we chose to implement HZ using OCaml\footnote{https://ocaml.org/}, the \texttt{js\_of\_ocaml} compiler\footnote{http://ocsigen.org/js\_of\_ocaml/} and the OCaml React library\footnote{http://erratique.ch/software/react}.
-
-At the time of the writing of this paper, our implementation of HZ includes encodings of Z-expression as presented in this paper.
-We consider this ZExp to be our model. 
-HZ renders the model as a string embedded in HTML.
-Currently we support only the delete action.  Other actions are currently under development. We anticipate having a substantially more functional implementation by the time this work is presented (our focus thusfar has been on the metatheory.) 
-The work-in-progress code as well as directions for how to compile and run it can be found here: \url{https://github.com/hazelgrove/impl-tfp16}.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.90\columnwidth]{impl-overview2}
-\caption{...}
+\includegraphics[width=\columnwidth]{impl-overview2}
+\caption{Implementation Concepts}
 \label{fig:impl-overview}
 \end{figure}
+
+\subsection{HZ}
+We have developed a simple reference implementation of Hazelnut.
+In order to reach a wide audience, we decided to implement HZ in the web browser.
+In order to take advantage of a mature implementation of the FRP model, we chose to implement HZ using OCaml\footnote{https://ocaml.org/}, the \texttt{js\_of\_ocaml} compiler and associated libraries\footnote{http://ocsigen.org/js\_of\_ocaml/} and the OCaml React library\footnote{http://erratique.ch/software/react}.
+
+At the time of the writing, 
+HZ's view computation renders the model as a string embedded into HTML. The action palette is a collection of buttons and text boxes, which are disabled when an action is not well-defined or an invalid action argument is entered. We determine this by simply attempting to run the action internally and catching the exception that is raised when an action is undefined. This, of course, is not meant to score marks for usability or performance. Instead, as a simple reference implementation, we expect its source code to be of use to others who are interested in layering a more fluid user interface atop the core semantics (which have been implemented in a style that follows the presentation in this paper closely), or extensions thereof.

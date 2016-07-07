@@ -387,16 +387,16 @@ Finally, we must extend the syntax of shapes:
 \begin{grammar}
 \textsf{Shape} & $\psi$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
 \end{grammar}
-Notice that for each H-type or H-expression form, there is a corresponding shape. The injection form had a formal parameter, $i$, so the corresponding shape takes a corresponding argument (like $\fnum{n}$.) The case form included two variable binders, so the corresponding shape takes two variable arguments (like $\flam{x}$.)
+Notice that for each H-type or H-expression form, there is a corresponding shape. The injection form had a formal parameter, $i$, so the corresponding shape takes a corresponding argument (like $\fnumlit{n}$.) The case form included two variable binders, so the corresponding shape takes two variable arguments (like $\flam{x}$.)
 
 
 
 \paragraph{Statics.}
 We can now move on to the static semantics. 
 
-First, we must extend the type consistency relation as shown in Figure \ref{fig:sum-statics}, following the example of covariant type consistency rule for arrow types in Figure \ref{fig:type-consistency}. Similarly, we will need a notion of a \emph{matched sum type} spiritually analogous to the notion of a matched arrow type defined in Figure \ref{fig:type-consistency}. 
+First, we must extend the type consistency relation as shown in Figure \ref{fig:sum-statics}, following the example of covariant type consistency rule for arrow types in Figure \ref{fig:type-consistency}. Similarly, we need a notion of a \emph{matched sum type} spiritually analogous to the notion of a matched arrow type defined in Figure \ref{fig:type-consistency}. 
 
-The type analysis rules shown in Figure \ref{fig:sum-statics} are essentially standard, differing only in that instead of immediately requiring that a type be of the form $\htau_1 + \htau_2$, we use the matched sum type judgement. We combine the two injection rules for concision and define only a type analysis rule for case analysis for simplicity (see \cite{gradualizer}\todo{cite} for additional machinery that would be necessary for a synthetic rule.)
+The type analysis rules shown in Figure \ref{fig:sum-statics} are essentially standard, differing only in that instead of immediately requiring that a type be of the form $\htau_1 + \htau_2$, we use the matched sum type judgement. We combine the two injection rules for concision and define only a type analysis rule for the case form for simplicity (see \cite{gradualizer}\todo{cite} for additional machinery that would be necessary for a synthetic rule.)
 
 
 % Figure~\ref{fig:sum-statics} extends the statics semantics of Hazelnut
@@ -437,9 +437,9 @@ action semantics to support bidirectionally typed structure editing with sums.
 
 Rule (\ref{rule:construct-sum}), the construction rule for sum types, and Rules (\ref{rule:zipper-sum-left})-(\ref{rule:zipper-sum-right}), the zipper rules for sum types, follow the corresponding rules for arrow types. Were we to have missed any of these, the first clause of Theorem \ref{thrm:constructability},  i.e. Constructability, would not be conserved.
 
-Rule (\ref{rule:performAna-inj-1}) constructs an injection when the type provided for analysis has a matched sum type. This is analagous to Rule (\ref{rule:performAna-lam-1}) for lambdas. Rule (\ref{rule:performAna-inj-2}) constructs an injection when the type provided for analysis is not consistent with sum types. This is analagous to Rule (\ref{rule:performAna-construct-lam-2}) for lambdas. Rule \ref{rule:performAna-case} is a straightforward rule for constructing case expressions in empty holes. Rules (\ref{rule:zipper-inj})-(\ref{rule:zipper-case-3}) are the zipper cases, which follow the structure of the statics. Finally, we also define a single new synthetic action rule, Rule (\ref{rule:performSyn-inj}), which allows for the construction of an injection in synthetic position, with automatic insertion of an ascription. This is analagous to Rule (\ref{r:conelamhole}). If we had defined any of these rules incorrectly, the Sensibility Theorem (Theorem \ref{thrm:actsafe}) would not be conserved. Had we forgotten any of these rules, the Constructability Theorem (Theorem \ref{thrm:constructability}) would not be conserved. 
+Rule (\ref{rule:performAna-inj-1}) constructs an injection when the type provided for analysis has a matched sum type. This is analagous to Rule (\ref{rule:performAna-lam-1}) for lambdas. Rule (\ref{rule:performAna-inj-2}) constructs an injection when the type provided for analysis is not consistent with sum types. This is analagous to Rule (\ref{rule:performAna-construct-lam-2}) for lambdas. Rule (\ref{rule:performAna-case}) is a straightforward rule for constructing case expressions in empty holes. Rules (\ref{rule:zipper-inj})-(\ref{rule:zipper-case-3}) are the zipper cases, which follow the structure of the statics. Finally, we also define a single new synthetic action rule, Rule (\ref{rule:performSyn-inj}), which allows for the construction of an injection in synthetic position, with automatic insertion of an ascription. This is analagous to Rule (\ref{r:conelamhole}). If we had defined any of these rules incorrectly, the Sensibility Theorem (Theorem \ref{thrm:actsafe}) would not be conserved. Had we forgotten any of these rules, the Constructability Theorem (Theorem \ref{thrm:constructability}) would not be conserved. 
 
-Figure \ref{fig:sum-move} gives the relevant movement axioms. For concision and clarity, we write these movement action axioms in tabular form. Had we made a mistake in any of these rules, the Movement Erasure Invariance theorem (Theorem \ref{lemma:movement-erasure}) would not be conserved. Had we forgotten any of these rules, the Reachability Theorem (Theorem \ref{thrm:reachability}) would not be conserved.
+Figure \ref{fig:sum-move} gives the relevant movement axioms. For concision and clarity, we write these axioms in tabular form. Had we made a mistake in any of these rules, the Movement Erasure Invariance theorem (Theorem \ref{lemma:movement-erasure}) would not be conserved. Had we forgotten any of these rules, the Reachability Theorem (Theorem \ref{thrm:reachability}) would not be conserved.
 
 \iffalse
 \begin{displaymath}
