@@ -22,7 +22,7 @@ In this section, we will conservatively extend Hazelnut with binary {sum types} 
 \paragraph{Syntax.} 
 %
 The first step is to extend the syntax of H-types and H-expressions 
-with the familiar forms \cite{pfpl}:\vsoace{-3px}
+with the familiar forms \cite{pfpl}:\vspace{-3px}
 \begin{grammar}
 \textsf{HTyp} & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
 \\
@@ -264,7 +264,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \end{figure}
 
 \begin{figure}
-\judgbox{\performMove{\zexp}{\aMove{\delta}}{\zexp'}}{(Additional type movement rules:)}
+\judgbox{\performMove{\ztau}{\aMove{\delta}}{\ztau'}}{(Additional type movement rules:)}
 \begin{displaymath}
 \begin{array}{@{}rcl}
   %\multicolumn{3}{l}{\textbf{Movement Actions for Sum Type Forms}:}
