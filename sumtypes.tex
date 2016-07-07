@@ -57,14 +57,14 @@
 %\\[1mm]
 \judgbox{\performTyp{\ztau}{\alpha}{\ztau}}{(Additional type actions:)}\vspace{-5px}
 \begin{subequations}
-\begin{equation}
+\begin{equation}\label{rule:construct-sum}
   \inferrule{ }
 {
   \performTyp{\zwsel{\htau}}{\aConstruct{\fsum}}
              {\tsum{{\htau}}{\zwsel{\hehole}}}
 }
 \end{equation}
- \begin{equation}
+ \begin{equation}\label{rule:zipper-sum-left}
     %\label{r:contarrL}
   \inferrule{
     \performTyp{\ztau}{\alpha}{\ztau'}
@@ -78,7 +78,7 @@
     }
   }
 \end{equation}
-  \begin{equation}
+  \begin{equation}\label{rule:zipper-sum-right}
     %\label{r:contarrR}
   \inferrule{
     \performTyp{\ztau}{\alpha}{\ztau'}
@@ -96,7 +96,7 @@
 \judgbox{\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}}
 {(Additional analytic actions:)}
 \begin{subequations}
-\begin{equation}
+\begin{equation}\label{rule:performAna-inj-1}
   \inferrule{ \sumhasmatched{\htau_{+}}{\tsum{\hehole}{\hehole}} }
   {
   \performAna{\hGamma}{\zwsel{\hehole}}
@@ -105,7 +105,7 @@
               {\hinj{i}{\zwsel{\hehole}}}
   }
 \end{equation}
-\begin{equation}
+\begin{equation}\label{rule:performAna-inj-2}
   \inferrule{ \tincompat{\htau}{ \tsum{\hehole}{\hehole} } }
         {
   \performAna{\hGamma}{\zwsel{\hehole}}
@@ -117,7 +117,7 @@
               }}              
         }
 \end{equation}
-\begin{equation}
+\begin{equation}\label{rule:performAna-case}
   \inferrule{ }{
   \performAna{\hGamma}{\zwsel{\hehole}}
               {\htau}
@@ -125,7 +125,7 @@
               {\hcase{\zwsel{\hehole}}{x}{\hehole}{y}{\hehole}}
   }
 \end{equation}
-\begin{equation}
+\begin{equation}\label{rule:zipper-inj}
 %% Inj -- Editing injected expression
 \inferrule
 {
@@ -140,7 +140,7 @@
   {\hinj{i}{\zexp' }}
 }~\text{$(i\in\{1,2\})$}
 \end{equation}
-\begin{equation}
+\begin{equation}\label{rule:zipper-case-1}
 %% Case -- Editing scrutinee
 \inferrule
 {
@@ -171,7 +171,7 @@
   {\hcase{\zexp'}{x}{\hexp_1}{y}{\hexp_2}}
 }
 \end{equation}
-\begin{equation}
+\begin{equation}\label{rule:zipper-case-2}
 %% Case -- Editing first branch arm
 \inferrule
 {
@@ -191,7 +191,7 @@
   {\hcase{\hexp}{x}{\zexp_1'}{y}{\hexp_2}}
 }
 \end{equation}
-\begin{equation}
+\begin{equation}\label{rule:zipper-case-3}
 %% Case -- Editing second branch arm
 \inferrule
 {
@@ -215,7 +215,7 @@
 \end{subequations}
 \judgbox{\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}}
 {(Additional synthetic actions:)}\vspace{-5px}
-\begin{equation}
+\begin{equation}\label{rule:performSyn-inj}
 %% Case -- Editing second branch arm
 \inferrule
 { }{
@@ -228,7 +228,7 @@
   {\tehole + \tehole}
 }
 \end{equation}
-\caption{Construction \& zipper actions for sums.}
+\caption{The construction \& zipper action rules for sums.}
 \label{fig:sum-action}
 }
 \end{figure}
@@ -427,6 +427,11 @@ The type analysis rules shown in Figure \ref{fig:sum-statics} are essentially st
 Figures~\ref{fig:sum-action} and \ref{fig:sum-move} extend Hazelnut's
 action semantics to support bidirectionally typed structure editing with sums.
 %
+
+Rule (\ref{rule:construct-sum}), the construction rule for sum types, and Rules (\ref{rule:zipper-sum-left})-(\ref{rule:zipper-sum-right}), the zipper rules for sum types, follow the corresponding rules for arrow types. Were we to have missed any of these, the first clause of Theorem \ref{thrm:constructability},  i.e. Constructability, would not be conserved.
+
+Rule (\ref{rule:performAna-inj-1}) constructs an injection in analytic position when the type provided for analysis has a matched sum type. 
+
 Conceptually, these extensions consist of four parts:
 \begin{enumerate}
 \item 

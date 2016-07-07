@@ -506,7 +506,7 @@ The bidirectional action semantics includes a subsumption rule similar to the su
     \hsyn{\hGamma}{\removeSel{\zexp}}{\htau'}\\
     \performSyn{\hGamma}{\zexp}{\htau'}{\alpha}{\zexp'}{\htau''}\\
     \tcompat{\htau}{\htau''}\\\\
-    \alpha~\mathsf{subsumes}
+    \zexp, \alpha~\mathsf{subsumes}
   }{
     \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}
   }
@@ -514,14 +514,23 @@ The bidirectional action semantics includes a subsumption rule similar to the su
 In other words, if the cursor erasure of the edit state synthesizes a type, then we defer to the synthetic action judgement, as long as the type of the resulting cursor erasure is consistent with the type provided for analysis.  The case involving Rule (\ref{rule:action-subsume}) in the proof of Theorem \ref{thrm:actsafe} goes through by induction and static subsumption, i.e. Rule (\ref{rule:ana-subsume}).
 
 We need to make some exceptions in this rule to maintain determinism, because certain construction actions, described in Sec. \ref{sec:construction}, behave slightly differently depending on whether a type is known. We do so by defining a simple judgement $\alpha~\mathsf{subsumes}$ that excludes these action forms:\todo{put into supp}
+\begin{subequations}
 \begin{equation}\label{rule:subsumes}
 \inferrule{
   \alpha \neq \aConstruct{\fasc}\\
   (\forall x) \alpha \neq \aConstruct{\flam{x}} 
 }{
-  \alpha~\mathsf{subsumes}
+  \zexp, \alpha~\mathsf{subsumes}
 }
 \end{equation}
+\begin{equation}\label{rule:subsumes}
+\inferrule{
+  \zexp \neq \zwsel{\hexp}
+}{
+  \zexp, \alpha~\mathsf{subsumes}
+}
+\end{equation}
+\end{subequations}
 Algorithmically, this captures the notion that subsumption should be the case of last resort.
 
 \subsubsection{Relative Movement}\label{sec:movement} 
@@ -1450,7 +1459,7 @@ The $\fnehole$ shape is grayed out in Figure \ref{fig:action-syntax} because we 
 
 \paragraph{Constructability}
 To check that we have defined ``enough'' construct actions, we need to establish that we can start from an empty hole and arrive at any well-typed expression with, for simplicity, the cursor on the outside (Lemma \ref{lemma:reach-down} allows us to then move the cursor anywhere else.) As with reachability, we rely on the iterated action judgements defined in Figure \ref{fig:multistep}.
-\begin{theorem}[Constructability] ~
+\begin{theorem}[Constructability]\label{thrm:constructability} ~
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
 \item For every $\htau$ there exists $\bar\alpha$ such that $\performTyp{\zwsel{\tehole}}{\bar\alpha}{\zwsel{\htau}}$.
 \item If $\hana{\hGamma}{\hexp}{\htau}$ then there exists $\bar\alpha$ such that $\performAna{\hGamma}{\zwsel{\hhole{}}}{\htau}{\bar\alpha}{\zwsel{\hexp}}$.
