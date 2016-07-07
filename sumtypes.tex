@@ -1,3 +1,4 @@
+% !TEX root = hazelnut-popl17.tex
 \newcounter{sumtypedef}
 \stepcounter{equation}
 \renewcommand{\thesumtypedef}{\theequation\alph{sumtypedef}}
@@ -9,15 +10,6 @@
 {
 %Extensions to \textbf{Static Semantics} for Sum Types:
 %\\[1mm]
-\judgbox{\sumhasmatched{\htau}{\htau_1+\htau_2}}{$\htau$ has matched $\htau_1+\htau_2$}
-\begin{mathpar}
-\Infer{}{ }
-{\sumhasmatched{\hehole}{\hehole + \hehole}}
-\and
-\Infer{}{ }
-{\sumhasmatched{\htau_1 + \htau_2}{\htau_1 + \htau_2}}
-\end{mathpar}
-
 \judgbox{\tcompat{\htau_1}{\htau_2}}{(Additional type consistency form:)}
 \begin{mathpar}
   \Infer{}{
@@ -28,27 +20,38 @@
    {\tcompat{\htau_1 + \htau_2}{\htau_1' + \htau_2'}}
 \end{mathpar}
 
-\judgbox{\hana{\hGamma}{\hexp}{\htau}}{(Additional analytical typing forms:)}
+\judgbox{\sumhasmatched{\htau}{\htau_1+\htau_2}}{$\htau$ has matched sum type $\htau_1+\htau_2$}
 \begin{mathpar}
-\Infer{\Define{ana-inj}}
-{ \hana{ \hGamma }{ \hexp }{ \htau_i }~~(i\in\{1,2\})
-  \\
-  \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}
-}
-{ \hana{ \hGamma }{ \hinj{i}{\hexp} }{ \htau_{+} } }
+\Infer{}{ }
+{\sumhasmatched{\htau_1 + \htau_2}{\htau_1 + \htau_2}}
 \and
-\Infer{\Define{ana-case}}
+\Infer{}{ }
+{\sumhasmatched{\hehole}{\hehole + \hehole}}
+\end{mathpar}
+
+\judgbox{\hana{\hGamma}{\hexp}{\htau}}{(Additional type analysis rules:)}
+\begin{subequations}
+\begin{equation}
+\inferrule{ 
+  \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}\\
+  \hana{ \hGamma }{ \hexp }{ \htau_i }%~~(i\in\{1,2\})
+}
+{ \hana{ \hGamma }{ \hinj{i}{\hexp} }{ \htau_{+} } }~\text{$(i \in \{1, 2\})$}
+\end{equation}
+\begin{equation}
+\inferrule%{\Define{ana-case}}
 { \hsyn{ \hGamma }{ \hexp }{ \htau_{+} }
   \\
   \sumhasmatched{\htau_{+}}{\tsum{\htau_1}{\htau_2}}
-  \\
+  \\\\
   \hana{ \hGamma, x:\htau_1 }{ \hexp_1 }{ \htau }
   \\
   \hana{ \hGamma, y:\htau_2 }{ \hexp_2 }{ \htau }
 }
 { \hana{ \hGamma }{ \hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2} }{ \htau } }
-\end{mathpar}
-\caption{Sum types: Static Semantics.}
+\end{equation}
+\end{subequations}
+\caption{The statics of sums.}
 \label{fig:sum-statics}
 \vspace{5mm}
 %Extensions to \textbf{Action Semantics} for Sum Types:
@@ -269,49 +272,45 @@
 \end{figure}
 
 
+%A typed lambda calculus with numbers is not, by itself, useful for software development.
+In this section, we will conservatively extend Hazelnut with binary {sum types} to demonstrate how the rules and the rich metatheory developed in the previous section serve to guide and constrain this and other such efforts. 
+% %
+% Below, we consider how this familiar language form impacts the
+% definitions of Hazelnut's core calculus.
+% %
+% In many cases, we show how the meta theory of Hazelnut forces our hand
+% in writing these definitions, ensuring that our rules adhere to the
+% broad goals associated with the meta theorems about sensibility,
+% determinism, constructability and reachability~(Sec.~\ref{sec:hazel}).
 
-
-
-In this section, we enrich the core calculus of Hazelnut with an
-additional type constructor for (binary) \emph{sum types}, often
-written~$\tau_1 + \tau_2$.
+\paragraph{Syntax.} 
 %
-Below, we consider how this familiar language form impacts the
-definitions of Hazelnut's core calculus.
-%
-In many cases, we show how the meta theory of Hazelnut forces our hand
-in writing these definitions, ensuring that our rules adhere to the
-broad goals associated with the meta theorems about sensibility,
-determinism, constructability and reachability~(Sec.~\ref{sec:hazel}).
-
-\paragraph{Extensions to Syntax.} 
-%
-As a reminder, the introduction forms for a sum type consists of
-(tagged) \emph{injections}; here, we consider binary sums with first
-and second injections~(we write~$\hinj{i}{\hexp}$, for
-$i\in\{1,2\}$). The elimination form for a sum type consists of case
-analysis~(we write~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$).
-
-Consistent with these new forms, below we extend our previous
-syntantic forms for H-Types, H-Expressions, Z-Types, Z-Expressions and
-Shapes.
-%
-In particular, in H-Types, Z-Types, and Shapes, we include syntax
-below for the new type connective~$+$.
-%
-In H-Expressions, Z-Expressions and Shapes, we include term syntax
-below for the type's introduction and elimination forms, injection and
-case analysis, respectively.
-
-%Extensions to \textbf{Syntax} for Sum Types:
-%\\[2mm]
+The first step is to extend the syntax of H-types and H-expressions 
+with the familiar forms \cite{pfpl}:
 \begin{grammar}
 \textsf{HTyp} & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
 \\
 \textsf{HExp} & $\hexp$ & \bnfas & $\cdots 
 \bnfalt \hinj{i}{\hexp}
 \bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
-\\[2mm]
+\end{grammar}
+Recall that binary sum types introduce a new type-level connective, $\htau_1 + \htau_2$. The introductory forms are the \emph{injections}, $\hinj{i}{\hexp}$; 
+here, we consider only binary sums, so $i\in\{1,2\}$. 
+The elimination form is case
+analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
+
+Next, we must correspondingly extend the syntax of Z-types and Z-expressions, following Huet's zipper pattern \cite{JFP::Huet1997}: 
+%
+% In particular, in H-Types, Z-Types, and Shapes, we include syntax
+% below for the new type connective~$+$.
+% %
+% In H-Expressions, Z-Expressions and Shapes, we include term syntax
+% below for the type's introduction and elimination forms, injection and
+% case analysis, respectively.
+
+%Extensions to \textbf{Syntax} for Sum Types:
+%\\[2mm]
+\begin{grammar}
 \textsf{ZTyp} & $\ztau$ & \bnfas & $\cdots \bnfalt \tsum{\ztau}{\htau} \bnfalt \tsum{\htau}{\ztau}$
 \\
 \textsf{ZExp} & $\zexp$ & \bnfas & $\cdots
@@ -320,12 +319,31 @@ case analysis, respectively.
 \\
 && $\bnfalt$ & $\hcase{\hexp}{x}{\zexp}{y}{\hexp}
 \bnfalt\hcase{\hexp}{x}{\hexp}{y}{\zexp}$
-\\[2mm]
-\textsf{Shape} & $\varphi$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
 \end{grammar}
+Notice that for each H-type or H-expression form of arity $n$, there are $n$ corresponding Z-type or Z-expression forms, each of which has a single ``hatted'' subterm. The remaining subterms are ``dotted''. We must also extend the definition of cursor erasure, e.g. for types:
+\begin{align*}
+\removeSel{(\ztau + \htau)} & = \removeSel{\ztau} + \htau\\
+\removeSel{(\htau + \ztau)} & = \htau + \removeSel{\ztau}
+\end{align*}
+The rules for Z-expressions are analagous (see supplement.)\todo{supp}
+
+Finally, we must extend the syntax of shapes:
 %\\[2mm]
+\begin{grammar}
+\textsf{Shape} & $\psi$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
+\end{grammar}
+Notice that for each H-type or H-expression form, there is a corresponding shape. The injection form had a formal parameter, $i$, so the corresponding shape takes a corresponding argument (like $\fnum{n}$.) The case form included two variable binders, so the corresponding shape takes two variable arguments (like $\flam{x}$.)
+
+
 
 \paragraph{Extensions to Static Semantics.}
+We can now move on to the static semantics. 
+
+First, we must extend the type consistency relation as shown in Figure \ref{fig:sum-statics}, following the example of type consistency for arrow types in Figure \ref{fig:type-consistency}. Similarly, we will need a notion of a \emph{matched sum type} directly analagous to the notion of a matched arrow type defined in Figure \ref{fig:type-consistency}. 
+
+The type analysis rules shown in Figure \ref{fig:sum-statics} are essentially standard, differing only in that rather than directly matching on the structure of sum types, we use the matched sum type judgement.
+
+
 Figure~\ref{fig:sum-statics} extends the statics semantics of Hazelnut
 with the static semantics of sum types.
 %

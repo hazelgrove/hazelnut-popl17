@@ -1494,7 +1494,38 @@ If the non-empty hole appears in synthetic position, then it can always be finis
 \end{equation}
 \end{subequations}
 
-\subsubsection{Zipper Cases}\label{sec:zipper-cases} The rules defined so far handle the base cases, i.e. the cases where the action has ``reached'' the expression under the cursor. We also need to define the recursive cases, which propagate the action into the subtree where the cursor appears, as encoded by the zipper structure. These rules essentially follow the structure of the corresponding rules in the statics.
+\subsubsection{Zipper Cases}\label{sec:zipper-cases} The rules defined so far handle the base cases, i.e. the cases where the action has ``reached'' the expression under the cursor. We also need to define the recursive cases, which propagate the action into the subtree where the cursor appears, as encoded by the zipper structure. For types, the zipper rules are straightforward:
+\begin{subequations}
+\begin{equation}
+    %\label{r:contarrL}
+  \inferrule{
+    \performTyp{\ztau}{\alpha}{\ztau'}
+  }{
+    \performTyp{
+      \tarr{\ztau}{\htau}
+    }{
+      \alpha
+    }{
+      \tarr{\ztau'}{\htau}
+    }
+  }
+\end{equation}
+  \begin{equation}
+    %\label{r:contarrR}
+  \inferrule{
+    \performTyp{\ztau}{\alpha}{\ztau'}
+  }{
+    \performTyp{
+      \tarr{\htau}{\ztau}
+    }{
+      \alpha
+    }{
+      \tarr{\htau}{\ztau'}
+    }
+  }
+\end{equation}
+\end{subequations}
+For expressions, the zipper rules essentially follow the structure of the corresponding rules in the statics.
 
 \begin{subequations}
 For example, when the cursor is in the body of a lambda expression, the zipper case mirrors Rule (\ref{rule:syn-lam}):\todo{supp}
