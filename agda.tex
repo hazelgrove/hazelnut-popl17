@@ -1,12 +1,12 @@
 % !TEX root = hazelnut-popl17.tex
 So far, we have given an overview of the most important judgements and rules in
-the semantics of Hazelnut, and stated the important metatheorems. In a few
+the semantics of Hazelnut, and stated the critical metatheorem, Sensibility, and several auxiliary ``checksum'' metatheorems. In a few
 cases, we have informally sketched out why these metatheorems will hold. In order to formally establish that our design meets our stated objectives, we
-have mechanized the semantics and metatheory of Hazelnut using the Agda proof assistant \cite{norell:thesis}. We 
+have mechanized the semantics of Hazelnut using the Agda proof assistant \cite{norell:thesis}. We 
 refer readers unfamiliar with Agda to the Agda Wiki, hosted
 at \url{http://wiki.portal.chalmers.se/agda/}.
 
-This development is available in the supplemental material. At the time of submission, all of the rules as well as the proofs of Theorem \ref{thrm:actsafe} and Theorem \ref{thrm:actdet} (including the proofs a number of technical lemmas that we elided here) are complete.\todo{rest of it}
+This development is available in the supplemental material. At the time of submission, the full set of rules is available and the proofs of Theorem \ref{thrm:actsafe}, Theorem \ref{lemma:movement-erasure} and a number of technical lemmas that we elided or mentioned informally in the text are complete. We also have nearly all of the cases of Reachability and Constructability complete (and see no major barrier to the remaining cases -- they are simply tedious.) \todo{include link to repos in non-anonymous supplementals}\todo{talk about determinism either here or there}
 
 The documentation 
 includes a more detailed discussion of the technical representation

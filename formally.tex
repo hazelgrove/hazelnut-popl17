@@ -466,7 +466,7 @@ Before giving the rules for these judgements, let us state the key metatheorem: 
 % \end{theorem}
 
 \subsubsection{Type Inconsistency}
-In order to define the action semantics, we will need to supplement our definition of type consistency from Figure \ref{fig:type-consistency} with a definition of \emph{type inconsistency}, written $\tincompat{\htau}{\htau'}$. One can define this notion either direrctly as the metatheoretic negation of type consistency, or as a separate inductively defined judgement. The supplement does the latter. The key rule establishes that arrow types are inconsistent with $\tnum$:
+In some of the rules below, we will need to supplement our definition of type consistency from Figure \ref{fig:type-consistency} with a definition of \emph{type inconsistency}, written $\tincompat{\htau}{\htau'}$. One can define this notion either directly as the metatheoretic negation of type consistency, or as a separate inductively defined judgement. The supplement does the latter. The key rule establishes that arrow types are inconsistent with $\tnum$:
 % \begin{subequations}
   % \begin{equation}
   %   \inferrule{
@@ -501,7 +501,7 @@ The mechanization proves that this judgemental definition of type inconsistency 
 
 \subsubsection{Action Subsumption}\label{sec:action-subsumption}
 
-The bidirectional action semantics includes a subsumption rule similar to the subsumption rule, Rule (\ref{rule:ana-subsume}), in the statics:
+The action semantics includes a subsumption rule similar to the subsumption rule, Rule (\ref{rule:ana-subsume}), in the statics:
 \begin{equation}\label{rule:action-subsume}
   \inferrule{
     \hsyn{\hGamma}{\removeSel{\zexp}}{\htau'}\\
@@ -512,7 +512,7 @@ The bidirectional action semantics includes a subsumption rule similar to the su
     \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}
   }
 \end{equation}
-In other words, if the cursor erasure of the edit state synthesizes a type, then we defer to the synthetic action judgement, as long as the type of the resulting cursor erasure is consistent with the type provided for analysis.  The case involving Rule (\ref{rule:action-subsume}) in the proof of Theorem \ref{thrm:actsafe} goes through by induction and static subsumption, i.e. Rule (\ref{rule:ana-subsume}).
+In other words, if the cursor erasure of the edit state synthesizes a type, then we defer to the synthetic action judgement, as long as the type of the resulting cursor erasure is consistent with the type provided for analysis.  The case involving Rule (\ref{rule:action-subsume}) in the proof of Theorem \ref{thrm:actsafe} goes through by induction and static subsumption, i.e. Rule (\ref{rule:ana-subsume}). Algorithmically, subsumption should be the rule of last resort.
 
 % We need to make some exceptions in this rule to maintain determinism, because certain construction actions, described in Sec. \ref{sec:construction}, behave slightly differently depending on whether a type is known. We do so by defining a simple judgement $\alpha~\mathsf{subsumes}$ that excludes these action forms:\todo{put into supp}
 % \begin{subequations}
@@ -1015,13 +1015,13 @@ Again, additional rules are needed to recurse into the zipper structure, but we 
 
 The rules above are numerous and fairly uninteresting. That makes them quite hazardous -- we might make a mistake absent-mindedly. One check against this is to prove a lemma that establishes that movement actions move the cursor but do not change the cursor erasure.
 
-\begin{lemma}[Movement Erasure Invariance]\label{lemma:movement-erasure} ~
+\begin{theorem}[Movement Erasure Invariance]\label{lemma:movement-erasure} ~
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px] 
 \item If $\performMove{\ztau}{\aMove{\delta}}{\ztau'}$ then $\removeSel{\ztau}=\removeSel{\ztau'}$.
 \item If $\performMove{\zexp}{\aMove{\delta}}{\zexp'}$ then $\removeSel{\zexp}=\removeSel{\zexp'}$.
 \end{enumerate}
-\end{lemma}
-\noindent Lemma \ref{lemma:movement-erasure} is useful also in that the relevant cases of Theorem \ref{thrm:actsafe} are straightforward by its application.
+\end{theorem}
+\noindent Theorem \ref{lemma:movement-erasure} is useful also in that the relevant cases of Theorem \ref{thrm:actsafe} are straightforward by its application.
 
 Another useful check is to establish \emph{reachability}, i.e. that it is possible, through a sequence of movement actions, to move the cursor from any position to any other position within a well-typed H-expression. 
 
@@ -1102,7 +1102,7 @@ Lemma \ref{lemma:reach-down} establishes that you can always move the cursor fro
 \item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ nand $\performSyn{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}{\htau}$.
 \end{enumerate}
 \end{lemma}
-Theorem \ref{thrm:reachability} follows by straightforward composition of these two lemmas. (The witness to the existential is not, of course, the shortest path between any two cursor locations.)
+Theorem \ref{thrm:reachability} follows by straightforward composition of these two lemmas. %(The witness to the existential is not, of course, the shortest path between any two cursor locations.)
 
 % \paragraph{Reachability}
 
@@ -1266,7 +1266,7 @@ The $\aConstruct{\fnum}$ action replaces an empty type hole under the cursor wit
 
 \begin{subequations}
 
-\paragraph{Ascription} Moving on to expression actions, we start to see some more interesting rules. The $\aConstruct{\fasc}$ action operates differently depending on whether the H-expression under the cursor synthesizes a type or is being analyzed against a type. In the first case, the synthesized type appears in the ascription:
+\paragraph{Ascription} The $\aConstruct{\fasc}$ action operates differently depending on whether the H-expression under the cursor synthesizes a type or is being analyzed against a type. In the first case, the synthesized type appears in the ascription:
 \begin{equation}
   \label{r:constructasc}
   \inferrule{ }{
@@ -1312,7 +1312,7 @@ The rule above featured on Line 15 of Figure \ref{fig:second-example}.
       {\tarr{\tehole}{\tehole}}
   }
 \end{equation}
-The type ascription is necessary because lambda expressions do not synthesize a type. If the focused empty hole is being analyzed against a type with matched arrow type, then no ascription is necessary:\todo{supp}
+The type ascription is necessary because lambda expressions do not synthesize a type. If the empty hole is being analyzed against a type with matched arrow type, then no ascription is necessary:\todo{supp}
 \begin{equation}\label{rule:performAna-lam-1}
   \inferrule{
     \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}
@@ -1536,7 +1536,7 @@ If the non-empty hole appears in synthetic position, then it can always be finis
 For expressions, the zipper rules essentially follow the structure of the corresponding rules in the statics.
 
 \begin{subequations}
-For example, when the cursor is in the body of a lambda expression, the zipper case mirrors Rule (\ref{rule:syn-lam}):\todo{supp}
+In particular, when the cursor is in the body of a lambda expression, the zipper case mirrors Rule (\ref{rule:syn-lam}):\todo{supp}
 \begin{equation}
 \inferrule{
   \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
@@ -1578,7 +1578,7 @@ When the cursor is in the expression position of an ascription, we use the analy
 
 
 When the focus is in the type position of an ascription, we must re-check the ascribed expression because the cursor erasure might have changed (in practice, one would optimize this check to only occur if the cursor erasure did change):
-\begin{equation}
+\begin{equation}\label{rule:zipper-asc}
 \inferrule{
   \performTyp{\ztau}{\alpha}{\ztau'}\\
   \hana{\hGamma}{\hexp}{\removeSel{\ztau'}}

@@ -1,17 +1,7 @@
 % !TEX root = hazelnut-popl17.tex
 \subsection{Implementation Concepts}
+Central to any implementation of Hazelnut is a stream of edit states whose cursor erasures synthesize types according to the synthetic action judgement under an empty context, $\performSyn{\emptyset}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$. The middle row of Figure \ref{fig:impl-overview} diagrams this stream of edit states. By Theorem \ref{thrm:actsafe}, the editor does not need to typecheck each edit state (though in some of the rules, e.g. Rule (\ref{rule:zipper-asc}) which handles the situation where the type in a type ascription changes, portions of the program do need to be typechecked.) For example, the reader is encouraged to re-examine the examples in Figure \ref{fig:first-example} and \ref{fig:second-example} -- the cursor erasure of each edit state synthesizes a type. 
 
-
-
-
-
-
-
-
-
-
-
-\todo{make figure take up only one column}\todo{change terminology in figure}\todo{revise}
 The key question that must be answered for any implementation strategy is: how do we model a stream of actions from a user? Let us assume that these actions are chosen (using some input device, preferably, a keyboard) from some ``palette'' that never presents the user with actions that are not semantically well-defined, according to the action semantics defined earlier.
 %In a traditional editor, the input from the user is a stream of characters, and there are no guarantees that at any point that the program is syntactically well-formed, so the designer leaves editing as an .
 %In contrast, in a structure editor, the input from the user is a stream of operations.
@@ -31,10 +21,6 @@ We consider this ZExp to be our model.
 HZ renders the model as a string embedded in HTML.
 Currently we support only the delete action.  Other actions are currently under development. We anticipate having a substantially more functional implementation by the time this work is presented (our focus thusfar has been on the metatheory.) 
 The work-in-progress code as well as directions for how to compile and run it can be found here: \url{https://github.com/hazelgrove/impl-tfp16}.
-
-A substantially simpler system that we developed while exploring the ideas that led to Hazelnut can be found at the following URL:
-\url{http://www.cs.cmu.edu/~comar/nestedpairs/}.
-
 
 \begin{figure}
 \centering
