@@ -22,14 +22,14 @@ In this section, we will conservatively extend Hazelnut with binary {sum types} 
 \paragraph{Syntax.} 
 %
 The first step is to extend the syntax of H-types and H-expressions 
-with the familiar forms \cite{pfpl}:
+with the familiar forms \cite{pfpl}:\vsoace{-3px}
 \begin{grammar}
 \textsf{HTyp} & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
 \\
 \textsf{HExp} & $\hexp$ & \bnfas & $\cdots 
 \bnfalt \hinj{i}{\hexp}
 \bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
-\end{grammar}
+\end{grammar}\vspace{-3px}
 Recall that binary sum types introduce a new type-level connective, $\htau_1 + \htau_2$. The introductory forms are the \emph{injections}, $\hinj{i}{\hexp}$; 
 here, we consider only binary sums, so $i\in\{1,2\}$. 
 The elimination form is case
@@ -380,7 +380,13 @@ Notice that for each H-type or H-expression form of arity $n$, there are $n$ cor
 \removeSel{(\ztau + \htau)} & = \removeSel{\ztau} + \htau\\
 \removeSel{(\htau + \ztau)} & = \htau + \removeSel{\ztau}
 \end{align*}
-The rules for Z-expressions are analagous (see supplement.)\todo{supp}
+The rules for Z-expressions are analagous:
+\begin{align*}
+\removeSel{\hinj{i}{\zexp}} & = \hinj{i}{\removeSel{\zexp}}\\
+\removeSel{\hcase{\zexp}{x}{\hexp_1}{y}{\hexp_2}} & = \hcase{\removeSel{\zexp}}{x}{\hexp_1}{y}{\hexp_2}\\
+\removeSel{\hcase{\hexp}{x}{\zexp_1}{y}{\hexp_2}} & = \hcase{\hexp}{x}{\removeSel{\zexp_1}}{y}{\hexp_2}\\
+\removeSel{\hcase{\hexp}{x}{\hexp_1}{y}{\zexp_2}} & = \hcase{\hexp}{x}{\hexp_1}{y}{\removeSel{\zexp_2}}
+\end{align*} 
 
 Finally, we must extend the syntax of shapes:
 %\\[2mm]
@@ -396,7 +402,7 @@ We can now move on to the static semantics.
 
 First, we must extend the type consistency relation as shown in Figure \ref{fig:sum-statics}, following the example of covariant type consistency rule for arrow types in Figure \ref{fig:type-consistency}. Similarly, we need a notion of a \emph{matched sum type} spiritually analogous to the notion of a matched arrow type defined in Figure \ref{fig:type-consistency}. 
 
-The type analysis rules shown in Figure \ref{fig:sum-statics} are essentially standard, differing only in that instead of immediately requiring that a type be of the form $\htau_1 + \htau_2$, we use the matched sum type judgement. We combine the two injection rules for concision and define only a type analysis rule for the case form for simplicity (see \cite{gradualizer}\todo{cite} for additional machinery that would be necessary for a synthetic rule.)
+The type analysis rules shown in Figure \ref{fig:sum-statics} are essentially standard, differing only in that instead of immediately requiring that a type be of the form $\htau_1 + \htau_2$, we use the matched sum type judgement. We combine the two injection rules for concision and define only a type analysis rule for the case form for simplicity (see \cite{DBLP:conf/popl/CiminiS16} for additional machinery that would be necessary for a synthetic rule.)
 
 
 % Figure~\ref{fig:sum-statics} extends the statics semantics of Hazelnut

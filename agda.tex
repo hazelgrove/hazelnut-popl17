@@ -5,7 +5,7 @@ cases, we have informally sketched out why these metatheorems will hold. In orde
 have mechanized the semantics of Hazelnut using the Agda proof assistant \cite{norell:thesis} (also see the Agda Wiki, hosted
 at \url{http://wiki.portal.chalmers.se/agda/}.)
 
-This development is available in the supplemental material. At the time of submission, the full set of rules is available and the proofs of Theorem \ref{thrm:actsafe}, Theorem \ref{lemma:movement-erasure} and a number of technical lemmas that we elided or mentioned informally in the text are complete. We also have nearly all of the cases of Reachability and Constructability complete, and we see no major barrier to the remaining cases -- we prioritized developing a clear exposition of our contributions after proving representative cases and finding that they were straightforward. The remaining cases will be completed in the repository linked in the non-anonymous supplementary material.\todo{talk about determinism either here or there}
+This development is available in the supplemental material. At the time of submission, the full set of rules is available and the proofs of Theorem \ref{thrm:actsafe}, Theorem \ref{lemma:movement-erasure} and a number of technical lemmas that we elided or mentioned informally in the text are complete. We also have nearly all of the cases of Reachability and Constructability complete, and we see no major barrier to the remaining cases -- we prioritized developing a clear exposition of our contributions after proving representative cases and finding that they were straightforward. The remaining cases will be completed in the repository linked in the non-anonymous supplementary material.
 
 The documentation 
 includes a more detailed discussion of the technical representation
@@ -25,3 +25,34 @@ shape of derivations, closely matching standard on-paper proofs. No proof automa
 % interesting language features with this generic infrastructure in place.
 We adopt Barendregt's convention for
 bound variables \cite{urban}. Hazelnut's semantics does not need substitution, so we do not need to adopt more sophisticated encodings (e.g. \cite{lh09unibind,Pouillard11}.)
+
+\subsubsection{Determinism}
+A useful property would be \emph{action determinism}, i.e. that performing an action produces a unique result. Formally, this would be established as follows:
+% \begin{theorem}[Action Determinism] All of the following hold:
+% \label{thrm:actdet}
+\begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
+\item If $\performTyp{\ztau}{\alpha}{\ztau'}$ and $\performTyp{\ztau}{\alpha}{\ztau''}$ then $\ztau'=\ztau''$.
+\item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+  $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$ and
+  $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}{\htau''}$ then
+  $\zexp' = \zexp''$ and $\htau' = \htau''$.
+% \item If all of
+
+  % \begin{quote}
+  %   \begin{enumerate}
+  %   \item $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$, and
+  %   \item $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$, and
+  %   \item $\tcompat{\htau}{\htau'}$, and
+  %   \item either $\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}$ or
+  %     $\performAna{\hGamma}{\zexp}{\htau'}{\alpha}{\zexp''}$
+  %   \end{enumerate}
+  % \end{quote}
+  % hold, then $\zexp' = \zexp''$.
+\item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+  $\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}$ and
+  $\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}$ then $\zexp' =
+  \zexp''$.
+\end{enumerate}
+% \end{theorem}
+
+This is not a theorem of the system as described in this paper. The reason is quite subtle: the semantics of two construction actions, $\aConstruct{\fasc}$ and $\aConstruct{\flam{x}}$, behave differently in the analytic case than they do in the synthetic case -- the difference has to do with what the generated ascription contains. Both cases can technically ``fire'' due to action subsumption. The mechanization includes a ``proof'' of determinism for all cases but these two. Resolving this ambiguity formally requires some rather inelegant machinery to exclude these particular base cases from action subsumption, so we are content to admonish implementors who apply action subsumption when another analytic rule would do. 

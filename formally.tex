@@ -7,7 +7,7 @@ The previous section introduced Hazelnut by example. In this section, we systema
 \item \textbf{Actions} (Sec. \ref{sec:actions}), which act relative to the cursor according to Hazelnut's \textbf{bidirectional action semantics}. The action semantics enjoys a rich metatheory. Of particular note, the \emph{sensibility theorem} establishes that every edit state is well-typed after cursor erasure.
 \end{itemize}
 
-Our overview below omits certain ``uninteresting'' details. The supplement includes the complete collection of rules, in definitional order. These rules, along with the proofs of the metatheorems, have been mechanized in Agda \cite{norell:thesis}, also in the supplement. We will summarize this effort in Sec. \ref{sec:mech}.% The supplement contains the Agda sources and additional technical details.
+Our overview below omits certain ``uninteresting'' details. The supplement includes the complete collection of rules, in definitional order. These rules, along with the proofs of two key metatheorems, have been mechanized in Agda \cite{norell:thesis}, also in the supplement. We will summarize this effort in Sec. \ref{sec:mech}.% The supplement contains the Agda sources and additional technical details.
 
 \subsection{H-types and H-expressions}\label{sec:holes}
 
@@ -16,7 +16,7 @@ Figure \ref{fig:hexp-syntax} defines the syntax of H-types, $\htau$, and H-expre
 
 In addition to these standard forms, \emph{type holes} and \emph{empty expression holes} are both drawn $\hehole$ and \emph{non-empty expression holes} are drawn $\hhole{\hexp}$. We do not need non-empty type holes because every H-type is a valid classifier of H-expressions. 
 
-Types and expressions that contain no holes are \emph{complete types} and \emph{complete expressions}, respectively. Formally, we can derive $\hcomplete{\htau}$ when $\htau$ is complete, and $\hcomplete{\hexp}$ when $\hexp$ is complete (see supplement.) We are not concerned here with defining a dynamic semantics for Hazelnut, but the dynamics for complete H-expressions would be entirely standard (in Sec. \ref{sec:future} we discuss the multi-dimensional design space around the question of evaluating incomplete H-expressions.)% The complete types and expressions correspond immediately to the types and expressions of the STLC with numbers. %Holes mark subterms that are, notionally, ``under construction.'' We will see what this formally corresponds to in a moment.
+Types and expressions that contain no holes are \emph{complete types} and \emph{complete expressions}, respectively. Formally, we can derive $\hcomplete{\htau}$ when $\htau$ is complete, and $\hcomplete{\hexp}$ when $\hexp$ is complete (see supplement.) We are not concerned here with defining a dynamic semantics for Hazelnut, but the dynamics for complete H-expressions would be entirely standard (in Sec. \ref{sec:rw} we discuss the multi-dimensional design space around the question of evaluating incomplete H-expressions.)% The complete types and expressions correspond immediately to the types and expressions of the STLC with numbers. %Holes mark subterms that are, notionally, ``under construction.'' We will see what this formally corresponds to in a moment.
 
 \begin{figure}[t]
 $\arraycolsep=4pt\begin{array}{lllllll}
@@ -218,7 +218,7 @@ Making a judgemental distinction between these two notions will be essential in 
 \begin{subequations}\label{rules:syn-ana}
 Type synthesis is stronger than type analysis in that if an expression is able to synthesize a type, it can also be analyzed against that type, or any other \emph{consistent} type, according to the \emph{subsumption rule}, Rule (\ref{rule:ana-subsume}).
 
-The \emph{H-type consistency judgement}, $\tcompat{\htau}{\htau'}$, that appears as a premise in the subsumption rule is a reflexive and symmetric (but not transitive) relation between H-types defined judgementally in Figure \ref{fig:type-consistency}. This relation coincides with equality for complete H-types. Two incomplete H-types are consistent if they differ only at positions where a hole appears in either type. The type hole is therefore compatible with every type. This notion of H-type consistency coincides with the notion of type consistency that Siek and Taha discovered in their foundational work on gradual type systems, if we interpret the type hole as the $?$ (i.e. unknown) type \cite{Siek06a}.\todo{fwd reference related work}
+The \emph{H-type consistency judgement}, $\tcompat{\htau}{\htau'}$, that appears as a premise in the subsumption rule is a reflexive and symmetric (but not transitive) relation between H-types defined judgementally in Figure \ref{fig:type-consistency}. This relation coincides with equality for complete H-types. Two incomplete H-types are consistent if they differ only at positions where a hole appears in either type. The type hole is therefore consistent with every type. This notion of H-type consistency coincides with the notion of type consistency that Siek and Taha discovered in their foundational work on gradual type systems, if we interpret the type hole as the $?$ (i.e. unknown) type \cite{Siek06a}.
 
 Rule (\ref{rule:syn-lam}) defines analysis for lambda abstractions, $\hlam{x}{\hexp}$. There is no type synthesis rule that applies to this form, so lambda abstractions can appear only in analytic position, i.e. where an expected type is known.\footnote{It is possible to also define a ``half-annotated'' synthetic lambda form, $\lambda x{:}\tau.e$, but for simplicity, we leave it out \cite{DBLP:conf/tldi/ChlipalaPH05}.} Rule (\ref{rule:syn-lam}) is not quite the standard rule, reproduced below:
 \begin{equation*}
@@ -236,13 +236,13 @@ The problem is that this standard rule alone leaves us unable to analyze lambda 
   \hana{\hGamma}{\hlam{x}{\hexp}}{\tehole}
 }
 \end{equation*}
-Intead, we combine these two possible rules into a single rule through the simple auxiliary \emph{matched arrow type} judgement, $\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$, defined in Figure \ref{fig:type-consistency}. This judgement leaves arrow types alone and assigns the type hole the matched arrow type $\tarr{\tehole}{\tehole}$. It is easy to see that the two rules above are admissible by appeal to Rule (\ref{rule:syn-lam}) and the matched arrow type judgement\todo{is admissible the right word}. Encouragingly, this judgement also arises in the study of gradual type systems\todo{first paper?}.
+Intead, we combine these two possible rules into a single rule through the simple auxiliary \emph{matched arrow type} judgement, $\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$, defined in Figure \ref{fig:type-consistency}. This judgement leaves arrow types alone and assigns the type hole the matched arrow type $\tarr{\tehole}{\tehole}$. It is easy to see that the two rules above are admissible by appeal to Rule (\ref{rule:syn-lam}) and the matched arrow type judgement. Encouragingly, this judgement also arises in the study of gradual type systems \cite{DBLP:conf/popl/CiminiS16,DBLP:conf/popl/GarciaC15,DBLP:conf/popl/RastogiCH12}.
 
 Rule (\ref{rule:syn-asc}) defines type synthesis of expressions of ascription form, $\hexp : \htau$. This allows the user to explicitly state  a type for the ascribed expression to be analyzed against.
 
 Rule (\ref{rule:syn-var}) is the standard rule for variables. 
 
-Rule (\ref{rule:syn-ap}) is again nearly the standard rule for function application. It also makes use of the matched function type judgement to combine what would otherwise need to be two rules for function application -- one for when $e_1$ synthesizes an arrow type, and another for when $e_1$ synthesizes the type hole. Indeed, Siek and Taha needed two application rules for the same fundamental reason \cite{Siek06a}. Subsequent work on gradual typing introduced this notion of type matching\todo{cite}.
+Rule (\ref{rule:syn-ap}) is again nearly the standard rule for function application. It also makes use of the matched function type judgement to combine what would otherwise need to be two rules for function application -- one for when $e_1$ synthesizes an arrow type, and another for when $e_1$ synthesizes the type hole. Indeed, Siek and Taha needed two application rules for the same fundamental reason \cite{Siek06a}. Later work on gradual typing introduced this notion of type matching to resolve this redundancy.
 
 Rule (\ref{rule:syn-num}) states that numbers synthesize the $\tnum$ type. Rule (\ref{rule:syn-plus}) states that $\hexp_1 + \hexp_2$ behaves like a function over numbers. 
 
@@ -323,7 +323,7 @@ Given these rules, it is instructive to derive the following (by subsumption):
 
 Hazelnut's action semantics operates over Z-types, $\ztau$, and Z-expressions, $\zexp$. Figure \ref{fig:zexp-syntax} defines the syntax of Z-types and Z-expressions. A Z-type (resp. Z-expression) represents an H-type (resp. H-expression) with a single superimposed \emph{cursor}.
 
-The only base cases in these inductive grammars are $\zwsel{\htau}$ and $\zwsel{\hexp}$, which identify the H-type or H-expression that the cursor is on. All of the other forms correspond to the recursive forms in the syntax of H-types and H-expressions, and contain exactly one ``hatted'' subterm that identifies the subtree where the focus will be found. Any other sub-term is ``dotted'', i.e. it is either an H-type or H-expression. Taken together, every Z-type and Z-expression contains exactly one focused H-type or H-expression by construction. This can be understood as an instance of Huet's \emph{zipper pattern} \cite{JFP::Huet1997} (which, coincidentally, Huet encountered while implementing a structure editor.)
+The only base cases in these inductive grammars are $\zwsel{\htau}$ and $\zwsel{\hexp}$, which identify the H-type or H-expression that the cursor is on. All of the other forms correspond to the recursive forms in the syntax of H-types and H-expressions, and contain exactly one ``hatted'' subterm that identifies the subtree where the cursor will be found. Any other sub-term is ``dotted'', i.e. it is either an H-type or H-expression. Taken together, every Z-type and Z-expression contains exactly one selected H-type or H-expression by construction. This can be understood as an instance of Huet's \emph{zipper pattern} \cite{JFP::Huet1997} (which, coincidentally, Huet encountered while implementing a structure editor.)
 
 We write $\removeSel{\ztau}$ for the H-type constructed by erasing the cursor from $\ztau$, which we refer to as the \emph{cursor erasure} of $\ztau$. This straightforward metafunction is defined as follows:
 \begin{align*}
@@ -634,7 +634,7 @@ The rules below define relative movement within Z-types. They should be self-exp
 Two more rules are needed to recurse into the zipper structure. We define these zipper rules in an action-independent manner in Sec. \ref{sec:zipper-cases}. 
 % The final two rules above recurse into the zipper structure.
 
-The rules for relative movement within Z-expressions are similarly straightforward. Movement is type-independent, so we defer to an auxiliary expression movement judgement in both the analytic and synthetic case:\todo{remove prevSib in supplement too}
+The rules for relative movement within Z-expressions are similarly straightforward. Movement is type-independent, so we defer to an auxiliary expression movement judgement in both the analytic and synthetic case:
 \begin{subequations}
 \begin{equation}
 \inferrule{
@@ -1025,10 +1025,10 @@ The rules above are numerous and fairly uninteresting. That makes them quite haz
 
 Another useful check is to establish \emph{reachability}, i.e. that it is possible, through a sequence of movement actions, to move the cursor from any position to any other position within a well-typed H-expression. 
 
-This requires developing machinery for reasoning about sequences of actions. There are two possibilities: we can either add a sequencing action, $\alpha; \alpha$, directly to the syntax of actions, or we can define a syntax for lists of actions, $\bar{\alpha}$, together with iterated action judgements. To keep the core of the action semantics small, we take the latter approach in Figure \ref{fig:multistep}.\todo{put stars on these?}
+This requires developing machinery for reasoning about sequences of actions. There are two possibilities: we can either add a sequencing action, $\alpha; \alpha$, directly to the syntax of actions, or we can define a syntax for lists of actions, $\bar{\alpha}$, together with iterated action judgements. To keep the core of the action semantics small, we take the latter approach in Figure \ref{fig:multistep}.
 
 
-A simple auxiliary judgement, $\bar\alpha~\mathsf{movements}$, defined in the supplement, establishes that $\bar\alpha$ consists only of actions of the form $\aMove{\delta}$.\todo{define this in supplement}
+A simple auxiliary judgement, $\bar\alpha~\mathsf{movements}$, defined in the supplement, establishes that $\bar\alpha$ consists only of actions of the form $\aMove{\delta}$.
 
 With these definitions, we can state reachability as follows:
 
@@ -1312,7 +1312,7 @@ The rule above featured on Line 15 of Figure \ref{fig:second-example}.
       {\tarr{\tehole}{\tehole}}
   }
 \end{equation}
-The type ascription is necessary because lambda expressions do not synthesize a type. If the empty hole is being analyzed against a type with matched arrow type, then no ascription is necessary:\todo{supp}
+The type ascription is necessary because lambda expressions do not synthesize a type. If the empty hole is being analyzed against a type with matched arrow type, then no ascription is necessary:
 \begin{equation}\label{rule:performAna-lam-1}
   \inferrule{
     \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}
@@ -1328,7 +1328,7 @@ The type ascription is necessary because lambda expressions do not synthesize a 
 % Because the ascription is omitted here but included in Rule (\ref{r:conelamhole}), we must exclude all $\aConstruct{\flam{x}}$ actions from subsumption in Rule (\ref{rule:subsumes}).
 
 Finally, if the empty hole is being analyzed against a type that has no matched arrow type, expressed in the premise as inconsistency with $\tarr{\tehole}{\tehole}$, then a lambda ascribed the type $\tarr{\tehole}{\tehole}$
-is inserted inside a hole, which defers the type inconsistency as previously discussed:\todo{supp}
+is inserted inside a hole, which defers the type inconsistency as previously discussed:
 \begin{equation}\label{rule:performAna-construct-lam-2}
   \inferrule{
     \tincompat{\htau}{\tarr{\tehole}{\tehole}}
@@ -1344,7 +1344,7 @@ is inserted inside a hole, which defers the type inconsistency as previously dis
   }
 \end{equation}
 
-\paragraph{Application} The $\aConstruct{\fap}$ action applies the expression under the cursor. The following rule handles the case where the synthesized type has matched function type:\todo{supp}
+\paragraph{Application} The $\aConstruct{\fap}$ action applies the expression under the cursor. The following rule handles the case where the synthesized type has matched function type:
 \begin{equation}
   \label{r:coneapfn}
   \inferrule{
@@ -1400,7 +1400,7 @@ The $\aConstruct{\farg}$ action instead places the expression under the cursor i
       {\tnum}
   }
 \end{equation}
-If the empty hole is being analyzed against a type that is incompatible with $\tnum$, then we must place the number expression inside the hole:
+If the empty hole is being analyzed against a type that is inconsistent with $\tnum$, then we must place the number expression inside the hole:
 \begin{equation}
   \inferrule{
     \tincompat{\htau}{\tnum}
@@ -1487,7 +1487,7 @@ If the non-empty hole appears in synthetic position, then it can always be finis
   }
 \end{equation}
 
-\todo{make sure there is no more compatibility or focus words}If the non-empty hole appears in analytic position, then it can only be finished if the type synthesized for the enveloped expression is consistent with the type that the hole is being analyzed against. This amounts to analyzing the enveloped expression against the provided type (by subsumption):
+If the non-empty hole appears in analytic position, then it can only be finished if the type synthesized for the enveloped expression is consistent with the type that the hole is being analyzed against. This amounts to analyzing the enveloped expression against the provided type (by subsumption):
 \begin{equation}\label{r:finishana}
   \inferrule{
     \hana{\hGamma}{\hexp}{\htau}
@@ -1536,7 +1536,7 @@ If the non-empty hole appears in synthetic position, then it can always be finis
 For expressions, the zipper rules essentially follow the structure of the corresponding rules in the statics.
 
 \begin{subequations}
-In particular, when the cursor is in the body of a lambda expression, the zipper case mirrors Rule (\ref{rule:syn-lam}):\todo{supp}
+In particular, when the cursor is in the body of a lambda expression, the zipper case mirrors Rule (\ref{rule:syn-lam}):
 \begin{equation}
 \inferrule{
   \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
@@ -1577,7 +1577,7 @@ When the cursor is in the expression position of an ascription, we use the analy
 \end{equation}
 
 
-When the focus is in the type position of an ascription, we must re-check the ascribed expression because the cursor erasure might have changed (in practice, one would optimize this check to only occur if the cursor erasure did change):
+When the cursor is in the type position of an ascription, we must re-check the ascribed expression because the cursor erasure might have changed (in practice, one would optimize this check to only occur if the cursor erasure did change):
 \begin{equation}\label{rule:zipper-asc}
 \inferrule{
   \performTyp{\ztau}{\alpha}{\ztau'}\\
