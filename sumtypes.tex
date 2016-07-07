@@ -20,7 +20,7 @@
    {\tcompat{\htau_1 + \htau_2}{\htau_1' + \htau_2'}}
 \end{mathpar}
 
-\judgbox{\sumhasmatched{\htau}{\htau_1+\htau_2}}{$\htau$ has matched sum type $\htau_1+\htau_2$}
+\judgbox{\sumhasmatched{\htau}{\htau_1+\htau_2}}{$\htau$ has matched sum type $\htau_1+\htau_2$}\vspace{-10px}
 \begin{mathpar}
 \Infer{}{ }
 {\sumhasmatched{\htau_1 + \htau_2}{\htau_1 + \htau_2}}
@@ -53,30 +53,60 @@
 \end{subequations}
 \caption{The statics of sums.}
 \label{fig:sum-statics}
-\vspace{5mm}
 %Extensions to \textbf{Action Semantics} for Sum Types:
 %\\[1mm]
-\judgbox{\performTyp{\ztau}{\alpha}{\ztau}}{(Additional type construction action:)}
-\begin{mathpar}
-  \Infer{\Define{cons-sum}}{ }
+\judgbox{\performTyp{\ztau}{\alpha}{\ztau}}{(Additional type actions:)}\vspace{-5px}
+\begin{subequations}
+\begin{equation}
+  \inferrule{ }
 {
   \performTyp{\zwsel{\htau}}{\aConstruct{\fsum}}
              {\tsum{{\htau}}{\zwsel{\hehole}}}
 }
-\end{mathpar}
-
+\end{equation}
+ \begin{equation}
+    %\label{r:contarrL}
+  \inferrule{
+    \performTyp{\ztau}{\alpha}{\ztau'}
+  }{
+    \performTyp{
+      {\ztau} + {\htau}
+    }{
+      \alpha
+    }{
+      {\ztau'} + {\htau}
+    }
+  }
+\end{equation}
+  \begin{equation}
+    %\label{r:contarrR}
+  \inferrule{
+    \performTyp{\ztau}{\alpha}{\ztau'}
+  }{
+    \performTyp{
+      {\htau} + {\ztau}
+    }{
+      \alpha
+    }{
+      {\htau} + {\ztau'}
+    }
+  }
+\end{equation}
+\end{subequations}
 \judgbox{\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}}
-{(Additional analytical actions:)}
-\begin{mathpar}
-  \Infer{\Define{cons-inj}}{ \sumhasmatched{\htau}{\tsum{\hehole}{\hehole}} }
+{(Additional analytic actions:)}
+\begin{subequations}
+\begin{equation}
+  \inferrule{ \sumhasmatched{\htau_{+}}{\tsum{\hehole}{\hehole}} }
   {
   \performAna{\hGamma}{\zwsel{\hehole}}
               {\htau_{+}}
               {\aConstruct{\finj{i}}}
               {\hinj{i}{\zwsel{\hehole}}}
   }
-  \and
-  \Infer{\Define{cons-inj-hole}}{ \tincompat{\htau}{ \tsum{\hehole}{\hehole} } }
+\end{equation}
+\begin{equation}
+  \inferrule{ \tincompat{\htau}{ \tsum{\hehole}{\hehole} } }
         {
   \performAna{\hGamma}{\zwsel{\hehole}}
               {\htau}
@@ -86,22 +116,21 @@
                   : \zwsel{\hehole} + \hehole
               }}              
         }
-  \and
-  \Infer{\Define{cons-case}}{ }{
+\end{equation}
+\begin{equation}
+  \inferrule{ }{
   \performAna{\hGamma}{\zwsel{\hehole}}
               {\htau}
               {\aConstruct{\fcase{x}{y}}}
               {\hcase{\zwsel{\hehole}}{x}{\hehole}{y}{\hehole}}
   }
-\end{mathpar}
-
-\begin{mathpar}
+\end{equation}
+\begin{equation}
 %% Inj -- Editing injected expression
-\Infer{\Define{inj-act-zip}}
+\inferrule
 {
-  \performAna{\hGamma}{\zexp}{\htau_i}{\alpha}{\zexp'}~~(i\in\{1,2\})
-  \\
-  \sumhasmatched{\htau_{+}}{\htau_1+\htau_2}
+  \sumhasmatched{\htau_{+}}{\htau_1+\htau_2}\\
+  \performAna{\hGamma}{\zexp}{\htau_i}{\alpha}{\zexp'}
 }{
   \performAna
   {\hGamma}
@@ -109,16 +138,17 @@
   {\htau_{+}}
   {\alpha}
   {\hinj{i}{\zexp' }}
-}
-\and
+}~\text{$(i\in\{1,2\})$}
+\end{equation}
+\begin{equation}
 %% Case -- Editing scrutinee
-\Infer{\Define{case-act-zip-scrut}}
+\inferrule
 {
   \hsyn
   {\hGamma}
   {\removeSel{\zexp}}
   {\htau_0}  
-  \\
+  \\\\
   \performSyn
   {\hGamma}
   {\zexp}
@@ -140,9 +170,10 @@
   {\alpha}
   {\hcase{\zexp'}{x}{\hexp_1}{y}{\hexp_2}}
 }
-\and
+\end{equation}
+\begin{equation}
 %% Case -- Editing first branch arm
-\Infer{\Define{case-act-zip-one}}
+\inferrule
 {
   \hsyn{\hGamma}{\hexp}{\htau_{+}}
   \\
@@ -159,9 +190,10 @@
   {\alpha}
   {\hcase{\hexp}{x}{\zexp_1'}{y}{\hexp_2}}
 }
-\and
+\end{equation}
+\begin{equation}
 %% Case -- Editing second branch arm
-\Infer{\Define{case-act-zip-two}}
+\inferrule
 {
   \hsyn{\hGamma}{\hexp}{\htau_{+}}
   \\
@@ -178,11 +210,27 @@
   {\alpha}
   {\hcase{\hexp}{x}{\hexp_1}{y}{\zexp_2'}}
 }
-
-\end{mathpar}
+\end{equation}
+% }
+\end{subequations}
+\judgbox{\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}}
+{(Additional synthetic actions:)}\vspace{-5px}
+\begin{equation}
+%% Case -- Editing second branch arm
+\inferrule
+{ }{
+  \performSyn
+  {\hGamma}
+  {\zwsel{\hhole{}}}
+  {\htau}
+  {\aConstruct{\finj{i}}}
+  {\hinj{i}{{\hhole{}}} : \zwsel{\tehole} + \tehole}
+  {\tehole + \tehole}
 }
-\caption{Sum types: Construction \& Zipper Actions.}
+\end{equation}
+\caption{Construction \& zipper actions for sums.}
 \label{fig:sum-action}
+}
 \end{figure}
 
 \begin{figure}
@@ -336,48 +384,48 @@ Notice that for each H-type or H-expression form, there is a corresponding shape
 
 
 
-\paragraph{Extensions to Static Semantics.}
+\paragraph{Statics.}
 We can now move on to the static semantics. 
 
-First, we must extend the type consistency relation as shown in Figure \ref{fig:sum-statics}, following the example of type consistency for arrow types in Figure \ref{fig:type-consistency}. Similarly, we will need a notion of a \emph{matched sum type} directly analagous to the notion of a matched arrow type defined in Figure \ref{fig:type-consistency}. 
+First, we must extend the type consistency relation as shown in Figure \ref{fig:sum-statics}, following the example of covariant type consistency rule for arrow types in Figure \ref{fig:type-consistency}. Similarly, we will need a notion of a \emph{matched sum type} spiritually analogous to the notion of a matched arrow type defined in Figure \ref{fig:type-consistency}. 
 
-The type analysis rules shown in Figure \ref{fig:sum-statics} are essentially standard, differing only in that rather than directly matching on the structure of sum types, we use the matched sum type judgement.
+The type analysis rules shown in Figure \ref{fig:sum-statics} are essentially standard, differing only in that instead of immediately requiring that a type be of the form $\htau_1 + \htau_2$, we use the matched sum type judgement. We combine the two injection rules for concision and define only a type analysis rule for case analysis for simplicity (see \cite{gradualizer} for additional machinery that would be necessary for a synthetic rule.)
 
 
-Figure~\ref{fig:sum-statics} extends the statics semantics of Hazelnut
-with the static semantics of sum types.
+% Figure~\ref{fig:sum-statics} extends the statics semantics of Hazelnut
+% with the static semantics of sum types.
+% %
+% First, we introduce the
+% relation~$\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ which is a
+% simple short-hand relation, analogous in spirit to the
+% relation~$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$.  Each relation
+% allows typing and action rules to match type holes with the relevant
+% type constructor (when filled with holes).
+% %
+% Next, we extend the consistency relation~$\tcompat{\htau_1}{\htau_2}$,
+% with a covariant case for sum types.
+
+% Finally, we extend the analytical typing
+% judgement~$\hana{\hGamma}{\hexp}{\htau}$ with rules for introducing
+% and eliminating sum types, Rules~\ref{ana-inj} and \ref{ana-case},
+% respectively.
+% %
+% In both rules, we use the ``has matched'' relation
+% $\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ to permit the sum
+% type~$\htau_+$ to be either a type hole~$\hehole$, or a specific sum
+% type that uses the constructor~$\htau_1 + \htau_2$.
+% %
+% We adhere to the usual directionality for sum types in bidirectional
+%  systems: The introduction rule \emph{checks} the term against the sum
+%  type, whereas in the elimination rule, the scrutinee~$\hexp$
+%  synthesizes the sum type, and the branch arms are checked against a
+%  final return type~$\htau$.
 %
-First, we introduce the
-relation~$\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ which is a
-simple short-hand relation, analogous in spirit to the
-relation~$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$.  Each relation
-allows typing and action rules to match type holes with the relevant
-type constructor (when filled with holes).
-%
-Next, we extend the consistency relation~$\tcompat{\htau_1}{\htau_2}$,
-with a covariant case for sum types.
-
-Finally, we extend the analytical typing
-judgement~$\hana{\hGamma}{\hexp}{\htau}$ with rules for introducing
-and eliminating sum types, Rules~\ref{ana-inj} and \ref{ana-case},
-respectively.
-%
-In both rules, we use the ``has matched'' relation
-$\sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}$ to permit the sum
-type~$\htau_+$ to be either a type hole~$\hehole$, or a specific sum
-type that uses the constructor~$\htau_1 + \htau_2$.
-%
-We adhere to the usual directionality for sum types in bidirectional
- systems: The introduction rule \emph{checks} the term against the sum
- type, whereas in the elimination rule, the scrutinee~$\hexp$
- synthesizes the sum type, and the branch arms are checked against a
- final return type~$\htau$.
-%
 
 
-\paragraph{Extensions to Action Semantics.}
+\paragraph{Action Semantics.}
 Figures~\ref{fig:sum-action} and \ref{fig:sum-move} extend Hazelnut's
-action-based editing rules for sum types.
+action semantics to support bidirectionally typed structure editing with sums.
 %
 Conceptually, these extensions consist of four parts:
 \begin{enumerate}
