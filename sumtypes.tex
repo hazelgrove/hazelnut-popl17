@@ -9,7 +9,7 @@
 
 
 %A typed lambda calculus with numbers is not, by itself, useful for software development.
-In this section, we will conservatively extend Hazelnut with binary {sum types} to demonstrate how the rules and the rich metatheory developed in the previous section serve to guide and constrain this and other such efforts. 
+In this section, we will conservatively extend Hazelnut with binary {sum types} to demonstrate how the rules and the rich metatheory developed in the previous section serve to guide and constrain this and other such efforts.
 % %
 % Below, we consider how this familiar language form impacts the
 % definitions of Hazelnut's core calculus.
@@ -19,19 +19,19 @@ In this section, we will conservatively extend Hazelnut with binary {sum types} 
 % broad goals associated with the meta theorems about sensibility,
 % determinism, constructability and reachability~(Sec.~\ref{sec:hazel}).
 
-\paragraph{Syntax.} 
+\paragraph{Syntax.}
 %
 The first step is to extend the syntax of H-types and H-expressions 
 with the familiar forms \cite{pfpl}:\vspace{-3px}
 \begin{grammar}
 \textsf{HTyp} & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
 \\
-\textsf{HExp} & $\hexp$ & \bnfas & $\cdots 
+\textsf{HExp} & $\hexp$ & \bnfas & $\cdots
 \bnfalt \hinj{i}{\hexp}
 \bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
 \end{grammar}\vspace{-3px}
-Recall that binary sum types introduce a new type-level connective, $\htau_1 + \htau_2$. The introductory forms are the \emph{injections}, $\hinj{i}{\hexp}$; 
-here, we consider only binary sums, so $i\in\{1,2\}$. 
+Recall that binary sum types introduce a new type-level connective, $\htau_1 + \htau_2$. The introductory forms are the \emph{injections}, $\hinj{i}{\hexp}$;
+here, we consider only binary sums, so $i\in\{1,2\}$.
 The elimination form is case
 analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 
@@ -43,7 +43,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \judgbox{\tcompat{\htau_1}{\htau_2}}{(Additional type consistency form:)}
 \begin{mathpar}
   \Infer{}{
-    \tcompat{\htau_1}{\htau_1'} 
+    \tcompat{\htau_1}{\htau_1'}
     \\
     \tcompat{\htau_2}{\htau_2'}
     }
@@ -62,7 +62,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \judgbox{\hana{\hGamma}{\hexp}{\htau}}{(Additional type analysis rules:)}
 \begin{subequations}
 \begin{equation}
-\inferrule{ 
+\inferrule{
   \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}\\
   \hana{ \hGamma }{ \hexp }{ \htau_i }%~~(i\in\{1,2\})
 }
@@ -142,9 +142,9 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
               {\htau}
               {\aConstruct{\finj{i}}}
               {\hhole{
-                  \hinj{i}{\hehole}                  
+                  \hinj{i}{\hehole}
                   : \zwsel{\hehole} + \hehole
-              }}              
+              }}
         }
 \end{equation}
 \begin{equation}\label{rule:performAna-case}
@@ -177,7 +177,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
   \hsyn
   {\hGamma}
   {\removeSel{\zexp}}
-  {\htau_0}  
+  {\htau_0}
   \\\\
   \performSyn
   {\hGamma}
@@ -264,7 +264,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \end{figure}
 
 \begin{figure}
-\judgbox{\performMove{\zexp}{\aMove{\delta}}{\zexp'}}{(Additional type movement rules:)}
+\judgbox{\performMove{\ztau}{\aMove{\delta}}{\ztau'}}{(Additional type movement rules:)}
 \begin{displaymath}
 \begin{array}{@{}rcl}
   %\multicolumn{3}{l}{\textbf{Movement Actions for Sum Type Forms}:}
@@ -302,10 +302,10 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
   \TABperformMove
       {\zwsel{\hinj{i}{\hexp}}}
       {\aMove{\dChild}}
-      {\hinj{i}{\zwsel{\hexp}}}      
+      {\hinj{i}{\zwsel{\hexp}}}
   \\
   \TABperformMove
-      {\hinj{i}{\zwsel{\hexp}}}      
+      {\hinj{i}{\zwsel{\hexp}}}
       {\aMove{\dParent}}
       {\zwsel{\hinj{i}{\hexp}}}
   \\[2mm]
@@ -354,7 +354,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \label{fig:sum-move}
 \end{figure}
 
-Next, we must correspondingly extend the syntax of Z-types and Z-expressions, following Huet's zipper pattern \cite{JFP::Huet1997}: 
+Next, we must correspondingly extend the syntax of Z-types and Z-expressions, following Huet's zipper pattern \cite{JFP::Huet1997}:
 %
 % In particular, in H-Types, Z-Types, and Shapes, we include syntax
 % below for the new type connective~$+$.
@@ -386,7 +386,7 @@ The rules for Z-expressions are analagous:
 \removeSel{\hcase{\zexp}{x}{\hexp_1}{y}{\hexp_2}} & = \hcase{\removeSel{\zexp}}{x}{\hexp_1}{y}{\hexp_2}\\
 \removeSel{\hcase{\hexp}{x}{\zexp_1}{y}{\hexp_2}} & = \hcase{\hexp}{x}{\removeSel{\zexp_1}}{y}{\hexp_2}\\
 \removeSel{\hcase{\hexp}{x}{\hexp_1}{y}{\zexp_2}} & = \hcase{\hexp}{x}{\hexp_1}{y}{\removeSel{\zexp_2}}
-\end{align*} 
+\end{align*}
 
 Finally, we must extend the syntax of shapes:
 %\\[2mm]
@@ -398,9 +398,9 @@ Notice that for each H-type or H-expression form, there is a corresponding shape
 
 
 \paragraph{Statics.}
-We can now move on to the static semantics. 
+We can now move on to the static semantics.
 
-First, we must extend the type consistency relation as shown in Figure \ref{fig:sum-statics}, following the example of covariant type consistency rule for arrow types in Figure \ref{fig:type-consistency}. Similarly, we need a notion of a \emph{matched sum type} spiritually analogous to the notion of a matched arrow type defined in Figure \ref{fig:type-consistency}. 
+First, we must extend the type consistency relation as shown in Figure \ref{fig:sum-statics}, following the example of covariant type consistency rule for arrow types in Figure \ref{fig:type-consistency}. Similarly, we need a notion of a \emph{matched sum type} spiritually analogous to the notion of a matched arrow type defined in Figure \ref{fig:type-consistency}.
 
 The type analysis rules shown in Figure \ref{fig:sum-statics} are essentially standard, differing only in that instead of immediately requiring that a type be of the form $\htau_1 + \htau_2$, we use the matched sum type judgement. We combine the two injection rules for concision and define only a type analysis rule for the case form for simplicity (see \cite{DBLP:conf/popl/CiminiS16} for additional machinery that would be necessary for a synthetic rule.)
 
@@ -443,7 +443,7 @@ action semantics to support bidirectionally typed structure editing with sums.
 
 Rule (\ref{rule:construct-sum}), the construction rule for sum types, and Rules (\ref{rule:zipper-sum-left})-(\ref{rule:zipper-sum-right}), the zipper rules for sum types, follow the corresponding rules for arrow types. Were we to have missed any of these, the first clause of Theorem \ref{thrm:constructability},  i.e. Constructability, would not be conserved.
 
-Rule (\ref{rule:performAna-inj-1}) constructs an injection when the type provided for analysis has a matched sum type. This is analagous to Rule (\ref{rule:performAna-lam-1}) for lambdas. Rule (\ref{rule:performAna-inj-2}) constructs an injection when the type provided for analysis is not consistent with sum types. This is analagous to Rule (\ref{rule:performAna-construct-lam-2}) for lambdas. Rule (\ref{rule:performAna-case}) is a straightforward rule for constructing case expressions in empty holes. Rules (\ref{rule:zipper-inj})-(\ref{rule:zipper-case-3}) are the zipper cases, which follow the structure of the statics. Finally, we also define a single new synthetic action rule, Rule (\ref{rule:performSyn-inj}), which allows for the construction of an injection in synthetic position, with automatic insertion of an ascription. This is analagous to Rule (\ref{r:conelamhole}). If we had defined any of these rules incorrectly, the Sensibility Theorem (Theorem \ref{thrm:actsafe}) would not be conserved. Had we forgotten any of these rules, the Constructability Theorem (Theorem \ref{thrm:constructability}) would not be conserved. 
+Rule (\ref{rule:performAna-inj-1}) constructs an injection when the type provided for analysis has a matched sum type. This is analagous to Rule (\ref{rule:performAna-lam-1}) for lambdas. Rule (\ref{rule:performAna-inj-2}) constructs an injection when the type provided for analysis is not consistent with sum types. This is analagous to Rule (\ref{rule:performAna-construct-lam-2}) for lambdas. Rule (\ref{rule:performAna-case}) is a straightforward rule for constructing case expressions in empty holes. Rules (\ref{rule:zipper-inj})-(\ref{rule:zipper-case-3}) are the zipper cases, which follow the structure of the statics. Finally, we also define a single new synthetic action rule, Rule (\ref{rule:performSyn-inj}), which allows for the construction of an injection in synthetic position, with automatic insertion of an ascription. This is analagous to Rule (\ref{r:conelamhole}). If we had defined any of these rules incorrectly, the Sensibility Theorem (Theorem \ref{thrm:actsafe}) would not be conserved. Had we forgotten the analytic rules, the Constructability Theorem (Theorem \ref{thrm:constructability}) would not be conserved.
 
 Figure \ref{fig:sum-move} gives the relevant movement axioms. For concision and clarity, we write these axioms in tabular form. Had we made a mistake in any of these rules, the Movement Erasure Invariance theorem (Theorem \ref{lemma:movement-erasure}) would not be conserved. Had we forgotten any of these rules, the Reachability Theorem (Theorem \ref{thrm:reachability}) would not be conserved.
 

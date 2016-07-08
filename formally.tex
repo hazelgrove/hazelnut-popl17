@@ -389,7 +389,7 @@ In some Z-expressions, the cursor is in a type ascription, so we also need a \em
 \subsubsection{Sensibility}
 
 
-Before giving the rules for these judgements, let us state the key metatheorem: \emph{sensibility}. This metatheorem deeply inform the design of the rules, given starting in Sec. \ref{sec:action-subsumption}. Its proof, which is mechanized in Agda, is by straightforward induction, so the reader is encouraged to think about the relevant cases of these proofs as we present the rules. 
+Before giving the rules for these judgements, let us state the key metatheorem: \emph{sensibility}. This metatheorem deeply informs the design of the rules, given starting in Sec. \ref{sec:action-subsumption}. Its proof, which is mechanized in Agda, is by straightforward induction, so the reader is encouraged to think about the relevant cases of these proofs as we present the rules. 
 \begin{theorem}[Action Sensibility]\label{thrm:actsafe} Both of the following hold:\begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
 \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$ 
    then
