@@ -2405,17 +2405,17 @@ The synthetic and analytic expression action performance judgements are defined 
   }
 \end{equation}
 
-\begin{equation}
-  \inferrule{ }{
-    \performSyn
-      {\hGamma}
-      {\zwsel{\hexp}}
-      {\tehole}
-      {\aConstruct{\fap}}
-      {\hap{\hexp}{\zwsel{\hehole}}}
-      {\tehole}
-  }
-\end{equation}
+% \begin{equation}
+%   \inferrule{ }{
+%     \performSyn
+%       {\hGamma}
+%       {\zwsel{\hexp}}
+%       {\tehole}
+%       {\aConstruct{\fap}}
+%       {\hap{\hexp}{\zwsel{\hehole}}}
+%       {\tehole}
+%   }
+% \end{equation}
 
 \begin{equation}
   \inferrule{
@@ -2634,8 +2634,7 @@ The synthetic and analytic expression action performance judgements are defined 
       {\htau}
       {\alpha}
       {\zexp'}
-      {\htau'}\\
-    \zexp' \neq \zwsel{\hehole}
+      {\htau'}
   }{
     \performSyn
       {\hGamma}
@@ -2646,26 +2645,26 @@ The synthetic and analytic expression action performance judgements are defined 
       {\tehole}
   }
 \end{equation}
-\begin{equation}
-  \inferrule{
-    \hsyn{\hGamma}{\removeSel{\zexp}}{\htau}\\
-    \performSyn
-      {\hGamma}
-      {\zexp}
-      {\htau}
-      {\alpha}
-      {\zwsel{\hehole}}
-      {\tehole}\\
-  }{
-    \performSyn
-      {\hGamma}
-      {\hhole{\zexp}}
-      {\tehole}
-      {\alpha}
-      {\zwsel{\hehole}}
-      {\tehole}
-  }
-\end{equation}
+% \begin{equation}
+%   \inferrule{
+%     \hsyn{\hGamma}{\removeSel{\zexp}}{\htau}\\
+%     \performSyn
+%       {\hGamma}
+%       {\zexp}
+%       {\htau}
+%       {\alpha}
+%       {\zwsel{\hehole}}
+%       {\tehole}\\
+%   }{
+%     \performSyn
+%       {\hGamma}
+%       {\hhole{\zexp}}
+%       {\tehole}
+%       {\alpha}
+%       {\zwsel{\hehole}}
+%       {\tehole}
+%   }
+% \end{equation}
 \end{subequations}
 
 \noindent\fbox{$\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}$}
