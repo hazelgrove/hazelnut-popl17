@@ -1,4 +1,6 @@
 \def\OPTIONConf{1}%
+%\newif\iftr\trfalse
+\newif\iftr\trtrue
 %\documentclass[12pt]{article}
 \RequirePackage{etex}
 \documentclass[preprint,9pt]{sigplanconf}
@@ -36,6 +38,8 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 \usepackage{joshuadunfield}
 \usepackage{llproof}
 \usepackage{rulelinks}
+
+%\usepackage{balance} %% Balance last page's two columns
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
@@ -96,10 +100,43 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 % \title{Hazelnut:\\A Bidirectionally Typed Structure Editor Calculus}
 
 %\authorinfo{\vspace{-2px}}{}{}
-\authorinfo{~}{~}{\vspace{-10px}}
+%\authorinfo{~}{~}{\vspace{-10px}}
 %\authorinfo{Cyrus Omar \and Jonathan Aldrich}
 %         {Carnegie Mellon University}
 %         {\{comar, aldrich\}@cs.cmu.edu}
+\iftr
+\authorinfo{
+        Cyrus Omar$^1$
+        \and Ian Voysey$^1$
+        \and Michael Hilton$^2$
+        \and Jonathan Aldrich$^1$
+        \and Matthew A. Hammer$^3$
+}
+{
+ $^1$~Carnegie Mellon University
+ \and
+ $^2$~Oregon State University
+ \and
+ $^3$~University of Colorado Boulder
+}
+{
+%\email{comar@cs.cmu.edu}\\
+%\texttt{http://www.cs.cmu.edu/\homedir comar/}
+%\email{hiltonm@eecs.oregonstate.edu}\\
+}
+\else
+\authorinfo{~}{~}{\vspace{-10px}}
+\fi
+
+%
+%\authorrunning{Omar et al.} % abbreviated author list (for running head)
+%
+%%%% list of authors for the TOC (use if author list has to be modified)
+%\tocauthor{Ivar Ekeland, Roger Temam, Jeffrey Dean, David Grove,
+%Craig Chambers, Kim B. Bruce, and Elisa Bertino}
+%
+%\email{Matthew.Hammer@colorado.edu}
+
 
 \maketitle
 \begin{abstract}
@@ -339,7 +376,6 @@ systems, for we will not forever stay confined to mere strings of symbols.}
 --- Marvin Minsky, Turing Award lecture \cite{DBLP:journals/jacm/Minsky70}
 \end{quote}
 
-
 \clearpage
 % We recommend abbrvnat bibliography style.
 \bibliographystyle{abbrvnat}
@@ -348,5 +384,14 @@ systems, for we will not forever stay confined to mere strings of symbols.}
 \bibliography{bibliography}
 %\softraggedright
 %P. Q. Smith, and X. Y. Jones. ...reference text...
+
+\iftr
+\clearpage
+%\onecolumn
+\appendix
+\input{hazelnut-rules}
+\else
+% No Appendix Here
+\fi
 
 \end{document}
