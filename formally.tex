@@ -7,11 +7,9 @@ The previous section introduced Hazelnut by example. In this section, we systema
 \item \textbf{Actions} (Sec. \ref{sec:actions}), which act relative to the cursor according to Hazelnut's \textbf{bidirectional action semantics}. The action semantics enjoys a rich metatheory. Of particular note, the \emph{sensibility theorem} establishes that every edit state is well-typed after cursor erasure.
 \end{itemize}
 
-Our overview below omits certain ``uninteresting'' details. The supplement includes the complete collection of rules, in definitional order. These rules, along with the proofs of two key metatheorems, have been mechanized in Agda \cite{norell:thesis}, also in the supplement. We will summarize this effort in Sec. \ref{sec:mech}.% The supplement contains the Agda sources and additional technical details.
+Our overview below omits certain ``uninteresting'' details. The supplement includesfffadfasfaasdff the complete collection of rules, in definitional order. These rules, along with the proofs of two key metatheorems, have been mechanized in Agda \cite{norell:thesis}, also in the supplement. We will summarize this effort in Sec. \ref{sec:mech}.% The supplement contains the Agda sources and additional technical details.
 
 \subsection{H-types and H-expressions}\label{sec:holes}
-
-
 Figure \ref{fig:hexp-syntax} defines the syntax of H-types, $\htau$, and H-expressions, $\hexp$. Most forms correspond directly to those of the simply typed lambda calculus (STLC) extended with a single base type, $\tnum$, of numbers (cf. \cite{pfpl}.) The number expression corresponding to the mathematical number $n$ is drawn $\hnum{n}$, and for simplicity, we define only a single arithmetic operation, $\hadd{\hexp}{\hexp}$. The form $\hexp : \htau$ is an explicit \emph{type ascription}. 
 
 In addition to these standard forms, \emph{type holes} and \emph{empty expression holes} are both drawn $\hehole$ and \emph{non-empty expression holes} are drawn $\hhole{\hexp}$. We do not need non-empty type holes because every H-type is a valid classifier of H-expressions. 
@@ -50,49 +48,66 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 %   \tcompat{\htau'}{\htau}
 % }
 % \end{equation}
+\begin{subequations}\label{eqns:consistency}
 \begin{mathpar}
+% \begin{equation}
 \inferrule{ }{
   \tcompat{\tehole}{\htau}
-}
-
+}%~\text{(1a)}
 % \end{equation}
+% \end{minipage}
+% \begin{minipage}{0.15\linewidth}
 % \begin{equation}%\label{rule:tcompat-hole}
+~~~~~~~~
 \inferrule{ }{
   \tcompat{\htau}{\tehole}
-}
-
+}%~\text{(1b)}
+% \end{equation}
+% \end{minipage}
+% \begin{minipage}{0.15\linewidth}
+% \begin{equation}
+~~~~~~~~
 \inferrule{ }{
   \tcompat{\htau}{\htau}
-}
-
+}%~\text{(1c)}
+% \end{equation}
+% \end{minipage}
+% \begin{minipage}{0.15\linewidth}
+% \begin{equation}
+~~~~~~~~
 \inferrule{
   \tcompat{\htau_1}{\htau_1'}\\
   \tcompat{\htau_2}{\htau_2'}
 }{
   \tcompat{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1'}{\htau_2'}}
-}
+}~~~~~~~~\text{(\ref*{eqns:consistency}a-d)}
+% \end{equation}
+% \end{minipage}
 \end{mathpar}
+\end{subequations}
 % \begin{equation}%\label{rule:tcompat-num}
 % \end{equation}
 % \begin{equation}%\label{rule:tcompat-arr}
 % \end{equation}
 % \end{subequations}
 \fbox{$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$}~~\text{$\tau$ has matched arrow type $\tarr{\htau_1}{\htau_2}$}
-\begin{mathpar}
-% \begin{subequations}
-% \begin{equation}
+\begin{subequations}
+\begin{minipage}{0.5\linewidth}
+\begin{equation}
 \inferrule{ }{
   \arrmatch{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1}{\htau_2}}
 }
-
-% \end{equation}
-% \begin{equation}
+\end{equation}
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+\begin{equation}
 \inferrule{ }{
   \arrmatch{\tehole}{\tarr{\tehole}{\tehole}}
 }
-% \end{equation}
+\end{equation}
+\end{minipage}
 % \end{subequations}
-\end{mathpar}
+% \end{mathpar}
 % \noindent\fbox{$\tincompat{\htau}{\htau'}$}
 % \begin{subequations}
 %   % \begin{equation}
@@ -126,7 +141,7 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 %       \tincompat{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1'}{\htau_2'}}
 %     }
 %   \end{equation}
-% \end{subequations}
+\end{subequations}
 \caption{H-type consistency and matched arrow types.}
 \label{fig:type-consistency}
 \end{figure}
