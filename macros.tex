@@ -79,8 +79,11 @@
 \newcommand{\aFinish}{\mathtt{finish}}
 
 \newcommand{\performAna}[5]{#1 \vdash #2 \xlongrightarrow{#4} #5 \Leftarrow #3}
+\newcommand{\performAnaI}[5]{#1 \vdash #2 \xlongrightarrow{#4}\hspace{-3px}{}^{*}~ #5 \Leftarrow #3}
 \newcommand{\performSyn}[6]{#1 \vdash #2 \Rightarrow #3 \xlongrightarrow{#4} #5 \Rightarrow #6}
+\newcommand{\performSynI}[6]{#1 \vdash #2 \Rightarrow #3 \xlongrightarrow{#4}\hspace{-3px}{}^{*}~ #5 \Rightarrow #6}
 \newcommand{\performTyp}[3]{#1 \xlongrightarrow{#2} #3}
+\newcommand{\performTypI}[3]{#1 \xlongrightarrow{#2}\hspace{-3px}{}^{*}~#3}
 
 \newcommand{\performMove}[3]{#1 \xlongrightarrow{#2} #3}
 \newcommand{\performDel}[2]{#1 \xlongrightarrow{\aDel} #2}
