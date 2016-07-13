@@ -4,7 +4,7 @@
 The full collection of rules defining the semantics of Hazelnut are reproduced here in their definitional order for reference.
 \subsection{H-Types and H-Expressions}
 \subsubsection{Type Compatibility and Incompatibility}
-~\\~\\
+
 \noindent\fbox{$\tcompat{\htau}{\htau'}$}
 \begin{subequations}%%\label{rules:tcompat}
 % \begin{equation}%%\label{rule:tcompat-comm}
@@ -244,7 +244,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
 By convention, we use the metavariable $\tau$ rather than $\htau$ for
 complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 
-~\\~\\\noindent\fbox{$\hcomplete{\tau}$}
+\noindent\fbox{$\hcomplete{\tau}$}
 \begin{subequations}
 \begin{equation}
 \inferrule{
@@ -305,7 +305,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 \end{subequations}
 
 \subsection{Z-Types and Z-Expressions}
-\subsubsection{Type Focus Erasure}~\\~\\
+\subsubsection{Type Focus Erasure}
 \noindent\fbox{$\removeSel{\ztau}=\htau$} is a metafunction defined as follows:
 \begin{subequations}
 \begin{align}
@@ -317,7 +317,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 \end{align}
 \end{subequations}
 
-\subsubsection{Expression Focus Erasure}~\\~\\
+\subsubsection{Expression Focus Erasure}
 \noindent\fbox{$\removeSel{\zexp}=\hexp$} is a metafunction defined as follows:
 \begin{subequations}
 \begin{align}
@@ -335,7 +335,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 \end{align}
 \end{subequations}
 \subsection{Action Model}
-\subsubsection{Type Actions}~\\~\\
+\subsubsection{Type Actions}
 \noindent\fbox{$\performTyp{\ztau}{\alpha}{\ztau'}$}
 \paragraph{Type Movement}
 \begin{subequations}
@@ -467,7 +467,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 \end{equation}
 \end{subequations}
 
-\subsubsection{Expression Movement Actions}~\\~\\
+\subsubsection{Expression Movement Actions} 
 \noindent\fbox{$\performMove{\zexp}{\aMove{\delta}}{\zexp'}$}
 
 \begin{subequations}
@@ -732,7 +732,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 \subsubsection{Synthetic and Analytic Expression Actions}
 The synthetic and analytic expression action performance judgements are defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules (\ref{Arules:performAna}), respectively.
 
-~\\~\\
+
 \noindent\fbox{$\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$}
 
 \begin{subequations}\label{Arules:performSyn}
