@@ -1782,10 +1782,10 @@ The full collection of rules defining the semantics of Hazelnut are reproduced h
 \subsubsection{Synthesis and Analysis}
 The judgements $\hsyn{\hGamma}{\hexp}{\htau}$ and
 $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
-(\ref{rules:hsyn}) and Rules (\ref{rules:hana}), respectively.
+(\ref{rules:hana}) and Rules (\ref{rules:hsyn}), respectively.
 
 \noindent\fbox{$\hana{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ analyzes against $\htau$}
-\begin{subequations}
+\begin{subequations}\label{rules:hana}
 \begin{equation}\label{rule:ana-subsume}
 \inferrule{
   \hsyn{\hGamma}{\hexp}{\htau'}\\
@@ -1804,7 +1804,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
 \end{equation}
 \end{subequations}
 \fbox{$\hsyn{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ synthesizes $\htau$}
-\begin{subequations}
+\begin{subequations}\label{rules:hsyn}
 \begin{equation}\label{rule:syn-asc}
 \inferrule{
   \hana{\hGamma}{\hexp}{\htau}
@@ -1858,7 +1858,7 @@ By convention, we use the metavariable $\tau$ rather than $\htau$ for
 complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 
 ~\\~\\\noindent\fbox{$\hcomplete{\tau}$}
-\begin{subequations}\label{rules:hana}
+\begin{subequations}
 \begin{equation}
 \inferrule{
   \hcomplete{\tau_1}\\
@@ -1875,7 +1875,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 \end{subequations}
 
 \noindent\fbox{$\hcomplete{e}$}
-\begin{subequations}\label{rules:hsyn}
+\begin{subequations}
 \begin{equation}
   \inferrule{
     \hcomplete{\hexp}\\
