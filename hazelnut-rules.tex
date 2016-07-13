@@ -8,8 +8,8 @@ The full collection of rules defining the semantics of Hazelnut are reproduced h
 \subsubsection{Type Compatibility and Incompatibility}
 ~\\~\\
 \noindent\fbox{$\tcompat{\htau}{\htau'}$}
-\begin{subequations}%\label{rules:tcompat}
-% \begin{equation}%\label{rule:tcompat-comm}
+\begin{subequations}%%\label{rules:tcompat}
+% \begin{equation}%%\label{rule:tcompat-comm}
 % \inferrule
 % %[TCSym]
 % {
@@ -23,17 +23,17 @@ The full collection of rules defining the semantics of Hazelnut are reproduced h
 	\tcompat{\tehole}{\htau}
 }
 \end{equation}
-\begin{equation}%\label{rule:tcompat-hole}
+\begin{equation}%%\label{rule:tcompat-hole}
 \inferrule{ }{
   \tcompat{\htau}{\tehole}
 }
 \end{equation}
-\begin{equation}%\label{rule:tcompat-num}
+\begin{equation}%%\label{rule:tcompat-num}
 \inferrule{ }{
   \tcompat{\htau}{\htau}
 }
 \end{equation}
-\begin{equation}%\label{rule:tcompat-arr}
+\begin{equation}%%\label{rule:tcompat-arr}
 \inferrule{
   \tcompat{\htau_1}{\htau_1'}\\
   \tcompat{\htau_2}{\htau_2'}
@@ -81,8 +81,8 @@ The full collection of rules defining the semantics of Hazelnut are reproduced h
 \subsubsection{Function Type Matching}~
 
 % \noindent\fbox{$\tcompat{\htau}{\htau'}$}~~\text{$\tau$ and $\tau'$ are consistent}
-% % \begin{subequations}%\label{rules:tcompat}
-% % \begin{equation}%\label{rule:tcompat-comm}
+% % \begin{subequations}%%\label{rules:tcompat}
+% % \begin{equation}%%\label{rule:tcompat-comm}
 % % \inferrule
 % % %[TCSym]
 % % {
@@ -96,7 +96,7 @@ The full collection of rules defining the semantics of Hazelnut are reproduced h
 %   \tcompat{\tehole}{\htau}
 % }
 % \end{equation}
-% \begin{equation}%\label{rule:tcompat-hole}
+% \begin{equation}%%\label{rule:tcompat-hole}
 % \inferrule{ }{
 %   \tcompat{\htau}{\tehole}
 % }
@@ -112,9 +112,9 @@ The full collection of rules defining the semantics of Hazelnut are reproduced h
 %   \tcompat{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1'}{\htau_2'}}
 % }
 % \end{mathpar}
-% \begin{equation}%\label{rule:tcompat-num}
+% \begin{equation}%%\label{rule:tcompat-num}
 % \end{equation}
-% \begin{equation}%\label{rule:tcompat-arr}
+% \begin{equation}%%\label{rule:tcompat-arr}
 % \end{equation}
 % \end{subequations}
 \noindent
@@ -171,11 +171,11 @@ The full collection of rules defining the semantics of Hazelnut are reproduced h
 \subsubsection{Synthesis and Analysis}
 The judgements $\hsyn{\hGamma}{\hexp}{\htau}$ and
 $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
-(\ref{rules:hana}) and Rules (\ref{rules:hsyn}), respectively.
+(\ref{Arules:hana}) and Rules (\ref{Arules:hsyn}), respectively.
 
 \noindent\fbox{$\hana{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ analyzes against $\htau$}
-\begin{subequations}\label{rules:hana}
-\begin{equation}\label{rule:ana-subsume}
+\begin{subequations}\label{Arules:hana}
+\begin{equation}%\label{rule:ana-subsume}
 \inferrule{
   \hsyn{\hGamma}{\hexp}{\htau'}\\
   \tcompat{\htau}{\htau'}
@@ -183,7 +183,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
   \hana{\hGamma}{\hexp}{\htau}
 }
 \end{equation}
-\begin{equation}\label{rule:syn-lam}
+\begin{equation}%\label{rule:syn-lam}
 \inferrule{
   \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
   \hana{\hGamma, x : \htau_1}{\hexp}{\htau_2}
@@ -193,20 +193,20 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
 \end{equation}
 \end{subequations}
 \fbox{$\hsyn{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ synthesizes $\htau$}
-\begin{subequations}\label{rules:hsyn}
-\begin{equation}\label{rule:syn-asc}
+\begin{subequations}\label{Arules:hsyn}
+\begin{equation}%\label{rule:syn-asc}
 \inferrule{
   \hana{\hGamma}{\hexp}{\htau}
 }{
   \hsyn{\hGamma}{\hexp : \htau}{\htau}
 }
 \end{equation}
-\begin{equation}\label{rule:syn-var}
+\begin{equation}%\label{rule:syn-var}
 \inferrule{ }{
   \hsyn{\hGamma, x : \htau}{x}{\htau}
 }
 \end{equation}
-\begin{equation}\label{rule:syn-ap}
+\begin{equation}%\label{rule:syn-ap}
 \inferrule{
   \hsyn{\hGamma}{\hexp_1}{\htau}\\
   \arrmatch{\htau}{\tarr{\htau_2}{\htau'}}\\
@@ -215,12 +215,12 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
   \hsyn{\hGamma}{\hap{\hexp_1}{\hexp_2}}{\htau'}
 }
 \end{equation}
-\begin{equation}\label{rule:syn-num}
+\begin{equation}%\label{rule:syn-num}
 \inferrule{ }{
   \hsyn{\hGamma}{\hnum{n}}{\tnum}
 }
 \end{equation}
-\begin{equation}\label{rule:syn-plus}
+\begin{equation}%\label{rule:syn-plus}
 \inferrule{
   \hana{\hGamma}{\hexp_1}{\tnum}\\
   \hana{\hGamma}{\hexp_2}{\tnum}
@@ -228,12 +228,12 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
   \hsyn{\hGamma}{\hadd{\hexp_1}{\hexp_2}}{\tnum}
 }
 \end{equation}
-\begin{equation}\label{rule:syn-ehole}
+\begin{equation}%\label{rule:syn-ehole}
 \inferrule{ }{
   \hsyn{\hGamma}{\hehole}{\tehole}
 }
 \end{equation}
-\begin{equation}\label{rule:syn-hole}
+\begin{equation}%\label{rule:syn-hole}
 \inferrule{
   \hsyn{\hGamma}{\hexp}{\htau}
 }{
@@ -412,7 +412,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 
 \paragraph{Type Construction}
 \begin{equation}
-    %\label{r:contarr}
+    %%\label{r:contarr}
   \inferrule{ }{
     \performTyp{
       \zwsel{\htau}
@@ -425,7 +425,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 \end{equation}
 
   \begin{equation}
-    %\label{r:contnum}
+    %%\label{r:contnum}
   \inferrule{ }{
     \performTyp{
       \zwsel{\tehole}
@@ -440,7 +440,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 
 \paragraph{Zipper Cases}
   \begin{equation}
-    %\label{r:contarrL}
+    %%\label{r:contarrL}
   \inferrule{
     \performTyp{\ztau}{\alpha}{\ztau'}
   }{
@@ -454,7 +454,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
   }
 \end{equation}
   \begin{equation}
-    %\label{r:contarrR}
+    %%\label{r:contarrR}
   \inferrule{
     \performTyp{\ztau}{\alpha}{\ztau'}
   }{
@@ -570,7 +570,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 % \end{equation}
 
 \paragraph{Lambda}
-\begin{equation}\label{r:movefirstchild-lam}
+\begin{equation}%\label{r:movefirstchild-lam}
 \inferrule{ }{
   \performMove{
     \zwsel{\hlam{x}{\hexp}}
@@ -615,7 +615,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
     }
   }
 \end{equation}
-\begin{equation}\label{r:moveparent-ap2}
+\begin{equation}%\label{r:moveparent-ap2}
   \inferrule{ }{
     \performMove{
       \hap{{\hexp_1}}{\zwsel{\hexp_2}}
@@ -718,7 +718,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
   }
 }
 \end{equation}
-\begin{equation}\label{r:moveparent-hole}
+\begin{equation}%\label{r:moveparent-hole}
   \inferrule{ }{
     \performMove{
       \hhole{\zwsel{\hexp}}
@@ -732,12 +732,12 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 
 \end{subequations}
 \subsubsection{Synthetic and Analytic Expression Actions}
-The synthetic and analytic expression action performance judgements are defined mutually inductively by Rules (\ref{rules:performSyn}) and Rules (\ref{rules:performAna}), respectively.
+The synthetic and analytic expression action performance judgements are defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules (\ref{Arules:performAna}), respectively.
 
 ~\\~\\
 \noindent\fbox{$\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$}
 
-\begin{subequations}\label{rules:performSyn}
+\begin{subequations}\label{Arules:performSyn}
 \paragraph{Movement}
 \begin{equation}
 \inferrule{
@@ -780,7 +780,7 @@ The synthetic and analytic expression action performance judgements are defined 
 \end{equation}
 
 \begin{equation}
-  \label{r:coneapfn}
+  %\label{r:coneapfn}
   \inferrule{
     \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}
   }{
@@ -885,7 +885,7 @@ The synthetic and analytic expression action performance judgements are defined 
 \end{equation}
 \paragraph{Finishing}
   \begin{equation}
-    %% \label{r:finishana} %% TODO; get labels right
+    %% %\label{r:finishana} %% TODO; get labels right
   \inferrule{
     \hsyn{\hGamma}{\hexp}{\htau'}
   }{
@@ -1057,7 +1057,7 @@ The synthetic and analytic expression action performance judgements are defined 
 \end{subequations}
 
 \noindent\fbox{$\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}$}
-\begin{subequations}\label{rules:performAna}
+\begin{subequations}\label{Arules:performAna}
 \paragraph{Subsumption}
 \begin{equation}
   \inferrule{
@@ -1102,7 +1102,7 @@ The synthetic and analytic expression action performance judgements are defined 
   }
 \end{equation}
 
-\begin{equation}\label{rule:performAna-lam-1}
+\begin{equation}%\label{rule:performAna-lam-1}
   \inferrule{
     \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}
   }{
