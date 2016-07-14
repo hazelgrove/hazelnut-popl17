@@ -50,7 +50,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
    {\tcompat{\htau_1 + \htau_2}{\htau_1' + \htau_2'}}
 \end{mathpar}
 
-\judgbox{\sumhasmatched{\htau}{\htau_1+\htau_2}}{$\htau$ has matched sum type $\htau_1+\htau_2$}\vspace{-10px}
+\judgbox{\sumhasmatched{\htau}{\htau_1+\htau_2}}{$\htau$ has matched sum type $\htau_1+\htau_2$}%\vspace{-10px}
 \begin{mathpar}
 \Infer{}{ }
 {\sumhasmatched{\htau_1 + \htau_2}{\htau_1 + \htau_2}}
@@ -94,8 +94,8 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
              {\tsum{{\htau}}{\zwsel{\hehole}}}
 }
 \end{equation}
+\noindent\begin{minipage}{.5\linewidth}
  \begin{equation}\label{rule:zipper-sum-left}
-    %\label{r:contarrL}
   \inferrule{
     \performTyp{\ztau}{\alpha}{\ztau'}
   }{
@@ -107,8 +107,8 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
       {\ztau'} + {\htau}
     }
   }
-\end{equation}
-  \begin{equation}\label{rule:zipper-sum-right}
+\end{equation}\end{minipage}\begin{minipage}{.5\linewidth}
+\begin{equation}\label{rule:zipper-sum-right}
     %\label{r:contarrR}
   \inferrule{
     \performTyp{\ztau}{\alpha}{\ztau'}
@@ -122,6 +122,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
     }
   }
 \end{equation}
+\end{minipage}
 \end{subequations}
 \judgbox{\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}}
 {(Additional analytic actions:)}

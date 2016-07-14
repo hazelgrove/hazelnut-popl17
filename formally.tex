@@ -10,8 +10,6 @@ The previous section introduced Hazelnut by example. In this section, we systema
 Our overview below omits certain ``uninteresting'' details. The supplement includes the complete collection of rules, in definitional order. These rules, along with the proofs of two key metatheorems, have been mechanized in Agda \cite{norell:thesis}, also in the supplement. We will summarize this effort in Sec. \ref{sec:mech}.% The supplement contains the Agda sources and additional technical details.
 
 \subsection{H-types and H-expressions}\label{sec:holes}
-
-
 Figure \ref{fig:hexp-syntax} defines the syntax of H-types, $\htau$, and H-expressions, $\hexp$. Most forms correspond directly to those of the simply typed lambda calculus (STLC) extended with a single base type, $\tnum$, of numbers (cf. \cite{pfpl}.) The number expression corresponding to the mathematical number $n$ is drawn $\hnum{n}$, and for simplicity, we define only a single arithmetic operation, $\hadd{\hexp}{\hexp}$. The form $\hexp : \htau$ is an explicit \emph{type ascription}. 
 
 In addition to these standard forms, \emph{type holes} and \emph{empty expression holes} are both drawn $\hehole$ and \emph{non-empty expression holes} are drawn $\hhole{\hexp}$. We do not need non-empty type holes because every H-type is a valid classifier of H-expressions. 
@@ -50,49 +48,66 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 %   \tcompat{\htau'}{\htau}
 % }
 % \end{equation}
+\begin{subequations}\label{eqns:consistency}
 \begin{mathpar}
+% \begin{equation}
 \inferrule{ }{
   \tcompat{\tehole}{\htau}
-}
-
+}%~\text{(1a)}
 % \end{equation}
+% \end{minipage}
+% \begin{minipage}{0.15\linewidth}
 % \begin{equation}%\label{rule:tcompat-hole}
+~~~~~~~~
 \inferrule{ }{
   \tcompat{\htau}{\tehole}
-}
-
+}%~\text{(1b)}
+% \end{equation}
+% \end{minipage}
+% \begin{minipage}{0.15\linewidth}
+% \begin{equation}
+~~~~~~~~
 \inferrule{ }{
   \tcompat{\htau}{\htau}
-}
-
+}%~\text{(1c)}
+% \end{equation}
+% \end{minipage}
+% \begin{minipage}{0.15\linewidth}
+% \begin{equation}
+~~~~~~~~
 \inferrule{
   \tcompat{\htau_1}{\htau_1'}\\
   \tcompat{\htau_2}{\htau_2'}
 }{
   \tcompat{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1'}{\htau_2'}}
-}
+}~~~~~~~~\text{(\ref*{eqns:consistency}a-d)}
+% \end{equation}
+% \end{minipage}
 \end{mathpar}
+\end{subequations}
 % \begin{equation}%\label{rule:tcompat-num}
 % \end{equation}
 % \begin{equation}%\label{rule:tcompat-arr}
 % \end{equation}
 % \end{subequations}
 \fbox{$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$}~~\text{$\tau$ has matched arrow type $\tarr{\htau_1}{\htau_2}$}
-\begin{mathpar}
-% \begin{subequations}
-% \begin{equation}
+\begin{subequations}
+\begin{minipage}{0.5\linewidth}
+\begin{equation}
 \inferrule{ }{
   \arrmatch{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1}{\htau_2}}
 }
-
-% \end{equation}
-% \begin{equation}
+\end{equation}
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+\begin{equation}
 \inferrule{ }{
   \arrmatch{\tehole}{\tarr{\tehole}{\tehole}}
 }
-% \end{equation}
+\end{equation}
+\end{minipage}
 % \end{subequations}
-\end{mathpar}
+% \end{mathpar}
 % \noindent\fbox{$\tincompat{\htau}{\htau'}$}
 % \begin{subequations}
 %   % \begin{equation}
@@ -126,7 +141,7 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 %       \tincompat{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1'}{\htau_2'}}
 %     }
 %   \end{equation}
-% \end{subequations}
+\end{subequations}
 \caption{H-type consistency and matched arrow types.}
 \label{fig:type-consistency}
 \end{figure}
@@ -204,7 +219,7 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 \label{fig:ana-syn}
 \end{figure}
 
-Hazelnut's static semantics is organized as a \emph{bidirectional type system} \cite{Pierce:2000:LTI:345099.345100,bidi-tutorial} around the two mutually defined judgements in Figure \ref{fig:ana-syn}. Typing contexts, $\hGamma$, map each variable $x \in \domof{\hGamma}$ to a hypothesis $x : \htau$ in the usual manner. We identify the context up to exchange and adopt the standard identification convention for formal structures that differ only up to alpha-equivalence. 
+Hazelnut's static semantics is organized as a \emph{bidirectional type system} \cite{Pierce:2000:LTI:345099.345100,DBLP:conf/icfp/DaviesP00,DBLP:conf/tldi/ChlipalaPH05,bidi-tutorial} around the two mutually defined judgements in Figure \ref{fig:ana-syn}. Typing contexts, $\hGamma$, map each variable $x \in \domof{\hGamma}$ to a hypothesis $x : \htau$ in the usual manner. We identify the context up to exchange and adopt the standard identification convention for formal structures that differ only up to alpha-equivalence. 
 
 Derivations of the type analysis judgement, $\hana{\hGamma}{\hexp}{\htau}$, establish that $\hexp$ can appear where an expression of type $\htau$ is expected. Derivations of the type synthesis judgement, $\hsyn{\hGamma}{\hexp}{\htau}$, infer a type from $\hexp$, which is necessary in positions where an expected type is not available (e.g. at the top level.) Algorithmically, the type is an ``input'' of the type analysis judgement, but an ``output'' of the type synthesis judgement. %The rules describe a \emph{local type inference} scheme, i.e. type ascriptions are unnecessary when an expression is being analyzed against a known type.
 Making a judgemental distinction between these two notions will be essential in our action semantics (Sec. \ref{sec:actions}.)
@@ -1034,54 +1049,81 @@ With these definitions, we can state reachability as follows:
 
 \begin{theorem}[Reachability]\label{thrm:reachability} ~
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
-\item If $\removeSel{\ztau}=\removeSel{\ztau'}$ then there exists some $\bar\alpha$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performTyp{\ztau}{\bar\alpha}{\ztau'}$.
-\item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\removeSel{\zexp}=\removeSel{\zexp'}$ then there exists some $\bar{\alpha}$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performAna{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}$. 
-\item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\removeSel{\zexp}=\removeSel{\zexp'}$ then there exists some $\bar{\alpha}$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performSyn{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zexp'}{\htau}$.
+\item If $\removeSel{\ztau}=\removeSel{\ztau'}$ then there exists some $\bar\alpha$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performTypI{\ztau}{\bar\alpha}{\ztau'}$.
+\item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\removeSel{\zexp}=\removeSel{\zexp'}$ then there exists some $\bar{\alpha}$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performAnaI{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}$. 
+\item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\removeSel{\zexp}=\removeSel{\zexp'}$ then there exists some $\bar{\alpha}$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performSynI{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zexp'}{\htau}$.
 \end{enumerate}
 \end{theorem}
 
 
 \begin{figure}
 $\mathsf{ActionList}$~~$\bar{\alpha} ::= \cdot ~\vert~ \alpha; \bar{\alpha}$\vspace{4px}\\
-\fbox{$\performTyp{\ztau}{\bar{\alpha}}{\ztau'}$}
-\vspace{-10px}\begin{mathpar}
-\inferrule{ }{
-    \performTyp{\ztau}{\cdot}{\ztau}
-}
+\fbox{$\performTypI{\ztau}{\bar{\alpha}}{\ztau'}$}
 
+\vspace{-10px}\begin{subequations}
+\begin{minipage}{0.35\linewidth}
+\begin{equation}
+\inferrule{ }{
+    \performTypI{\ztau}{\cdot}{\ztau}
+}
+\end{equation}
+\end{minipage}
+\begin{minipage}{0.65\linewidth}
+\begin{equation}
 \inferrule{
   \performTyp{\ztau}{\alpha}{\ztau'}\\
-  \performTyp{\ztau'}{\bar{\alpha}}{\ztau''}
+  \performTypI{\ztau'}{\bar{\alpha}}{\ztau''}
 }{
-  \performTyp{\ztau}{\alpha; \bar{\alpha}}{\ztau''}
+  \performTypI{\ztau}{\alpha; \bar{\alpha}}{\ztau''}
 }
-\end{mathpar}
-\fbox{$\performSyn{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}{\htau'}$}
-\vspace{-10px}\begin{mathpar}
-\inferrule{ }{
-  \performSyn{\hGamma}{\zexp}{\htau}{\cdot}{\zexp}{\htau}
-}
+\end{equation}
+\end{minipage}
+\end{subequations}
 
+\fbox{$\performSynI{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}{\htau'}$}
+\vspace{-10px}
+
+\begin{subequations}\label{rules:iterated-syn}
+\hspace{-12px}
+% \begin{minipage}{0.88\linewidth}
+\begin{mathpar}
+\inferrule{ }{
+  \performSynI{\hGamma}{\zexp}{\htau}{\cdot}{\zexp}{\htau}
+}
+~~~~~~
 \inferrule{
   \performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}\\\\
-  \performSyn{\hGamma}{\zexp'}{\htau'}{\bar{\alpha}}{\zexp''}{\htau''}
+  \performSynI{\hGamma}{\zexp'}{\htau'}{\bar{\alpha}}{\zexp''}{\htau''}
 }{
-  \performSyn{\hGamma}{\zexp}{\htau}{\alpha; \bar{\alpha}}{\zexp''}{\htau''}
+  \performSynI{\hGamma}{\zexp}{\htau}{\alpha; \bar{\alpha}}{\zexp''}{\htau''}
 }
+~~~~~
+\text{(\ref*{rules:iterated-syn}a-b)}
 \end{mathpar}
-\fbox{$\performAna{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}$}
-\vspace{-10px}\begin{mathpar}
-\inferrule{ }{
-  \performAna{\hGamma}{\zexp}{\htau}{\cdot}{\zexp}
-}
+% \end{minipage}
+% \begin{minipage}{0.12\linewidth}
+% (11a-b)
+% \end{minipage}
+\end{subequations}
 
+\fbox{$\performAna{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}$}
+\vspace{-12px}
+\begin{subequations}\label{rules:iterated-ana}
+\begin{mathpar}
+~~~~~~~\inferrule{ }{
+  \performAnaI{\hGamma}{\zexp}{\htau}{\cdot}{\zexp}
+}
+~~~~~~~~~~~~~~
 \inferrule{
   \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}\\\\
-  \performAna{\hGamma}{\zexp'}{\htau}{\bar\alpha}{\zexp''}
+  \performAnaI{\hGamma}{\zexp'}{\htau}{\bar\alpha}{\zexp''}
 }{
-  \performAna{\hGamma}{\zexp}{\htau}{\alpha; \bar\alpha}{\zexp''}
+  \performAnaI{\hGamma}{\zexp}{\htau}{\alpha; \bar\alpha}{\zexp''}
 }
+~~~~~~~~~~
+\text{(\ref*{rules:iterated-ana}a-b)}
 \end{mathpar}
+\end{subequations}
 \caption{Iterated Action Judgements}
 \label{fig:multistep}
 \end{figure}
@@ -1089,17 +1131,17 @@ $\mathsf{ActionList}$~~$\bar{\alpha} ::= \cdot ~\vert~ \alpha; \bar{\alpha}$\vsp
 The simplest way to prove Theorem \ref{thrm:reachability} is to  break it into two lemmas. Lemma \ref{lemma:reach-up} establishes that you can always move the cursor to the outermost position in an expression. This serves as a check on our $\aMove{\dParent}$ rules.
 \begin{lemma}[Reach Up]\label{lemma:reach-up} ~
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
-\item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performTyp{\ztau}{\bar\alpha}{\zwsel{\htau}}$.
-\item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performAna{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}$. 
-\item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performSyn{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}{\htau}$.
+\item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performTypI{\ztau}{\bar\alpha}{\zwsel{\htau}}$.
+\item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performAnaI{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}$. 
+\item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performSynI{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}{\htau}$.
 \end{enumerate}
 \end{lemma}
 Lemma \ref{lemma:reach-down} establishes that you can always move the cursor from the outermost position to any other position. This serves as a check on our $\aMove{\dChild}$ and $\aMove{\dNext}$ rules. 
 \begin{lemma}[Reach Down]\label{lemma:reach-down} ~
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
-\item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performTyp{\zwsel{\htau}}{\bar\alpha}{\ztau}$.
-\item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performAna{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}$.
-\item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ nand $\performSyn{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}{\htau}$.
+\item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performTypI{\zwsel{\htau}}{\bar\alpha}{\ztau}$.
+\item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performAnaI{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}$.
+\item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ nand $\performSynI{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}{\htau}$.
 \end{enumerate}
 \end{lemma}
 Theorem \ref{thrm:reachability} follows by straightforward composition of these two lemmas. %(The witness to the existential is not, of course, the shortest path between any two cursor locations.)
@@ -1462,9 +1504,9 @@ The $\fnehole$ shape is grayed out in Figure \ref{fig:action-syntax} because we 
 To check that we have defined ``enough'' construct actions, we need to establish that we can start from an empty hole and arrive at any well-typed expression with, for simplicity, the cursor on the outside (Lemma \ref{lemma:reach-down} allows us to then move the cursor anywhere else.) As with reachability, we rely on the iterated action judgements defined in Figure \ref{fig:multistep}.
 \begin{theorem}[Constructability]\label{thrm:constructability} ~
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
-\item For every $\htau$ there exists $\bar\alpha$ such that $\performTyp{\zwsel{\tehole}}{\bar\alpha}{\zwsel{\htau}}$.
-\item If $\hana{\hGamma}{\hexp}{\htau}$ then there exists $\bar\alpha$ such that $\performAna{\hGamma}{\zwsel{\hhole{}}}{\htau}{\bar\alpha}{\zwsel{\hexp}}$.
-\item If $\hsyn{\hGamma}{\hexp}{\htau}$ then there exists $\bar\alpha$ such that $\performSyn{\hGamma}{\zwsel{\hhole{}}}{\tehole}{\bar\alpha}{\zwsel{\hexp}}{\htau}$.
+\item For every $\htau$ there exists $\bar\alpha$ such that $\performTypI{\zwsel{\tehole}}{\bar\alpha}{\zwsel{\htau}}$.
+\item If $\hana{\hGamma}{\hexp}{\htau}$ then there exists $\bar\alpha$ such that: $$\performAnaI{\hGamma}{\zwsel{\hhole{}}}{\htau}{\bar\alpha}{\zwsel{\hexp}}$$
+\item If $\hsyn{\hGamma}{\hexp}{\htau}$ then there exists $\bar\alpha$ such that: $$\performSynI{\hGamma}{\zwsel{\hhole{}}}{\tehole}{\bar\alpha}{\zwsel{\hexp}}{\htau}$$
 \end{enumerate}
 \end{theorem}
 
