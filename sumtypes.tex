@@ -40,25 +40,33 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 {
 %Extensions to \textbf{Static Semantics} for Sum Types:
 %\\[1mm]
-\judgbox{\tcompat{\htau_1}{\htau_2}}{(Additional type consistency form:)}
-\begin{mathpar}
-  \Infer{}{
+\judgbox{\tcompat{\htau_1}{\htau_2}}{(Additional type consistency rule:)}
+\begin{equation}
+  \inferrule{
     \tcompat{\htau_1}{\htau_1'}
     \\
     \tcompat{\htau_2}{\htau_2'}
     }
    {\tcompat{\htau_1 + \htau_2}{\htau_1' + \htau_2'}}
-\end{mathpar}
+\end{equation}
 
 \judgbox{\sumhasmatched{\htau}{\htau_1+\htau_2}}{$\htau$ has matched sum type $\htau_1+\htau_2$}%\vspace{-10px}
-\begin{mathpar}
-\Infer{}{ }
+\begin{subequations}
+\begin{minipage}{.5\linewidth}
+\begin{equation}
+\inferrule{ }
 {\sumhasmatched{\htau_1 + \htau_2}{\htau_1 + \htau_2}}
-\and
-\Infer{}{ }
+\end{equation}
+\end{minipage}
+\begin{minipage}{.5\linewidth}
+\begin{equation}
+\inferrule{ }
 {\sumhasmatched{\hehole}{\hehole + \hehole}}
-\end{mathpar}
+\end{equation}
+\end{minipage}
+\end{subequations}
 
+\vspace{3px}
 \judgbox{\hana{\hGamma}{\hexp}{\htau}}{(Additional type analysis rules:)}
 \begin{subequations}
 \begin{equation}
@@ -85,6 +93,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \label{fig:sum-statics}
 %Extensions to \textbf{Action Semantics} for Sum Types:
 %\\[1mm]
+\vspace{15px}
 \judgbox{\performTyp{\ztau}{\alpha}{\ztau}}{(Additional type actions:)}\vspace{-5px}
 \begin{subequations}
 \begin{equation}\label{rule:construct-sum}
@@ -351,7 +360,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
       {\zwsel{\hcase{{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
 \end{array}
 \end{displaymath}
-\caption{Movement action semantics for sum type forms.}
+\caption{Movement actions for sums.}
 \label{fig:sum-move}
 \end{figure}
 
