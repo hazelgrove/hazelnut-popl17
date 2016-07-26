@@ -21,7 +21,7 @@ In this section, we will conservatively extend Hazelnut with binary {sum types} 
 
 \paragraph{Syntax.}
 %
-The first step is to extend the syntax of H-types and H-expressions 
+The first step is to extend the syntax of H-types and H-expressions
 with the familiar forms \cite{pfpl}:\vspace{-3px}
 \begin{grammar}
 \textsf{HTyp} & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
@@ -137,7 +137,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 {(Additional analytic actions:)}
 \begin{subequations}
 \begin{equation}\label{rule:performAna-inj-1}
-  \inferrule{ \sumhasmatched{\htau_{+}}{\tsum{\hehole}{\hehole}} }
+  \inferrule{ \sumhasmatched{\htau_{+}}{\tsum{\htau_{1}}{\htau_{2}}} }
   {
   \performAna{\hGamma}{\zwsel{\hehole}}
               {\htau_{+}}
