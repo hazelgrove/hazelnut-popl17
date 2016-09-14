@@ -1,0 +1,376 @@
+ACM policy says that "Anonymized reviews are the non-exclusive
+property of the authors of the reviewed paper: they can be made public
+or attached to resubmissions of the paper."
+
+See also: http://www.sigplan.org/Resources/Policies/Review/
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+===========================================================================
+                          POPL 2017 Review #319A
+---------------------------------------------------------------------------
+  Paper #319: Hazelnut: A Bidirectionally Typed Structure Editor Calculus
+---------------------------------------------------------------------------
+
+                      Overall merit: A. Good paper, I will champion it
+                         Confidence: Y. I am knowledgeable in this area,
+                                        but not an expert
+
+                         ===== Paper summary =====
+
+This paper presents a type theory of structure editing with many holes, and one cursor like a zipper. Semantically, the calculus formalizes "squiggly lines" so that temporary inconsistencies are delimited in holes instead of rendering the entire program meaningless. The calculus enables rich editing with deferred consistency checks and furthermore not limited to just outside-in tree-like editing. In addition to a model, the paper includes theorems -- in particular, the sensibility theorem establishes that the edit state is well-typed after cursor erasure. The paper also discusses safe extension and relations to known type theories.
+
+Formally, an `HTyp` adds an extra syntactic form for a hole. An `HExp` adds likewise an extra syntactic form for a hole, and in addition for a non-empty expression hole. A non-empty expression hole erases to an empty hole for the purpose of typing. `ZTyp` and `ZExp` adds a notion of cursor within types and expressions, respectively. Semantic actions are defined by relative movements on Z-expressions.
+
+                           ===== Strengths =====
+
++ beautiful typesetting, with tasteful use of colors
++ paper is easy to read in order, flows well
++ thoughtful about proving theorems that are relevant to semantic editing
+
+                          ===== Weaknesses =====
+
+- the paper does not have a practical evaluation, though it seems OK to me to leave this as future work
+
+                      ===== Comments for author =====
+
+The paper presents a foundation of semantics for editing. Because the paper is well-structured and written, this is a valuable contribution that others can build on.
+
+Minor:
+- typo p.4: Intead -> Instead
+
+===========================================================================
+                          POPL 2017 Review #319B
+---------------------------------------------------------------------------
+  Paper #319: Hazelnut: A Bidirectionally Typed Structure Editor Calculus
+---------------------------------------------------------------------------
+
+                      Overall merit: B. OK paper, but I will not champion
+                                        it
+                         Confidence: X. I am an expert in this area
+
+                         ===== Paper summary =====
+
+This paper introduces Hazelnut, which the authors describe as a “type-theoretic structure editor calculus” for a very simply lambda calculus.  The paper defines the notion of expressions and types with holes and then adds the notion of a cursor a la Huet’s zippers.  The authors give a language of commands for moving the cursor and filling it with constructs from the language.  They give a bi-directional type system for the language and show the resulting system has a number of nice theoretical properties including: 
+
+ 1) Sensibility (Actions on well-typed terms produce well-typed terms under both type analysis and type checking), 
+
+ 2) Movement erasure (moving the cursor around types and expressions does not change their erased values), 
+
+ 3) Reachability (the movement commands can move the cursor anywhere in an expression or type), and 
+
+ 4) Constructabilty (any expression or type can be constructed using the commands in the language).  
+
+Most of these results have been proven formally in Agda.  The authors show the essentially routine process of extending the original language with the constructs necessary to support binary sums.   The goal of the paper is to provide a formal semantics for structured editors.  The authors envision multiple possible front ends with a variety of user interfaces.
+
+                           ===== Strengths =====
+
++ Mechanized semantics and proofs of Sensibility and Movement Invariance in Agda and is available in supplement.
++ Reference implementation exists and is available in supplement.
++ Lots of interesting relationship with existing work (gradual type systems, type holes as unification variables, type-directed program synthesis, contextual modal type theory/interleaved “edit and resume” programming)
++ Clearly written paper.
++ The idea of automatically generating much of the structure seems feasible and really useful.
+
+                          ===== Weaknesses =====
+
+- Not clear how usable/useful structure editors are.
+- Proofs of reachability and constructabilty have not yet been fully mechanized.
+
+                      ===== Comments for author =====
+
+I like the discussion of how the various theorems ensure that the rules you have defined are correct and that you have not forgotten any.
+
+I like how you showed how to extend the system with a new kind of type, giving a feel for the level of effort required to handle new constructs.  
+
+Neural implants: programming at the speed of thought :-)!… although having to think all the shape commands to navigate would quickly become tedious!
+
+Conceptual questions
+p. 5 Do you need actions for renaming bound variables?
+
+p. 6  The deletion rule for Z-expressions in analysis changes not just the expression being deleted but also the inferred type.  Does this “action outside the hole” cause any difficulties?
+
+p. 6  Rule (10a) Why does the construct arrow make the type at the cursor location into the argument type?  Why not the result type?  Why not have two commands for introducing function types, one where the cursor into the argument and a second into the return?  This approach would be consistent with what you did for function application.
+
+p. 7 Similarly for plus.  Why does the construct plus command put the argument in the left hand side?  Because of the symmetry of addition?  
+
+Minor edits/confusions
+p. 1 “it’s edit” —> “its edit”
+
+p. 5 Figure 7.  It’s probably useful to “read” the cases for Shape.  It took me a bit to decipher asc. Nehole looks like it is something you will talk about later; maybe say that?
+
+p. 5 “if the cursor erasure of the edit state synthesizes a type, then we defer to the synthetic action judgement, as long as the type of the resulting cursor erasure is consistent with the type provided for analysis.” I don’t follow what you mean by “the resulting cursor erasure.” It seems like that would be type \tau.’ (the type inferred for the cursor eraser), but you are actually checking that \tau. is consistent with \tau.’’ not \tau.’.  What am I missing?  (Sorry if that was difficult to follow!)
+
+p. 8 latex residual: -3px
+
+      ===== Questions for authors to address in rebuttal period =====
+
+p. 6  Rule (11c) Are you guaranteed in this case that x is already in the context?  Does this mean that you have to introduce the binding location for a variable before you can refer to the variable?  Is that overly restrictive in practice? Why not allow holes in the context?
+
+===========================================================================
+                          POPL 2017 Review #319C
+---------------------------------------------------------------------------
+  Paper #319: Hazelnut: A Bidirectionally Typed Structure Editor Calculus
+---------------------------------------------------------------------------
+
+                      Overall merit: A. Good paper, I will champion it
+                         Confidence: Y. I am knowledgeable in this area,
+                                        but not an expert
+
+                         ===== Paper summary =====
+
+This paper presents a type-based system for structured editing. Terms and types may have holes representing unspecified or underspecified subterms and subtypes. Holes can be empty, indicating an unspecified subterm or subtype, or nonempty, indicating a subterm or subtype that does not (yet) match its context. There are rules for type synthesis, or generation of a type for a given term, and analysis, determining whether a term can appear where an expression of a given type is expected. The system is more flexible than other structure editors in that it allows a comparatively liberal set of partially consistent states. There are also rules that allow the user to incrementally develop a type or term, filling it the gaps while maintaining partial consistency (Theorem 1), and moving a cursor around. There is a prototype written in Agda.
+
+                           ===== Strengths =====
+
+- A principled type-theoretic approch to structure editing that allows a more flexible form of typing.
+- Connections to gradual typing
+- Generally well-written, although difficult to follow all the intricacies of the type system, especially the interaction between synthesis and analysis. However it seems well considered.
+
+                          ===== Weaknesses =====
+
+None, except for a few typos.
+
+                      ===== Comments for author =====
+
+I may be mistaken, but the system for navigating with the cursor seems completely orthogonal to the type system. It also seems like it is a special case of something much more general that would apply to any term signature. I am wondering whether this part of the system could be factored out and handled completely separately, independently of the type system. As it is currently, it is like the lambda calculus with a cursor movement system for allowing a user to navigate around to select a redex to reduce. Perhaps it would be possible to present a cursor-free version of the type system in which any subterm matching a rule premise can be a redex, as in the lambda calculus. If there is some reason this is not possible, this should be explained.
+
+Minor comments:
+
+p1
+.) -> ).
+it's -> its
+definitions is -> definition is
+'...statically meaningful -- only that it is syntactically well-formed...' Please explain the difference.
+
+p2
+I'm not familiar with the term 'ascription'.
+
+p3
+There seem to be some dots missing on some tau and tau' in Fig 4.
+'We do not need non-empty type holds because every H-type is a valid classifier of H-esxpressions.' I do not understand this comment, please elaborate.
+
+p4
+Intead -> Instead
+
+p5
+deeply inform -> deeply informs
+
+p8
+'This is not a theorem...' This paragraph needs to be elaborated to better explain the difficulty and how it is being resolved.
+Spurious '-3px'
+
+p9
+analagous -> analogous (2 instances)
+
+p11 is build -> is built
+
+      ===== Questions for authors to address in rebuttal period =====
+
+Please address my question about the orthogonality of the navigation system and the type system above.
+
+To what extent can one precompile or partially evaluate in the presence of holes?
+
+===========================================================================
+                          POPL 2017 Review #319D
+---------------------------------------------------------------------------
+  Paper #319: Hazelnut: A Bidirectionally Typed Structure Editor Calculus
+---------------------------------------------------------------------------
+
+                      Overall merit: B. OK paper, but I will not champion
+                                        it
+                         Confidence: Y. I am knowledgeable in this area,
+                                        but not an expert
+
+                         ===== Paper summary =====
+
+This paper develops a typed programming language that features
+extensions that support structure editing, as well as a theory of
+structured editor actions that supports the development of
+syntactically well-typed programs throughout the editing process.
+This structured editing theory relies on notions of typed expression
+and type holes, bidirectional typing, and gradual type consistency to
+preserve typeability while supporting both top-down and bottom-up
+programming within the same development.  The edit actions are
+designed and validated with respect to a suite of correctness
+criteria.
+
+                           ===== Strengths =====
+
++ Interesting idea and execution
++ Nice set of validating metatheorems
++ Well-Written Paper
+
+                          ===== Weaknesses =====
+
++ Must the source language be designed with structure editing in mind?
++ Must the source language type system be bidirectional
++ How does this scale to polymorphism, either System F or Hindley/Milner?
++ How does support incremental type and other declarations fit in?
+
+                      ===== Comments for author =====
+
+This is an interesting idea and I can appreciate the goals of the
+work.  The paper sets down a number of fine criteria and some of he
+basic ideas.  It could do more to talk about how these concepts
+apply to more complex languages than STLC and what would be
+straightforward and what would not.
+
+I'm mostly concerned by whether an existing language with its own,
+possibly NOT bidirectional, syntax and type system can be enhanced
+into a corresponding structure editor calculus, or is this limited to
+languages designed with structure editors in mind.  The paper could
+speak more about this.
+
+
+The title of the paper could speak more directly to the important
+aspect of the work:  that it's a type-enforcing structure editor.
+That it's bidirectionally typed seems to be a mere technical detail,
+one tool among many that is used in its development.
+
+
+Abstract:
+A nitpick, but: the "popularity" of structure editors is not "evidence"
+of their cognitive benefits.  I expect there is something more precise
+to say here.
+
+"guides the definition of an extension to the calculus"  say
+which extension: sums.
+
+
+
+Introduction:
+"This indirection has practical benefits"  say what some of those
+are.  That text based tools are old is not in and of itself a
+benefit.  For example, it would help me to understand what the authors
+might see one losing by switching to a structure editor.
+
+
+"develop ad hoc heuristics, which can be misleading."  I'm not sure
+what is meant by misleading here.  A bit more about what you have in
+mind?
+
+"This paper develops a principled solution."  What is the principle?
+It would be great to know up front succinctly the guiding principle,
+even more than the names of the formalisms to be developed.
+
+Thanks for explaining why Z-expressions are so named: I was going to
+spend too much time figuring it out otherwise.
+
+"much of the technical machinery needed to handle type holes coincides
+with machinery developed in the study of gradual typing".  In the
+Related Work section, the paper talks about replacing the hole type
+with unification variables, which appears would behave very
+differently than type consistency.  If the gradual typing machinery is
+truly needed, then would unification work?  Or is it just that this is
+the machinery that happened to be used here?  Or would both be
+required?
+
+"which, by its correspondence with contextual modal logic, lays
+logical foundations beneath our work."  I'm not clear on whether this
+is a happy syntactic accident or whether there is a compelling
+connection here that should guide the development of structure editors
+or has more to add.  The related work didn't really help me with this,
+especially since "making the modal context explicit in our semantics
+is not technically useful given our stated purpose."  So what is
+useful about this?
+
+Section 2: Regarding the "construct lam x" action, at first I found it
+rather annoying that introducing a lam also introduces an ascription,
+and that lambda does not have a synthesis rule.  My best guess for
+this design decision is that one should usually think of the lam and
+ascription together as a single expression, rather than just marking
+the type of the argument, but that in some contexts you can get away
+with not providing an ascription because of the demands of the context
+(i.e. it's a syntactic nicety to not provide a type for your lambda).
+Is that the intent?  Otherwise lambdas are the only constructor in
+your theory with no synthesis rule (even injections for sums have
+them).
+
+Section 3: "We are not concerned here with defining a dynamic
+semantics for Hazelnut" I can imagine defining semantics for the
+hole-less subset, but what would be the purpose of a dynamic semantics
+for the entire language?
+
+As alluded to earlier, why not have a synthesis rule for lambda that
+gives x the hole type and synthesizes the type of the body?  What goes
+wrong?
+
+Is it strictly necessary to have a universal subsumption rule that
+works for any expression?  This seems to cause you trouble with
+determinism in 3.4.1.  You may be better off proving this as an 
+admissible rule of the entire system rather than including it as a
+rule itself.  That would lead to some restrictions on a
+constructor-by-constructor basis, but that seems more fundamentally
+palatable to me.
+
+I can see this being needed for some introduction rules and variables
+(which synthesize by design), but I don't see why application for
+instance should be subject to a subsumption rule.
+
+Regarding actions: It seems like it could be quite useful to have a
+"remove ascription" action, especially given how the "construct lam"
+operation works.  Otherwise it appears that you cannot easily add a
+lam, then add an application around it afterwards and then remove the
+ascription.
+
+"we might make a mistake absent-mindedly", briefly lay out what kinds
+of mistakes that are in mind here before diving into details.
+
+Reachability is a nice property, but I wonder if it's possible to
+establish a more "local" version of reachability.  That one may have
+to go all the way up and then down in movements does not bode well for
+implementation.  For example, if one could characterize paths to a
+cursor from the top of the program, then one could prove that the
+moves necessary do not have to go higher than the shared prefix of the
+paths to the two positions.
+
+
+Regarding Determinism, I'm not particularly happy with the solution
+taken here.  Choosing "elegant" presentation of the typing rules over
+a semantics for edit operations that satisfies a coherence property
+seems to be a turn away from the principled approach that has been
+followed throughout the rest of the paper.  I think the problem here
+really goes back to the generalized subsumption rule in the source
+type system, which then rears its head again in the action semantics.
+I strongly encourage the authors to reconsider.
+
+
+Section 4:
+
+Extending consistency to sums seems straightforward.  But how would
+this extend to types that have binders, like recursive types or System
+F types?
+
+
+Section 5:
+
+"By theorem 1, the editor does not need to typecheck each edit state
+(though in some of the rules..."  Is the assumption that the typing
+derivations are kept around by the editor and then modified?  Or is it
+just an optimization to only re-check if certain edit actions are
+applied?  The edit actions appear to depend on the type derivations
+critically.
+
+"We determine this by simply attempting to perform the action
+internally and catching the exception..."  This is fine for a proof of
+concept, but what is a practical alternative to doing this?  Do you
+have a sketch of what the right thing to do would be?  e.g. could a
+"zipper" representation of the typing derivation up to the cursor
+provide enough local information to quickly detect (il)legal actions?
+
+
+Section 6:
+
+Related to Type Unification, can this technique scale to the
+Hindley-Milner setting, or even lambda calculus without any
+ascriptions (as presented in TAPL's type reconstruction chapter)?
+I'm not clear on how one would proceed.
+
+Section 7:
+
+The future work section seems really long and high-level.  Rather than
+seeing lots of directions sparsely described, I'd like to see just a
+few of them with more details about how and why they may be viable.
+Should others desire more content elsewhere, this is a good place to
+shrink if needed.
