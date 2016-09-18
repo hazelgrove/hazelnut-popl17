@@ -1,0 +1,88 @@
+We thank all of the reviewers for their thoughtful questions, comments and suggestions.  In this response, we first address the “questions for authors to address” in Reviews B and C.  Then, after the break marked below, we address other issues raised in Reviews B and D.
+
+Review B
+
+“Rule(11c)--Are you guaranteed in this case that x is already in the context? Does this mean that you have to introduce the binding location for a variable before you can refer to the variable?  Is that overly restrictive in practice? Why not allow holes in the context?”
+
+Yes, the variable x must be in the context, due to the sensibility invariant (though the type of a variable in the context can be any H-type, including the hole type.) It would certainly be interesting to extend the language of H-expressions to assign meaning to terms where variables occur free. This would then require tweaking the rules in the action semantics that introduce bindings (e.g. those for construct lam x) to ensure that the introduced binding is at a type consistent with its use. We will mention this as future work!
+
+Review C
+
+“Please address my question about the orthogonality of the navigation system and the type system above.”
+
+It is indeed the case that movement actions are type-independent (Sec 3.3.4), and that they could straightforwardly be generated automatically from a term signature, as suggested in Sec. 6.2. Such a system would need to come equipped with a metatheorem that guaranteed that the generated movement action rules collectively obey the Movement Erasure Invariance and Reachability theorems established by this paper.
+
+With regard to a “cursor free version” of Hazelnut, note a crucial distinction between reduction and action performance: one eventually wants reduction to occur everywhere it is possible, but each action should not eventually be performed everywhere it may be possible. The notion of a locus of action is therefore essential to the notion of a program editor. It would be possible to define this notion using some structure other than a zipper. For example, we could define the notion of a path into an H-expression. With such a model, the movement actions would not touch the H-expression. However, this could complicate the specification of the other actions. We would be happy to discuss our choice of cursor representation more thoroughly in the final paper.
+
+”To what extent can one precompile or partially evaluate in the presence of holes?”
+
+Section 6.6 discussed the possibility of defining a dynamic (operational) semantics for incomplete H-expressions based on CMTT. Evaluation could proceed until a hole appeared in an elimination position. Compilation relies on a theory of evaluation, so it could be considered after developing this theory. It would also be interesting to explore the intersection of incremental computation and our action semantics -- many of the computations necessary for compiling a term could be reused when compiling the term that arises from performing an action on it.
+
+-----------------------------------------------------
+Below, we address more questions and issues raised in the reviews (this section goes beyond 500 words):
+
+Review B
+
+“Proofs of reachability and constructabilty have not yet been fully mechanized”
+
+As promised in Sec. 3.4 of the submission, the last remaining cases of these theorems have been mechanized in the repository linked in the non-anonymous supplement. No fundamentally new insight was necessary. (The sum type extension has also been mechanized.)
+
+“Do you need actions for renaming bound variables?”
+
+It would be possible to define such actions primitively, but we envision higher-level actions like these as being “derived actions” in the sense that they can be defined in terms of the “core” action language that this paper defines. In particular, renaming a bound variable could be “internally” accomplished by deletion and reconstruction. In Sec. 7.1.3, we discuss “action macros” as future work -- they could be used to implement refactoring features like this. We will clarify this point.
+
+“Why does the construct arrow make the type at the cursor location into the argument type?  Why not the result type?  Why not have two commands for introducing function types, one where the cursor into the argument and a second into the return?  This approach would be consistent with what you did for function application.” 
+and
+“Similarly for plus.  Why does the construct plus command put the argument in the left hand side?  Because of the symmetry of addition?”
+
+Good points! The decision to leave the expression under the cursor on the left is formally an arbitrary one. We made the choice based on our intuition that programs are typically written “left to right”, i.e. in a textual language one typically writes the left side of an arrow type or addition before writing down “->” or “+” and then the right side. It would be possible to include a variant of these actions that made the opposite decision, by analogy to the construct arg action. Alternatively, some or all of these could be derived actions as described above. We will take care to indicate which aspects of our calculus are based on informal intuitions like this in the final version.
+
+“The deletion rule for Z-expressions in analysis changes not just the expression being deleted but also the inferred type.  Does this “action outside the hole” cause any difficulties?”
+
+The deletion rule in analytic position does change the type itself, but the new type -- being the hole type -- is consistent with every type, so there is no difficulty (indeed, if there were, the corresponding case of Sensibility would fail to go through.)
+
+“I don’t follow what you mean by “the resulting cursor erasure.” It seems like that would be type \tau.’ (the type inferred for the cursor eraser), but you are actually checking that \tau. is consistent with \tau.’’ not \tau.’.  What am I missing?  (Sorry if that was difficult to follow!)”
+
+By “the resulting cursor erasure” we mean “the cursor erasure of the edit state resulting from performing synthetic action \alpha” (we will use this wording in the final version). For Sensibility to hold, we need that the type provided for analysis, \tau., is consistent with the type synthesized from the resulting edit state, \tau.’’ (the type synthesized from the initial edit state, \tau.’, is irrelevant.)
+
+Review D
+
+“How does this scale to polymorphism?”
+
+Higher-rank polymorphism in a bidirectional system is possible, e.g. see Dunfield and Krishnaswami 2013. We see no fundamental impediment to building a structure editor in the style of Hazelnut that supports that mechanism. The introduction of type variables would require lifting to the type level some of the mechanisms related to binding and non-empty holes that were developed at the expression level in this paper.
+
+“Must the source language type system be bidirectional?”
+
+We agree that this question is worthy of more thorough discussion in the paper!
+
+Replacing the bidirectional type system with one that performs HM-style type inference would be tricky, because type reconstruction typically assumes a complete expression. In intermediate edit states, then, one would not always have enough information to definitively determine the types of variables nor the expected type of an expression. At best, then, we could attempt to constrain the action semantics to allow only those actions consistent with presently known constraints. However, later edits would then have non-local implications with respect to well-typedness. This could possibly be addressed by a “whole-program” pass on each edit that put newly ill-typed sub-terms into holes. However, from a user perspective, this would require error messages at each such hole. The problem of coming up with usable error messages when type inference fails is notoriously difficult. 
+
+In contrast, in a bidirectional system the locality of inference precludes “spooky errors at a distance”. Instead, the interaction is a sort of local dialog between the programmer and the system involving simple, familiar concepts -- types with holes -- rather than sets of constraints. 
+
+“Must the source language be designed with structure editing in mind?”
+
+Sec. 6.2 discusses related work on the Gradualizer, which covers how to go from a non-gradually-typed language to one that is gradual. The transition from a language without holes to one with holes should be similar, i.e. it should not generally require anticipation by the language designer, and could conceivably be automated to a significant extent.
+
+(That said, we are also excited by the possibilities of _intentionally_ codesigning a language with its structure editor as discussed in Sec. 7.1.1.)
+
+“Is it strictly necessary to have a universal subsumption rule that works for any expression?  This seems to cause you trouble with determinism in 3.4.1.  You may be better off proving this as an admissible rule of the entire system rather than including it as a rule itself.  That would lead to some restrictions on a constructor-by-constructor basis, but that seems more fundamentally palatable to me.”
+
+We would not be able prove that the subsumption rule as stated is admissible in a deterministic variant of our system because its inclusion is what breaks determinism, as you inferred.
+
+We have explored an alternative definition of subsumption that does maintain determinism by explicitly excluding the two situations (mentioned in the paper) where both a synthetic and an analytic rule can fire. This is likely to be more economical than attempting to positively characterize the situations where subsumption should be permitted.
+
+Another approach that we are exploring in our mechanization is to define a predicate over action performance derivations that excludes those that apply subsumption prematurely. Only those derivations that satisfy this predicate are the subject of the determinism theorem.
+
+We believe that a clear description of the issue is quite valuable, so we do not plan to attempt to settle on any one of these solutions in the final paper. Note that in practice, the question of whether to apply subsumption is straightforward -- it should only be applied as a rule of last resort (see our implementation.)
+
+“why not have a synthesis rule for lambda that gives x the hole type and synthesizes the type of the body?  What goes wrong?”
+
+This would be a valid extension of the calculus, but a more conventional approach would be to introduce “half annotated” lambdas as described by Chlipala et al. in their paper “Strict Bidirectional Type Checking” (TLDI 2005). We left these out for simplicity.
+
+“lambdas are the only constructor in your theory with no synthesis rule (even injections for sums have them)”
+
+Correction: there is no type synthesis rule for injections. The synthetic action rule for injections inserts an ascription, like the synthetic action rule for lambdas.
+
+“Is the assumption that the typing derivations are kept around by the editor and then modified?  Or is it just an optimization to only re-check if certain edit actions are applied?”
+
+Only those action rules that have a typing premise need to invoke the typechecker, and then only on subtrees of the program (see our implementation). Keeping around the types of subtrees would allow for further optimization even beyond this.
