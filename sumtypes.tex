@@ -353,7 +353,7 @@ extend the definition of cursor erasure, e.g. for types:
 \removeSel{(\ztau + \htau)} & = \removeSel{\ztau} + \htau\\
 \removeSel{(\htau + \ztau)} & = \htau + \removeSel{\ztau}
 \end{align*}
-The rules for Z-expressions are analagous:
+The rules for Z-expressions are analogous:
 \begin{align*}
 \removeSel{\hinj{i}{\zexp}} & = \hinj{i}{\removeSel{\zexp}}\\
 \removeSel{\hcase{\zexp}{x}{\hexp_1}{y}{\hexp_2}} & = \hcase{\removeSel{\zexp}}{x}{\hexp_1}{y}{\hexp_2}\\
@@ -405,10 +405,10 @@ Theorem \ref{thrm:constructability}, i.e. Constructability, would not be
 conserved.
 
 Rule (\ref{rule:performAna-inj-1}) constructs an injection when the type
-provided for analysis has a matched sum type. This is analagous to Rule
+provided for analysis has a matched sum type. This is analogous to Rule
 (\ref{rule:performAna-lam-1}) for lambdas. Rule
 (\ref{rule:performAna-inj-2}) constructs an injection when the type
-provided for analysis is not consistent with sum types. This is analagous
+provided for analysis is not consistent with sum types. This is analogous
 to Rule (\ref{rule:performAna-construct-lam-2}) for lambdas. Rule
 (\ref{rule:performAna-case}) is a straightforward rule for constructing
 case expressions in empty holes. Rules
@@ -416,7 +416,7 @@ case expressions in empty holes. Rules
 which follow the structure of the statics. Finally, we also define a single
 new synthetic action rule, Rule (\ref{rule:performSyn-inj}), which allows
 for the construction of an injection in synthetic position, with automatic
-insertion of an ascription. This is analagous to Rule
+insertion of an ascription. This is analogous to Rule
 (\ref{r:conelamhole}). If we had defined any of these rules incorrectly,
 the Sensibility Theorem (Theorem \ref{thrm:actsafe}) would not be
 conserved. Had we forgotten the analytic rules, the Constructability
