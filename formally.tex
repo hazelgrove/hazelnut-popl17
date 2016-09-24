@@ -147,25 +147,6 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 \end{figure}
 
 \begin{figure}
-\fbox{$\hana{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ analyzes against $\htau$}
-\begin{subequations}
-\begin{equation}\label{rule:ana-subsume}
-\inferrule{
-  \hsyn{\hGamma}{\hexp}{\htau'}\\
-  \tcompat{\htau}{\htau'}
-}{
-  \hana{\hGamma}{\hexp}{\htau}
-}
-\end{equation}
-\begin{equation}\label{rule:syn-lam}
-\inferrule{
-  \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
-  \hana{\hGamma, x : \htau_1}{\hexp}{\htau_2}
-}{
-  \hana{\hGamma}{\hlam{x}{\hexp}}{\htau}
-}
-\end{equation}
-\end{subequations}
 \fbox{$\hsyn{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ synthesizes $\htau$}
 \begin{subequations}
 \begin{equation}\label{rule:syn-asc}
@@ -215,7 +196,26 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 }
 \end{equation}
 \end{subequations}
-\caption{Analysis and synthesis.}
+\fbox{$\hana{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ analyzes against $\htau$}
+\begin{subequations}
+\begin{equation}\label{rule:ana-subsume}
+\inferrule{
+  \hsyn{\hGamma}{\hexp}{\htau'}\\
+  \tcompat{\htau}{\htau'}
+}{
+  \hana{\hGamma}{\hexp}{\htau}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-lam}
+\inferrule{
+  \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
+  \hana{\hGamma, x : \htau_1}{\hexp}{\htau_2}
+}{
+  \hana{\hGamma}{\hlam{x}{\hexp}}{\htau}
+}
+\end{equation}
+\end{subequations}
+\caption{Synthesis and analysis.}
 \label{fig:ana-syn}
 \end{figure}
 
