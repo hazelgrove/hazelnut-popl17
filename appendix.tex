@@ -1,37 +1,29 @@
 % !TEX root = hazelnut-popl17.tex
 
 \section{Hazelnut}
-The full collection of rules defining the semantics of Hazelnut are reproduced here in their definitional order for reference.
+The full collection of rules defining the semantics of Hazelnut are
+reproduced here in their definitional order for reference.
 \subsection{H-Types and H-Expressions}
 \subsubsection{Type Compatibility and Incompatibility}
 
 \noindent\fbox{$\tcompat{\htau}{\htau'}$}
-\begin{subequations}%%\label{rules:tcompat}
-% \begin{equation}%%\label{rule:tcompat-comm}
-% \inferrule
-% %[TCSym]
-% {
-%   \tcompat{\htau}{\htau'}
-% }{
-%   \tcompat{\htau'}{\htau}
-% }
-% \end{equation}
+\begin{subequations}
 \begin{equation}
 \inferrule{ }{
 	\tcompat{\tehole}{\htau}
 }
 \end{equation}
-\begin{equation}%%\label{rule:tcompat-hole}
+\begin{equation}
 \inferrule{ }{
   \tcompat{\htau}{\tehole}
 }
 \end{equation}
-\begin{equation}%%\label{rule:tcompat-num}
+\begin{equation}
 \inferrule{ }{
   \tcompat{\htau}{\htau}
 }
 \end{equation}
-\begin{equation}%%\label{rule:tcompat-arr}
+\begin{equation}
 \inferrule{
   \tcompat{\htau_1}{\htau_1'}\\
   \tcompat{\htau_2}{\htau_2'}
@@ -43,13 +35,6 @@ The full collection of rules defining the semantics of Hazelnut are reproduced h
 
 \noindent\fbox{$\tincompat{\htau}{\htau'}$}
 \begin{subequations}
-  % \begin{equation}
-  %   \inferrule{
-  %     \tincompat{\htau}{\htau'}
-  %   }{
-  %     \tincompat{\htau'}{\htau}
-  %   }
-  % \end{equation}
   \begin{equation}
   	\inferrule{ }{
   		\tincompat{\tarr{\htau_1}{\htau_2}}{\tnum}
@@ -78,46 +63,10 @@ The full collection of rules defining the semantics of Hazelnut are reproduced h
 
 \subsubsection{Function Type Matching}~
 
-% \noindent\fbox{$\tcompat{\htau}{\htau'}$}~~\text{$\tau$ and $\tau'$ are consistent}
-% % \begin{subequations}%%\label{rules:tcompat}
-% % \begin{equation}%%\label{rule:tcompat-comm}
-% % \inferrule
-% % %[TCSym]
-% % {
-% %   \tcompat{\htau}{\htau'}
-% % }{
-% %   \tcompat{\htau'}{\htau}
-% % }
-% % \end{equation}
-% \begin{equation}
-% \inferrule{ }{
-%   \tcompat{\tehole}{\htau}
-% }
-% \end{equation}
-% \begin{equation}%%\label{rule:tcompat-hole}
-% \inferrule{ }{
-%   \tcompat{\htau}{\tehole}
-% }
 
-% \inferrule{ }{
-%   \tcompat{\htau}{\htau}
-% }
-
-% \inferrule{
-%   \tcompat{\htau_1}{\htau_1'}\\
-%   \tcompat{\htau_2}{\htau_2'}
-% }{
-%   \tcompat{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1'}{\htau_2'}}
-% }
-% \end{mathpar}
-% \begin{equation}%%\label{rule:tcompat-num}
-% \end{equation}
-% \begin{equation}%%\label{rule:tcompat-arr}
-% \end{equation}
-% \end{subequations}
 \noindent
-\fbox{$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$}~~\text{$\tau$ has matched arrow type $\tarr{\htau_1}{\htau_2}$}
-% \begin{mathpar}
+\fbox{$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$}~~\text{$\tau$ has
+  matched arrow type $\tarr{\htau_1}{\htau_2}$}
 \begin{subequations}
 \begin{equation}
 \inferrule{ }{
@@ -130,41 +79,6 @@ The full collection of rules defining the semantics of Hazelnut are reproduced h
 }
 \end{equation}
 \end{subequations}
-% \end{mathpar}
-% \noindent\fbox{$\tincompat{\htau}{\htau'}$}
-% \begin{subequations}
-%   % \begin{equation}
-%   %   \inferrule{
-%   %     \tincompat{\htau}{\htau'}
-%   %   }{
-%   %     \tincompat{\htau'}{\htau}
-%   %   }
-%   % \end{equation}
-%   \begin{equation}
-%     \inferrule{ }{
-%       \tincompat{\tarr{\htau_1}{\htau_2}}{\tnum}
-%     }
-%   \end{equation}
-%   \begin{equation}
-%     \inferrule{ }{
-%       \tincompat{\tnum}{\tarr{\htau_1}{\htau_2}}
-%     }
-%   \end{equation}
-%   \begin{equation}
-%     \inferrule{
-%       \tincompat{\htau_1}{\htau_1'}
-%     }{
-%       \tincompat{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1'}{\htau_2'}}
-%     }
-%   \end{equation}
-%   \begin{equation}
-%     \inferrule{
-%       \tincompat{\htau_2}{\htau_2'}
-%     }{
-%       \tincompat{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1'}{\htau_2'}}
-%     }
-%   \end{equation}
-% \end{subequations}
 
 \subsubsection{Synthesis and Analysis}
 The judgements $\hsyn{\hGamma}{\hexp}{\htau}$ and
@@ -173,19 +87,19 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
 
 \fbox{$\hsyn{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ synthesizes $\htau$}
 \begin{subequations}\label{Arules:hsyn}
-\begin{equation}%\label{rule:syn-asc}
+\begin{equation}
 \inferrule{
   \hana{\hGamma}{\hexp}{\htau}
 }{
   \hsyn{\hGamma}{\hexp : \htau}{\htau}
 }
 \end{equation}
-\begin{equation}%\label{rule:syn-var}
+\begin{equation}
 \inferrule{ }{
   \hsyn{\hGamma, x : \htau}{x}{\htau}
 }
 \end{equation}
-\begin{equation}%\label{rule:syn-ap}
+\begin{equation}
 \inferrule{
   \hsyn{\hGamma}{\hexp_1}{\htau}\\
   \arrmatch{\htau}{\tarr{\htau_2}{\htau'}}\\
@@ -194,12 +108,12 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
   \hsyn{\hGamma}{\hap{\hexp_1}{\hexp_2}}{\htau'}
 }
 \end{equation}
-\begin{equation}%\label{rule:syn-num}
+\begin{equation}
 \inferrule{ }{
   \hsyn{\hGamma}{\hnum{n}}{\tnum}
 }
 \end{equation}
-\begin{equation}%\label{rule:syn-plus}
+\begin{equation}
 \inferrule{
   \hana{\hGamma}{\hexp_1}{\tnum}\\
   \hana{\hGamma}{\hexp_2}{\tnum}
@@ -207,12 +121,12 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
   \hsyn{\hGamma}{\hadd{\hexp_1}{\hexp_2}}{\tnum}
 }
 \end{equation}
-\begin{equation}%\label{rule:syn-ehole}
+\begin{equation}
 \inferrule{ }{
   \hsyn{\hGamma}{\hehole}{\tehole}
 }
 \end{equation}
-\begin{equation}%\label{rule:syn-hole}
+\begin{equation}
 \inferrule{
   \hsyn{\hGamma}{\hexp}{\htau}
 }{
@@ -222,7 +136,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
 \end{subequations}
 \noindent\fbox{$\hana{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ analyzes against $\htau$}
 \begin{subequations}\label{Arules:hana}
-\begin{equation}%\label{rule:ana-subsume}
+\begin{equation}
 \inferrule{
   \hsyn{\hGamma}{\hexp}{\htau'}\\
   \tcompat{\htau}{\htau'}
@@ -230,7 +144,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
   \hana{\hGamma}{\hexp}{\htau}
 }
 \end{equation}
-\begin{equation}%\label{rule:syn-lam}
+\begin{equation}
 \inferrule{
   \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
   \hana{\hGamma, x : \htau_1}{\hexp}{\htau_2}
@@ -309,9 +223,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 \noindent\fbox{$\removeSel{\ztau}=\htau$} is a metafunction defined as follows:
 \begin{subequations}
 \begin{align}
-%\removeSel{(\zlsel{\htau})} & = \htau\\
 \removeSel{(\zwsel{\htau})} & = \htau\\
-%\removeSel{(\zrsel{\htau})} & = \htau\\
 \removeSel{(\tarr{\ztau}{\htau})} & = \tarr{\removeSel{\ztau}}{\htau}\\
 \removeSel{(\tarr{\htau}{\ztau})} & = \tarr{\htau}{\removeSel{\ztau}}
 \end{align}
@@ -321,9 +233,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 \noindent\fbox{$\removeSel{\zexp}=\hexp$} is a metafunction defined as follows:
 \begin{subequations}
 \begin{align}
-%\removeSel{(\zlsel{\hexp})} & = \hexp\\
 \removeSel{(\zwsel{\hexp})} & = \hexp\\
-%\removeSel{(\zrsel{\hexp})} & = \hexp\\
 \removeSel{(\zexp : \htau)} & = \removeSel{\zexp} : \htau\\
 \removeSel{(\hexp : \ztau)} & = \hexp : \removeSel{\ztau}\\
 \removeSel{(\hlam{x}{\zexp})} & = \hlam{x}{\removeSel{\zexp}}\\
@@ -383,17 +293,6 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
     }
   }
 \end{equation}
-% \begin{equation}
-%   \inferrule{ }{
-%     \performTyp{
-%       \tarr{{\htau_1}}{\zwsel{\htau_2}}
-%     }{
-%       \aMove{\dPrev}
-%     }{
-%       {\tarr{\zwsel{\htau_1}}{{\htau_2}}}
-%     }
-%   }
-% \end{equation}
 
 \paragraph{Type Deletion}
 \begin{equation}
@@ -410,7 +309,6 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 
 \paragraph{Type Construction}
 \begin{equation}
-    %%\label{r:contarr}
   \inferrule{ }{
     \performTyp{
       \zwsel{\htau}
@@ -423,7 +321,6 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 \end{equation}
 
   \begin{equation}
-    %%\label{r:contnum}
   \inferrule{ }{
     \performTyp{
       \zwsel{\tehole}
@@ -438,7 +335,6 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 
 \paragraph{Zipper Cases}
   \begin{equation}
-    %%\label{r:contarrL}
   \inferrule{
     \performTyp{\ztau}{\alpha}{\ztau'}
   }{
@@ -452,7 +348,6 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
   }
 \end{equation}
   \begin{equation}
-    %%\label{r:contarrR}
   \inferrule{
     \performTyp{\ztau}{\alpha}{\ztau'}
   }{
@@ -467,7 +362,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 \end{equation}
 \end{subequations}
 
-\subsubsection{Expression Movement Actions} 
+\subsubsection{Expression Movement Actions}
 \noindent\fbox{$\performMove{\zexp}{\aMove{\delta}}{\zexp'}$}
 
 \begin{subequations}
@@ -517,58 +412,9 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
     }
   }
 \end{equation}
-% \begin{equation}
-%   \inferrule{ }{
-%     \performMove{
-%       \hexp : \zwsel{\htau}
-%     }{
-%       \aMove{\dPrev}
-%     }{
-%       \zwsel{\hexp} : \htau
-%     }
-%   }
-% \end{equation}
-% \begin{equation}
-% \inferrule{
-%   \performMove{
-%     \zexp
-%   }{
-%     \aMove{\delta}
-%   }{
-%     \zexp'
-%   }
-% }{
-%   \performMove{
-%     \zexp : \htau
-%   }{
-%     \aMove{\delta}
-%   }{
-%     \zexp' : \htau
-%   }
-% }
-% \end{equation}
-% \begin{equation}
-%   \inferrule{
-%     \performMove{
-%       \ztau
-%     }{
-%       \aMove{\delta}
-%     }{
-%       \ztau'
-%     }
-%   }{
-%     \performMove{
-%       \hexp : \ztau
-%     }{
-%       \aMove{\delta}
-%     }{
-%       \hexp : \ztau'
-%     }
-%   }
-% \end{equation}
 
 \paragraph{Lambda}
-\begin{equation}%\label{r:movefirstchild-lam}
+\begin{equation}
 \inferrule{ }{
   \performMove{
     \zwsel{\hlam{x}{\hexp}}
@@ -613,7 +459,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
     }
   }
 \end{equation}
-\begin{equation}%\label{r:moveparent-ap2}
+\begin{equation}
   \inferrule{ }{
     \performMove{
       \hap{{\hexp_1}}{\zwsel{\hexp_2}}
@@ -635,17 +481,6 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
     }
   }
 \end{equation}
-% \begin{equation}
-%   \inferrule{ }{
-%     \performMove{
-%       \hap{\hexp_1}{\zwsel{\hexp_2}}
-%     }{
-%       \aMove{\dPrev}
-%     }{
-%       \hap{\zwsel{\hexp_1}}{\hexp_2}
-%     }
-%   }
-% \end{equation}
 
 \paragraph{Plus}
 \begin{equation}
@@ -692,17 +527,6 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
     }
   }
 \end{equation}
-% \begin{equation}
-%   \inferrule{ }{
-%     \performMove{
-%       \hadd{\hexp_1}{\zwsel{\hexp_2}}
-%     }{
-%       \aMove{\dPrev}
-%     }{
-%       \hadd{\zwsel{\hexp_1}}{\hexp_2}
-%     }
-%   }
-% \end{equation}
 
 \paragraph{Non-Empty Hole}
 \begin{equation}
@@ -716,7 +540,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
   }
 }
 \end{equation}
-\begin{equation}%\label{r:moveparent-hole}
+\begin{equation}
   \inferrule{ }{
     \performMove{
       \hhole{\zwsel{\hexp}}
@@ -730,8 +554,9 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 
 \end{subequations}
 \subsubsection{Synthetic and Analytic Expression Actions}
-The synthetic and analytic expression action performance judgements are defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules (\ref{Arules:performAna}), respectively.
-
+The synthetic and analytic expression action performance judgements are
+defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
+(\ref{Arules:performAna}), respectively.
 
 \noindent\fbox{$\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$}
 
@@ -778,7 +603,6 @@ The synthetic and analytic expression action performance judgements are defined 
 \end{equation}
 
 \begin{equation}
-  %\label{r:coneapfn}
   \inferrule{
     \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}
   }{
@@ -791,18 +615,6 @@ The synthetic and analytic expression action performance judgements are defined 
       {\htau_2}
   }
 \end{equation}
-
-% \begin{equation}
-%   \inferrule{ }{
-%     \performSyn
-%       {\hGamma}
-%       {\zwsel{\hexp}}
-%       {\tehole}
-%       {\aConstruct{\fap}}
-%       {\hap{\hexp}{\zwsel{\hehole}}}
-%       {\tehole}
-%   }
-% \end{equation}
 
 \begin{equation}
   \inferrule{
@@ -883,7 +695,6 @@ The synthetic and analytic expression action performance judgements are defined 
 \end{equation}
 \paragraph{Finishing}
   \begin{equation}
-    %% %\label{r:finishana} %% TODO; get labels right
   \inferrule{
     \hsyn{\hGamma}{\hexp}{\htau'}
   }{
@@ -1032,26 +843,6 @@ The synthetic and analytic expression action performance judgements are defined 
       {\tehole}
   }
 \end{equation}
-% \begin{equation}
-%   \inferrule{
-%     \hsyn{\hGamma}{\removeSel{\zexp}}{\htau}\\
-%     \performSyn
-%       {\hGamma}
-%       {\zexp}
-%       {\htau}
-%       {\alpha}
-%       {\zwsel{\hehole}}
-%       {\tehole}\\
-%   }{
-%     \performSyn
-%       {\hGamma}
-%       {\hhole{\zexp}}
-%       {\tehole}
-%       {\alpha}
-%       {\zwsel{\hehole}}
-%       {\tehole}
-%   }
-% \end{equation}
 \end{subequations}
 
 \noindent\fbox{$\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}$}
@@ -1062,8 +853,6 @@ The synthetic and analytic expression action performance judgements are defined 
     \hsyn{\hGamma}{\removeSel{\zexp}}{\htau'}\\
     \performSyn{\hGamma}{\zexp}{\htau'}{\alpha}{\zexp'}{\htau''}\\
     \tcompat{\htau}{\htau''}%\\\\
-    % \alpha \neq \aConstruct{\fasc}\\
-    % \alpha \neq \aConstruct{\flam{x}}
   }{
     \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}
   }
@@ -1100,7 +889,7 @@ The synthetic and analytic expression action performance judgements are defined 
   }
 \end{equation}
 
-\begin{equation}%\label{rule:performAna-lam-1}
+\begin{equation}
   \inferrule{
     \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}
   }{
