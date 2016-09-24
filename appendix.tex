@@ -169,27 +169,8 @@ The full collection of rules defining the semantics of Hazelnut are reproduced h
 \subsubsection{Synthesis and Analysis}
 The judgements $\hsyn{\hGamma}{\hexp}{\htau}$ and
 $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
-(\ref{Arules:hana}) and Rules (\ref{Arules:hsyn}), respectively.
+(\ref{Arules:hsyn}) and Rules (\ref{Arules:hana}), respectively.
 
-\noindent\fbox{$\hana{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ analyzes against $\htau$}
-\begin{subequations}\label{Arules:hana}
-\begin{equation}%\label{rule:ana-subsume}
-\inferrule{
-  \hsyn{\hGamma}{\hexp}{\htau'}\\
-  \tcompat{\htau}{\htau'}
-}{
-  \hana{\hGamma}{\hexp}{\htau}
-}
-\end{equation}
-\begin{equation}%\label{rule:syn-lam}
-\inferrule{
-  \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
-  \hana{\hGamma, x : \htau_1}{\hexp}{\htau_2}
-}{
-  \hana{\hGamma}{\hlam{x}{\hexp}}{\htau}
-}
-\end{equation}
-\end{subequations}
 \fbox{$\hsyn{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ synthesizes $\htau$}
 \begin{subequations}\label{Arules:hsyn}
 \begin{equation}%\label{rule:syn-asc}
@@ -236,6 +217,25 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
   \hsyn{\hGamma}{\hexp}{\htau}
 }{
   \hsyn{\hGamma}{\hhole{\hexp}}{\tehole}
+}
+\end{equation}
+\end{subequations}
+\noindent\fbox{$\hana{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ analyzes against $\htau$}
+\begin{subequations}\label{Arules:hana}
+\begin{equation}%\label{rule:ana-subsume}
+\inferrule{
+  \hsyn{\hGamma}{\hexp}{\htau'}\\
+  \tcompat{\htau}{\htau'}
+}{
+  \hana{\hGamma}{\hexp}{\htau}
+}
+\end{equation}
+\begin{equation}%\label{rule:syn-lam}
+\inferrule{
+  \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
+  \hana{\hGamma, x : \htau_1}{\hexp}{\htau_2}
+}{
+  \hana{\hGamma}{\hlam{x}{\hexp}}{\htau}
 }
 \end{equation}
 \end{subequations}
