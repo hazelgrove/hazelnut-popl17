@@ -7,42 +7,20 @@ indirection has practical benefits, to be sure -- text editors and other
 text-based tools benefit from decades of development effort -- but it also
 introduces some fundamental complexity into the programming process.
 
-First, it requires that programmers learn the subtleties of the textual syntax (e.g. the precedence of the various forms.) This can be particularly challenging for novices \cite{Altadmri:2015:MCI:2676723.2677258}. %For example, one study of novice programmers found syntax errors (e.g. unbalanced parentheses) to be the most common class of errors.
-% Too much detail?
+First, it requires that programmers learn the subtleties of the textual
+syntax (e.g. the precedence of the various forms.) This can be particularly
+challenging for novices \cite{Altadmri:2015:MCI:2676723.2677258}.
+
 
 The fact that not every sequence of characters corresponds to a meaningful program also complicates matters for tool designers. In particular, program editors must contend with meaningless text on a regular basis. In a dataset analyzed by Yoon and Myers consisting of 1460 hours of edit logs, 44.2\% of edit states were syntactically malformed \cite{6883030}. Some additional percentage of edit states were well-formed but ill-typed (the dataset did not contain enough information to determine the exact percentage.)
 Some of these meaningless edit states arose because the programmer was in the midst of a sequence of edits that left the edit state transiently meaningless, while others arose because the programmer made a logical mistake. Because the language definitions is silent about these edit states, it is difficult to design useful editor services, e.g. syntax highlighting~\cite{sarkar2015impact}, type-aware code completion~\cite{Mooty:2010:CCC:1915084.1916348,Omar:2012:ACC:2337223.2337324}, and refactoring support \cite{mens2004survey}. Editors must either disable these editor services when they encounter meaningless edit states or develop \emph{ad hoc} heuristics, which can be misleading. %, or because the programmer has made a mistake.
-% The syntax definition is silent about these situations, so it is difficult for tools to help programmers determine and execute a corrective course of action
 
-% Many editors have developed \emph{ad hoc} workarounds for this problem, e.g. they might attempt to use regular expressions to highlight malformed program text, insert closing delimiters automatically, use whitespace to guess where a delimiter is likely to appear, or continue past a type error by pretending that the type was as expected (if, indeed, an expected type can be determined.) These heuristic methods are often complex, and they can confuse or mislead the programmer. % This may also help explain why the error messages emitted by parsers and typecheckers are often quite baroque\todo{citations}.
-
-% stuck editing a representation of the program instead of the structures
-% themselves. The editor does not restrict what the programmer may do: you
-% can delete characters that belong, insert ones that don't, forget things
-% that were needed, and so. There's nothing stopping us from accidentally
-% writing $$\lambda \mathit{x:num}.\mathit{(x,x)}$$ even though it's obvious
-% that building a pair can't hope to form a natural number.
-
-% The type structure of the language makes this sort of error obvious: it's
-% not that you're adding characters that make your program incorrect, or even
-% malformed; you're adding characters that can't possibly create a structure
-% you want because of the type. Simply put, the primitive operations
-% available in text editors do not always correspond to sensible
-% transformations on the structure of the program.
 These complications have motivated a long line of research into \emph{structure editors}, i.e. program editors where every edit state is a program structure. % Eliminating text eliminates the possibility of syntax errors.
 
 Most structure editors are \emph{syntactic structure editors}, i.e. the edit state is a syntax tree with \emph{holes} that stand for branches of the tree that have yet to be constructed, and the edit actions are context-free tree transformations. For example, Scratch is a syntactic structure editor that has achieved success as a tool for teaching children how to program \cite{Resnick:2009:SP:1592761.1592779}.
 
 The Scratch language has a trivial static semantics, but researchers have also designed syntactic structure editors for  languages with a non-trivial static semantics. For example, \texttt{mbeddr} is an editor for a C-like language \cite{voelter_mbeddr:_2012}, TouchDevelop is an editor for an object-oriented language \cite{tillmann_touchdevelop:_2011} and Lamdu is an editor for a functional language similar to Haskell \cite{lamdu}. Each of these editors presents an innovative user interface, but the non-trivial type and binding structure of the underlying language complicates its design. The reason is that a syntactic structure editor does not guarantee that every edit state is statically meaningful -- only that it is syntactically well-formed. As in textual program editors, these syntactic structure editors must either disable key editor services when they encounter meaningless edit states or deploy \emph{ad hoc} heuristics.
-%Indeed, it is not entirely clear what it should mean for terms with holes to be statically meaningful.
-% Consequently, heuristics analagous to those that pervade textual program editors also pervade these syntactic structure editors.
 
-% \begin{itemize}
-% \item
-
-% First, there is an all too familiar problem: these languages do not have a clear formal semantics and metatheory, i.e. ``the implementation is the specification''. This makes it difficult to reason methodically about types and binding, so, in turn, it is difficult to design reliable editor services.
-
-% Even if a formal semantics and metatheory for the underlying language were forthcoming (e.g. following Standard ML \cite{Harper00atype-theoretic,mthm97-for-dart}), it would go only part of the way towards addressing the challenges faced by structure editor designers. First, a standard semantics assigns no formal meaning to \emph{incomplete terms}, i.e. terms with holes. Moreover, a syntactic structure editor  -- so incorporating holes into the static semantics would in any case be only a minor salve. Heuristics analagous to those that pervade textual program editors would still be needed to contend with the ill-typed edit states.
 
 This paper develops a principled solution to this problem. We introduce Hazelnut,  a \emph{typed structure editor}  based on a bidirectionally typed lambda calculus extended to assign static meaning to expressions and types with {holes}, which we call \textbf{H-expressions} and \textbf{H-types}. Hazelnut's formal \emph{action semantics} maintains the invariant that every edit state is a statically meaningful (i.e. well-typed) H-expression with a single superimposed \emph{cursor}. We call H-expressions and H-types with a cursor \textbf{Z-expressions} and \textbf{Z-types} (so prefixed because our encoding follows Huet's \emph{zipper} pattern \cite{JFP::Huet1997}.) %ctions act relative to the H-expression or H-type under the cursor.% (which need not be a hole.)  %More specifically, actions are context-aware,  acting on an expression whose type is determined by its surroundings (e.g. a function argument), only actions consistent with that type are permitted.
 
