@@ -1,7 +1,5 @@
 \def\OPTIONConf{1}%
-%\newif\iftr\trfalse
 \newif\iftr\trtrue
-%\documentclass[12pt]{article}
 \RequirePackage{etex}
 \documentclass[preprint,9pt]{sigplanconf}
 \usepackage[T1]{fontenc}
@@ -256,7 +254,6 @@ matching \cite{DBLP:conf/popl/RastogiCH12,DBLP:conf/popl/GarciaC15}. In
 retrospect, this relationship is perhaps unsurprising: gradual typing is,
 notionally, also motivated by the idea of iterated development of a program
 where every intermediate state is well-defined in some sense.
-%Typed structure editing endows this intuitive notion with technical force.
 
 Recent work has discovered a systematic procedure for generating a
 ``gradual version'' of a standard type
@@ -387,53 +384,6 @@ of a full-scale programming system in the spirit of Hazelnut. Indeed, the
 user might be given several options from among these combinations,
 depending on their usage scenario. Many of these warrant further inquiry.
 
-
-% \todo{Eclipse parsing partial programs // other heuristics}
-
-
-% \paragraph{Gradual typing: Has Matched Relation}
-% %
-% A. Rastogi, A. Chaudhuri, and B. Hosmer. The ins and outs of gradual type inference.
-% \\
-% Definition 3.1 is similar to our ``has matched'' relations:
-% \\
-% \url{https://www.cs.umd.edu/~avik/papers/iogti.pdf}
-
-% This paper defines ``has matched'' relation for arrow, just like us:
-% \\
-% \url{http://cimini.info/publications/Gradualizer_Draft.pdf}
-% \\
-% They credit this technique to the following paper:
-% \\
-% \url{http://www.cs.ubc.ca/~rxg/ptsgp.pdf}
-% \\
-% But, the Rastogi paper came earlier.
-
-
-% \todo{TODO: \url{http://research.nii.ac.jp/~hu/pub/hosc07.pdf}}
-
-
-% Agda and Idris are two dependently typed languages that attempt to simulate a structured editor from within a rich text editor (e.g. Emacs.) These systems also have notions of holes and use types to guide the user toward filling these holes. These  systems are also, to our knowledge, not formally well-defined but rather exist only as part of system implementations.
-
-
-% Our work differs from all of these in that we begin with a formal editor calculus and build from there, rather than starting with an implementation and leaving many of the formal details formally unspecified. For example, while Lamdu has many interesting features, there is no theoretical basis presented for their work -- it is a rather large body of Haskell code with an unclear (and indeed, often somewhat perplexing, in our experience) action model. Unison is also a rather large body of Haskell code, though its action model appears superficially more similar to ours. We maintain what we believe to be a stronger action sensibility invariant than Unison (i.e. in Unison, one must construct expressions from the outside-in.) These systems are rich sources of interesting ideas, however -- there is room enough for many different approaches in this (re-)emerging space.
-
-% \todo{TODO: cite \url{http://cseweb.ucsd.edu/~lerner/pb.html}}
-
-% \todo{TODO: cite} \url{http://delivery.acm.org/10.1145/1060000/1056965/p1557-ko.pdf?ip=73.154.143.34&id=1056965&acc=AUTHOR-IZED&key=4D4702B0C3E38B35%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35%2EC2CC0A83071F7605&CFID=780613712&CFTOKEN=33786941&__acm__=1462392463_f29fc98965004c61bfb1291d07756a23}
-
-%Drag-and-drop / for novices: lots of examples, e.g. Alice and others
-%
-%Contemporary: Lamdu, MPS/Mbeddr, TouchDevelop
-%
-%Hybrid: Cyrus' active code completion paper
-
-%\subsection{Refactoring Models}
-%(Michael, can you fill this section out?)
-
-%\subsection{Formal Editor Models}
-%Need to do a search to see what else has been done...
-
 \section{Conclusion}
 \label{sec:future}
 This paper presented Hazelnut, a type theoretic structure editor
@@ -450,16 +400,6 @@ did not discuss such ``edit costs'' here, because they depend on particular
 implementation details, e.g. whether a keyboard or a mouse is in
 use. Indeed, we consider it a virtue of this work that such implementation
 details do not enter into our design.
-
-% By keeping the program in both a structurally and semantically
-% well-defined state at all times, Hazelnut allows users to avoid premature
-% commitment~\cite{green1996usability}.  By inserting a hole, the user can
-% leave certain parts of the program unfinished, \todo{What is the best
-% word to define this concept?  In progress, unfinished, incomple?} and yet
-% still in a well defined type state.  This also enables progressive
-% evaluation~\cite{green1996usability}, because unfinished solutions are
-% also are well-defined at all times, thus enabling tools to provide
-% evaluation of unfinished solutions.\todo{integrate this}
 
 \subsection{Future Work}
 \subsubsection{Richer Languages}
@@ -532,28 +472,6 @@ cursor has a very strong intuitive connection to the proof theoretic notion
 of focusing \cite{Simmons11tr}. Building closer connections with proof
 theory (and category theory) is likely to be a fruitful avenue of further
 inquiry.
-
-
-% We already discussed a connection to gradual typing \cite{Siek06a}. We
-% hope to explore this connection more thoroughly. In particular, it may be
-% possible to better support exploratory and live programming by allowing
-% even programs with holes in them to execute as long as those holes are
-% only in the type portions, by deferring to the semantics given in work on
-% gradual typing.
-
-% It may also be possible to give a dynamics to incomplete
-% expressions. Prior work on staged evaluation suggests that there may be a
-% connection to modal logic, viewing holes as quantifying over all possible
-% terms that may fill them \cite{DBLP:journals/jacm/DaviesP01}. In
-% developing a dynamic semantics, we will also need to handle terms like
-% $\hhole{\hehole}$ and $\hhole{\hhole{\hexp}}$. In our semantics given
-% here, we eliminated them as they came up in a somewhat \emph{ad hoc}
-% manner. We have not yet explored an equational theory for terms with
-% holes, but intend to once our formalization effort is more
-% mature.\todo{fix bib}
-
-% \todo{new action form that makes actions extensible given proofs of
-% admissiblity of a derived form, like prevSib}
 
 \begin{quote}
 \emph{In any case, these are but steps toward more graphical program-description
