@@ -1050,8 +1050,8 @@ With these definitions, we can state reachability as follows:
 \begin{theorem}[Reachability]\label{thrm:reachability} ~
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
 \item If $\removeSel{\ztau}=\removeSel{\ztau'}$ then there exists some $\bar\alpha$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performTypI{\ztau}{\bar\alpha}{\ztau'}$.
-\item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\removeSel{\zexp}=\removeSel{\zexp'}$ then there exists some $\bar{\alpha}$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performAnaI{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}$. 
 \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\removeSel{\zexp}=\removeSel{\zexp'}$ then there exists some $\bar{\alpha}$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performSynI{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zexp'}{\htau}$.
+\item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and $\removeSel{\zexp}=\removeSel{\zexp'}$ then there exists some $\bar{\alpha}$ such that $\bar{\alpha}~\mathsf{movements}$ and $\performAnaI{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}$. 
 \end{enumerate}
 \end{theorem}
 
@@ -1132,19 +1132,21 @@ The simplest way to prove Theorem \ref{thrm:reachability} is to  break it into t
 \begin{lemma}[Reach Up]\label{lemma:reach-up} ~
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
 \item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performTypI{\ztau}{\bar\alpha}{\zwsel{\htau}}$.
-\item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performAnaI{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}$. 
 \item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performSynI{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}{\htau}$.
+\item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performAnaI{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}$. 
 \end{enumerate}
 \end{lemma}
 Lemma \ref{lemma:reach-down} establishes that you can always move the cursor from the outermost position to any other position. This serves as a check on our $\aMove{\dChild}$ and $\aMove{\dNext}$ rules. 
 \begin{lemma}[Reach Down]\label{lemma:reach-down} ~
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
 \item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performTypI{\zwsel{\htau}}{\bar\alpha}{\ztau}$.
-\item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performAnaI{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}$.
 \item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ nand $\performSynI{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}{\htau}$.
+\item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$ then there exists some $\bar\alpha$ such that $\bar\alpha~\mathsf{movements}$ and $\performAnaI{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}$.
 \end{enumerate}
 \end{lemma}
-Theorem \ref{thrm:reachability} follows by straightforward composition of these two lemmas. %(The witness to the existential is not, of course, the shortest path between any two cursor locations.)
+Theorem \ref{thrm:reachability} follows by straightforward composition of these two lemmas.
+%(The witness to the existential is not, of course, the shortest path
+%between any two cursor locations.)
 
 % \paragraph{Reachability}
 
@@ -1505,8 +1507,8 @@ To check that we have defined ``enough'' construct actions, we need to establish
 \begin{theorem}[Constructability]\label{thrm:constructability} ~
 \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
 \item For every $\htau$ there exists $\bar\alpha$ such that $\performTypI{\zwsel{\tehole}}{\bar\alpha}{\zwsel{\htau}}$.
-\item If $\hana{\hGamma}{\hexp}{\htau}$ then there exists $\bar\alpha$ such that: $$\performAnaI{\hGamma}{\zwsel{\hhole{}}}{\htau}{\bar\alpha}{\zwsel{\hexp}}$$
 \item If $\hsyn{\hGamma}{\hexp}{\htau}$ then there exists $\bar\alpha$ such that: $$\performSynI{\hGamma}{\zwsel{\hhole{}}}{\tehole}{\bar\alpha}{\zwsel{\hexp}}{\htau}$$
+\item If $\hana{\hGamma}{\hexp}{\htau}$ then there exists $\bar\alpha$ such that: $$\performAnaI{\hGamma}{\zwsel{\hhole{}}}{\htau}{\bar\alpha}{\zwsel{\hexp}}$$
 \end{enumerate}
 \end{theorem}
 
