@@ -265,13 +265,13 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \begin{array}{@{}rcl}
   \TABperformMove
       {\zwsel{\tsum{\htau_1}{\htau_2}}}
-      {\aMove{\dChild}}
+      {\aMove{\dChildn{1}}}
       {      {\tsum{\zwsel{\htau_1}}{\htau_2}}}
   \\
   \TABperformMove
-      {      {\tsum{\zwsel{\htau_1}}{\htau_2}}}
-      {\aMove{\dNext}}
-      {      {\tsum{{\htau_1}}{\zwsel{\htau_2}}}}
+      {\zwsel{\tsum{\htau_1}{\htau_2}}}
+      {\aMove{\dChildn{2}}}
+      {      {\tsum{\htau_1}{\zwsel{\htau_2}}}}
   \\
   \TABperformMove
       {      {\tsum{\zwsel{\htau_1}}{\htau_2}}}
@@ -290,7 +290,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \begin{array}{@{}rcl}
   \TABperformMove
       {\zwsel{\hinj{i}{\hexp}}}
-      {\aMove{\dChild}}
+      {\aMove{\dChildn{1}}}
       {\hinj{i}{\zwsel{\hexp}}}
   \\
   \TABperformMove
@@ -300,18 +300,18 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
   \\[2mm]
   \TABperformMove
       {\zwsel{\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}}}
-      {\aMove{\dChild}}
+      {\aMove{\dChildn{1}}}
       {      {\hcase{\zwsel{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
   \\
   \TABperformMove
-      {      {\hcase{\zwsel{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}
-      {\aMove{\dNext}}
-      {      {\hcase{{\hexp}}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
+      {\zwsel{\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}}}
+      {\aMove{\dChildn{2}}}
+      {      {\hcase{\hexp}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
   \\
   \TABperformMove
-      {      {\hcase{{\hexp}}{x}{\zwsel{\hexp_1}}{y}{\hexp_2}}}
-      {\aMove{\dNext}}
-      {      {\hcase{{\hexp}}{x}{{\hexp_1}}{y}{\zwsel{\hexp_2}}}}
+      {\zwsel{\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}}}
+      {\aMove{\dChildn{3}}}
+      {      {\hcase{\hexp}{x}{\hexp_1}{y}{\zwsel{\hexp_2}}}}
   \\
   \TABperformMove
       {      {\hcase{\zwsel{\hexp}}{x}{\hexp_1}{y}{\hexp_2}}}

@@ -23,9 +23,10 @@ Line 2, consisting of a lambda abstraction with an arrow type
 ascription. The cursor is placed on the argument type hole. Type holes are
 typeset like empty expression holes for visual consistency.
 
-The actions on Lines 2-4 complete the type ascription. In particular, the
+The actions on Lines 2-5 complete the type ascription. In particular, the
 $\aConstruct{\fnum}$ action constructs the $\tnum$ type at the cursor and
-the $\aMove{\dNext}$ action moves the cursor to the next hole.
+composition of the $\aMove{\dParent}$ and $\aMove{\dChildn{2}}$ actions
+move the cursor to the next hole.
 
 \begin{figure}[t!]
 \begin{center}
@@ -46,44 +47,48 @@ $\arraycolsep=4px
 \text{(\ref{r:contnum})}
 \\ 3 &
 \hlam{x}{\hhole{}} : \tarr{\zwsel{\tnum{}}}{\hhole{}} &
-\aMove{\dNext{}} &
-\text{({\ref{rule:move-nextSib-arr}})}
+\aMove{\dParent} &
+\text{({\ref{rule:move-parent-arr-left}})}
 \\ 4 &
+\hlam{x}{\hhole{}} : \zwsel{\tarr{\tnum{}}{\hhole{}}} &
+\aMove{\dChildn{2}} &
+\text{({\ref{rule:move-arr-c2}})}
+\\ 5 &
 \hlam{x}{\hhole{}} : \tarr{\tnum}{\zwsel{\hhole{}}}
 &
 \aConstruct{\fnum{}} &
 \text{(\ref{r:contnum})}
-\\ 5 &
+\\ 6 &
 \hlam{x}{\hhole{}} : \tarr{\tnum{}}{\zwsel{\tnum{}}} &
 \aMove{\dParent{}} &
 \text{(\ref{rule:move-parent-arr-right})}
-\\ 6 &
+\\ 7 &
 \hlam{x}{\hhole{}} : \zwsel{\tarr{\tnum{}}{\tnum{}}}
 &
 \aMove{\dParent{}} &
 \text{(\ref{rule:move-parent-asc-right})}
-\\ 7 &
-\zwsel{\hlam{x}{\hhole{}} : \tarr{\tnum}{\tnum}} &
-\aMove{\dChild} &
-\text{(\ref{r:movefirstchild})}
 \\ 8 &
-\zwsel{\hlam{x}{\hhole{}}} : \tarr{\tnum{}}{\tnum{}} &
-\aMove{\dChild{}} &
-\text{(\ref{r:movefirstchild-lam})}
+\zwsel{\hlam{x}{\hhole{}} : \tarr{\tnum}{\tnum}} &
+\aMove{\dChildn{1}} &
+\text{(\ref{r:movefirstchild-asc})}
 \\ 9 &
+\zwsel{\hlam{x}{\hhole{}}} : \tarr{\tnum{}}{\tnum{}} &
+\aMove{\dChildn{1}} &
+\text{(\ref{r:movefirstchild-lam})}
+\\ 10 &
 \hlam{x}{\zwsel{\hhole{}}} : \tarr{\tnum{}}{\tnum{}} &
 \aConstruct{\fvar{x}} &
 \text{(\ref{r:conevar})}
-\\ 10 &
+\\ 11 &
 \hlam{x}{\zwsel{{x}}} : \tarr{\tnum{}}{\tnum{}} &
 {\aConstruct{\fplus}}
 &
 \text{(\ref{rule:construct-plus-compat})}
-\\ 11 &
+\\ 12 &
 \hlam{x}{\hadd{x}{\zwsel{\hhole{}}}} : \tarr{\tnum{}}{\tnum{}} &
 \aConstruct{\fnumlit{1}} &
 \text{(\ref{r:conenumnum})}
-\\ 12 &
+\\ 13 &
 \hlam{x}{\hadd{x}{\zwsel{\hnum{1}}}} : \tarr{\tnum}{\tnum} &
 \textrm{---} &
 {\textrm{---}}
@@ -94,13 +99,13 @@ $\end{center}\vspace{-6px}
 \label{fig:first-example}
 \end{figure}
 
-The actions on Lines 5-8 move the cursor to the function body. For
+The actions on Lines 6-9 move the cursor to the function body. For
 simplicity, Hazelnut defines only a small collection of primitive movement
 actions. In practice, an editor would also define compound movement
 actions, e.g. an action that moves the cursor directly to the next
 remaining hole, in terms of these primitive movement actions.
 
-Lines 9-11 complete the function body by first constructing the variable
+Lines 10-12 complete the function body by first constructing the variable
 $x$, then constructing the plus form, and finally constructing the number
 $\hnum{1}$. Notice that we did not need to construct the function body in
 an ``outside-in'' manner, i.e. we constructed $x$ before constructing the
@@ -120,39 +125,39 @@ $\arraycolsep=4px
 \textbf{Next Action} & \textbf{Rule}
 \\
 \hline
-13 &
+14 &
 \zwsel{\hhole{}} &
 \aConstruct{\fvar{incr}} \hphantom{~\,\,~~}&
 \text{(\ref{r:conevar})}
-\\ 14 &
+\\ 15 &
 \zwsel{incr} &
 \aConstruct{\fap} &
 \text{(\ref{r:coneapfn})}
-\\ 15 &
+\\ 16 &
 incr(\zwsel{\hhole{}}) &
 \aConstruct{\fvar{incr}} &
 \text{(\ref{r:conevar2})}
-\\ 16 &
+\\ 17 &
 incr(\hhole{\zwsel{incr}}) &
 \aConstruct{\fap} &
 \text{(\ref{r:coneapfn})}
-\\ 17 &
+\\ 18 &
 incr(\hhole{incr(\zwsel{\hhole{}})}) \hphantom{~~~~} &
 \aConstruct{\fnumlit{3}} &
 \text{(\ref{r:conenumnum})}
-\\ 18 &
+\\ 19 &
 incr(\hhole{incr(\zwsel{\hnum{3}})}) &
 \aMove{\dParent}&
 \text{(\ref{r:moveparent-ap2})}
-\\ 19 &
+\\ 20 &
 incr(\hhole{\zwsel{incr(\hnum{3})}}) &
 \aMove{\dParent} &
 \text{(\ref{r:moveparent-hole})}
-\\ 20 &
+\\ 21 &
 incr(\zwsel{\hhole{incr(\hnum{3})}})&
 \aFinish &
 \text{(\ref{r:finishana})}
-\\ 21 &
+\\ 22 &
 incr(\zwsel{incr(\hnum{3})}) &
 \textrm{---} &
 {\textrm{---}}
@@ -167,15 +172,15 @@ Figure \ref{fig:second-example} shows an edit sequence that constructs the
 expression $incr(incr(\hnum{3}))$, where $incr$ is assumed bound to the
 increment function from Figure \ref{fig:first-example}.
 
-We begin on Line 13 by constructing the variable $incr$. Line 14 then
+We begin on Line 14 by constructing the variable $incr$. Line 15 then
 constructs the application form with $incr$ in function position, leaving
 the cursor on a hole in the argument position. Notice that we did not need
 to construct the outer application form before identifying the function
 being applied. Again, the transient edit state happens to be well-typed, so
 we needed to make no special allowances for this order of actions.
 
-We now need to apply $incr$ again, so we perform the same action on Line 15
-as we did on Line 13, i.e. $\aConstruct{\fvar{incr}}$. In a syntactic
+We now need to apply $incr$ again, so we perform the same action on Line 16
+as we did on Line 14, i.e. $\aConstruct{\fvar{incr}}$. In a syntactic
 structure editor, performing such an action would result in the following
 edit state:
 \[
@@ -186,7 +191,7 @@ $incr$ must be of type $\tnum$ but here it is of type
 $\tarr{\tnum}{\tnum}$. Hazelnut cannot allow such an edit state to arise.
 
 The programmer could alternatively have performed the $\aConstruct{\fap}$
-action on Line 15. This would result in the following edit state, which is
+action on Line 16. This would result in the following edit state, which is
 well-typed according to the static semantics that we will define in the
 next section:
 \[
@@ -194,10 +199,10 @@ incr(\hhole{}(\zwsel{\hhole{}}))
 \]
 The problem is that the programmer is not able to identify the intended
 function before constructing the function application form. This stands in
-contrast to Lines 13-14.
+contrast to Lines 14-15.
 
 Hazelnut's action semantics addresses this problem: rather than disallowing
-the $\aConstruct{\fvar{incr}}$ action on Line 15, it leaves $incr$ inside a
+the $\aConstruct{\fvar{incr}}$ action on Line 16, it leaves $incr$ inside a
 hole:
 \[
 incr(\hhole{\zwsel{incr}})
@@ -210,12 +215,12 @@ internalizing this concept, the presence of a type inconsistency does not
 leave the entire program formally meaningless.
 
 The expression inside a non-empty hole must itself be well-typed, so the
-programmer can continue to edit it. Lines 16-17 proceed to apply the inner
+programmer can continue to edit it. Lines 17-18 proceed to apply the inner
 mention of $incr$ to a number literal, $\hnum{3}$. Finally, Lines 18-19
-move the cursor to the non-empty hole and Line 20 performs the $\aFinish$
+move the cursor to the non-empty hole and Line 21 performs the $\aFinish$
 action. The $\aFinish$ action removes the hole if the type of the
 expression inside the hole is consistent with the expected type, as it now
-is. This results in the final edit state on Line 20, as desired. In
+is. This results in the final edit state on Line 22, as desired. In
 practice, the editor might automatically perform the $\aFinish$ action as
 soon as it becomes possible, but for simplicity, Hazelnut formally requires
 that it be performed explicitly.

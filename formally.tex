@@ -412,9 +412,8 @@ analyzes against the same H-type.
   \aConstruct{\psi} ~\vert~
   \aFinish\\
 \mathsf{Dir} & \delta & ::= &
-  \dChild ~\vert~
-  \dParent ~\vert~
-  \dNext \\
+  \dChildnm{n} ~\vert~
+  \dParent\\
 \mathsf{Shape} & \psi & ::= &
   \farr ~\vert~
   \fnum \\
@@ -479,13 +478,24 @@ self-explanatory:
     \performTyp{
       \zwsel{\tarr{\htau_1}{\htau_2}}
     }{
-      \aMove{\dChild}
+      \aMove{\dChildn{1}}
     }{
       \tarr{\zwsel{\htau_1}}{\htau_2}
     }
   }
 \end{equation}
-\begin{equation}
+\begin{equation}\label{rule:move-arr-c2}
+  \inferrule{ }{
+    \performTyp{
+      \zwsel{\tarr{\htau_1}{\htau_2}}
+    }{
+      \aMove{\dChildn{2}}
+    }{
+      \tarr{\htau_1}{\zwsel{\htau_2}}
+    }
+  }
+\end{equation}
+\begin{equation}\label{rule:move-parent-arr-left}
   \inferrule{ }{
     \performTyp{
       \tarr{\zwsel{\htau_1}}{\htau_2}
@@ -504,17 +514,6 @@ self-explanatory:
       \aMove{\dParent}
     }{
       \zwsel{\tarr{\htau_1}{\htau_2}}
-    }
-  }
-\end{equation}
-\begin{equation}\label{rule:move-nextSib-arr}
-  \inferrule{ }{
-    \performTyp{
-      \tarr{\zwsel{\htau_1}}{{\htau_2}}
-    }{
-      \aMove{\dNext}
-    }{
-      {\tarr{\htau_1}{\zwsel{\htau_2}}}
     }
   }
 \end{equation}
@@ -547,14 +546,26 @@ The expression movement judgement is defined as follows.
 \paragraph{Ascription}
 \begin{subequations}
   \begin{equation}
-    \label{r:movefirstchild}
+    \label{r:movefirstchild-asc}
   \inferrule{ }{
     \performTyp{
       \zwsel{\hexp : \htau}
     }{
-      \aMove{\dChild}
+      \aMove{\dChildn{1}}
     }{
       \zwsel{\hexp} : \htau
+    }
+  }
+  \end{equation}
+  \begin{equation}
+    \label{r:movesecondchild-asc}
+    \inferrule{ }{
+    \performTyp{
+      \zwsel{\hexp : \htau}
+    }{
+      \aMove{\dChildn{2}}
+    }{
+      \hexp : \zwsel{\htau}
     }
   }
 \end{equation}
@@ -581,18 +592,6 @@ The expression movement judgement is defined as follows.
     }
   }
 \end{equation}
-\begin{equation}
-  \label{r:movenextsib}
-  \inferrule{ }{
-    \performTyp{
-      \zwsel{\hexp} : \htau
-    }{
-      \aMove{\dNext}
-    }{
-      \hexp : \zwsel{\htau}
-    }
-  }
-\end{equation}
 
 \paragraph{Lambda}\vspace{-3px}
 \begin{equation}\label{r:movefirstchild-lam}
@@ -600,7 +599,7 @@ The expression movement judgement is defined as follows.
   \performMove{
     \zwsel{\hlam{x}{\hexp}}
   }{
-    \aMove{\dChild}
+    \aMove{\dChildn{1}}
   }{
     \hlam{x}{\zwsel{\hexp}}
   }
@@ -623,9 +622,20 @@ The expression movement judgement is defined as follows.
     \performMove{
       \zwsel{\hap{\hexp_1}{\hexp_2}}
     }{
-      \aMove{\dChild}
+      \aMove{\dChildn{1}}
     }{
       \hap{\zwsel{\hexp_1}}{\hexp_2}
+    }
+  }
+\end{equation}
+\begin{equation}
+  \inferrule{ }{
+    \performMove{
+      \zwsel{\hap{\hexp_1}{\hexp_2}}
+    }{
+      \aMove{\dChildn{2}}
+    }{
+      \hap{\hexp_1}{\zwsel{\hexp_2}}
     }
   }
 \end{equation}
@@ -651,17 +661,6 @@ The expression movement judgement is defined as follows.
     }
   }
 \end{equation}
-\begin{equation}
-  \inferrule{ }{
-    \performMove{
-      \hap{\zwsel{\hexp_1}}{\hexp_2}
-    }{
-      \aMove{\dNext}
-    }{
-      \hap{\hexp_1}{\zwsel{\hexp_2}}
-    }
-  }
-\end{equation}
 
 \paragraph{Plus}
 \begin{equation}
@@ -669,9 +668,20 @@ The expression movement judgement is defined as follows.
     \performMove{
       \zwsel{\hadd{\hexp_1}{\hexp_2}}
     }{
-      \aMove{\dChild}
+      \aMove{\dChildn{1}}
     }{
       \hadd{\zwsel{\hexp_1}}{\hexp_2}
+    }
+  }
+\end{equation}
+\begin{equation}
+  \inferrule{ }{
+    \performMove{
+      \zwsel{\hadd{\hexp_1}{\hexp_2}}
+    }{
+      \aMove{\dChildn{2}}
+    }{
+      \hadd{\hexp_1}{\zwsel{\hexp_2}}
     }
   }
 \end{equation}
@@ -697,17 +707,6 @@ The expression movement judgement is defined as follows.
     }
   }
 \end{equation}
-\begin{equation}
-  \inferrule{ }{
-    \performMove{
-      \hadd{\zwsel{\hexp_1}}{\hexp_2}
-    }{
-      \aMove{\dNext}
-    }{
-      \hadd{\hexp_1}{\zwsel{\hexp_2}}
-    }
-  }
-\end{equation}
 
 \paragraph{Non-Empty Hole}
 \begin{equation}
@@ -715,7 +714,7 @@ The expression movement judgement is defined as follows.
   \performMove{
     \zwsel{\hhole{\hexp}}
   }{
-    \aMove{\dChild}
+    \aMove{\dChildn{1}}
   }{
     \hhole{\zwsel{\hexp}}
   }
@@ -880,7 +879,7 @@ a check on our $\aMove{\dParent}$ rules.
 \end{lemma}
 Lemma \ref{lemma:reach-down} establishes that you can always move the
 cursor from the outermost position to any other position. This serves as a
-check on our $\aMove{\dChild}$ and $\aMove{\dNext}$ rules.
+check on our $\aMove{\dChildnm{n}}$ rules.
 \begin{lemma}[Reach Down]\label{lemma:reach-down} ~
   \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
   \item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$

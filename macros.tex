@@ -3,8 +3,6 @@
 % Violet hotdogs; highlight color helps distinguish them
 \newcommand{\llparenthesiscolor}{\textcolor{violet}{\llparenthesis}}
 \newcommand{\rrparenthesiscolor}{\textcolor{violet}{\rrparenthesis}}
-% \newcommand{\llparenthesiscolor}{\textcolor{red}{\lfloor}}
-% \newcommand{\rrparenthesiscolor}{\textcolor{red}{\rfloor}}
 
 % HTyp and HExp
 \newcommand{\hcomplete}[1]{#1~\mathsf{complete}}
@@ -27,11 +25,7 @@
 \newcommand{\hnum}[1]{\underline{#1}}
 \newcommand{\hadd}[2]{#1 + #2}
 \newcommand{\hehole}{\llparenthesiscolor\rrparenthesiscolor}
-% \newcommand{\hhole}[1]{\setlength{\fboxsep}{0pt}\fcolorbox{red}{white}{\vphantom{)}$#1$}}
 \newcommand{\hhole}[1]{\llparenthesiscolor#1\rrparenthesiscolor}
-% \newcommand{\hhole}[1]{
-  % \setlength{\fboxsep}{0pt}
-  % \colorbox{violet!10!white!100}{\ensuremath{\llparenthesiscolor#1\rrparenthesiscolor}}}
 \newcommand{\hindet}[1]{\lceil#1\rceil}
 \newcommand{\hinj}[2]{\texttt{inj}_{#1}({#2})}
 \newcommand{\hcase}[5]{\texttt{case}({#1},{#2}.{#3},{#4}.{#5})}
@@ -44,14 +38,11 @@
 % ZTyp and ZExp
 \newcommand{\zlsel}[1]{{\bowtie}{#1}}
 \newcommand{\zrsel}[1]{{#1}{\bowtie}}
-
-%\newcommand{\zwsel}[1]{\adjustbox{cframe=blue}{\ensuremath{{\textcolor{blue}{\triangleright}}{#1}{\textcolor{blue}{\triangleleft}}}}}
 \newcommand{\zwsel}[1]{
   \setlength{\fboxsep}{0pt}
   \colorbox{green!10!white!100}{
     \ensuremath{{{\textcolor{Green}{{\hspace{-2px}\triangleright}}}}{#1}{\textcolor{Green}{\triangleleft{\vphantom{\tehole}}}}}}
 }
-%\newcommand{\zwsel}[1]{{\triangleright}{#1}{\triangleleft}}
 
 \newcommand{\removeSel}[1]{#1^{\diamond}}
 
@@ -63,9 +54,8 @@
 
 % Direction
 \newcommand{\dParent}{\mathtt{parent}}
-\newcommand{\dChild}{\mathtt{firstChild}}
-\newcommand{\dNext}{\mathtt{nextSib}}
-\newcommand{\dPrev}{\mathtt{prevSib}}
+\newcommand{\dChildn}[1]{\mathtt{child}~\mathtt{{#1}}}
+\newcommand{\dChildnm}[1]{\mathtt{child}~{#1}}
 
 % Action
 \newcommand{\aMove}[1]{\mathtt{move}~#1}

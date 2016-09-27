@@ -254,13 +254,24 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
     \performTyp{
       \zwsel{\tarr{\htau_1}{\htau_2}}
     }{
-      \aMove{\dChild}
+      \aMove{\dChildn{1}}
     }{
       \tarr{\zwsel{\htau_1}}{\htau_2}
     }
   }
 \end{equation}
-\begin{equation}
+\begin{equation}\label{rule:move-arr-c2}
+  \inferrule{ }{
+    \performTyp{
+      \zwsel{\tarr{\htau_1}{\htau_2}}
+    }{
+      \aMove{\dChildn{2}}
+    }{
+      \tarr{\htau_1}{\zwsel{\htau_2}}
+    }
+  }
+\end{equation}
+\begin{equation}\label{rule:move-parent-arr-left}
   \inferrule{ }{
     \performTyp{
       \tarr{\zwsel{\htau_1}}{\htau_2}
@@ -271,7 +282,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
     }
   }
 \end{equation}
-\begin{equation}
+\begin{equation}\label{rule:move-parent-arr-right}
   \inferrule{ }{
     \performTyp{
       \tarr{{\htau_1}}{\zwsel{\htau_2}}
@@ -279,17 +290,6 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
       \aMove{\dParent}
     }{
       \zwsel{\tarr{\htau_1}{\htau_2}}
-    }
-  }
-\end{equation}
-\begin{equation}
-  \inferrule{ }{
-    \performTyp{
-      \tarr{\zwsel{\htau_1}}{{\htau_2}}
-    }{
-      \aMove{\dNext}
-    }{
-      {\tarr{\htau_1}{\zwsel{\htau_2}}}
     }
   }
 \end{equation}
@@ -367,21 +367,31 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 
 \begin{subequations}
 \paragraph{Ascription}
-
-\begin{equation}
+  \begin{equation}
   \inferrule{ }{
-    \performMove{
+    \performTyp{
       \zwsel{\hexp : \htau}
     }{
-      \aMove{\dChild}
+      \aMove{\dChildn{1}}
     }{
       \zwsel{\hexp} : \htau
+    }
+  }
+  \end{equation}
+  \begin{equation}
+    \inferrule{ }{
+    \performTyp{
+      \zwsel{\hexp : \htau}
+    }{
+      \aMove{\dChildn{2}}
+    }{
+      \hexp : \zwsel{\htau}
     }
   }
 \end{equation}
 \begin{equation}
   \inferrule{ }{
-    \performMove{
+    \performTyp{
       \zwsel{\hexp} : \htau
     }{
       \aMove{\dParent}
@@ -392,23 +402,12 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
 \end{equation}
 \begin{equation}
   \inferrule{ }{
-    \performMove{
+    \performTyp{
       \hexp : \zwsel{\htau}
     }{
       \aMove{\dParent}
     }{
       \zwsel{\hexp : \htau}
-    }
-  }
-\end{equation}
-\begin{equation}
-  \inferrule{ }{
-    \performMove{
-      \zwsel{\hexp} : \htau
-    }{
-      \aMove{\dNext}
-    }{
-      \hexp : \zwsel{\htau}
     }
   }
 \end{equation}
@@ -419,7 +418,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
   \performMove{
     \zwsel{\hlam{x}{\hexp}}
   }{
-    \aMove{\dChild}
+    \aMove{\dChildn{1}}
   }{
     \hlam{x}{\zwsel{\hexp}}
   }
@@ -442,9 +441,20 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
     \performMove{
       \zwsel{\hap{\hexp_1}{\hexp_2}}
     }{
-      \aMove{\dChild}
+      \aMove{\dChildn{1}}
     }{
       \hap{\zwsel{\hexp_1}}{\hexp_2}
+    }
+  }
+\end{equation}
+\begin{equation}
+  \inferrule{ }{
+    \performMove{
+      \zwsel{\hap{\hexp_1}{\hexp_2}}
+    }{
+      \aMove{\dChildn{2}}
+    }{
+      \hap{\hexp_1}{\zwsel{\hexp_2}}
     }
   }
 \end{equation}
@@ -470,17 +480,6 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
     }
   }
 \end{equation}
-\begin{equation}
-  \inferrule{ }{
-    \performMove{
-      \hap{\zwsel{\hexp_1}}{\hexp_2}
-    }{
-      \aMove{\dNext}
-    }{
-      \hap{\hexp_1}{\zwsel{\hexp_2}}
-    }
-  }
-\end{equation}
 
 \paragraph{Plus}
 \begin{equation}
@@ -488,9 +487,20 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
     \performMove{
       \zwsel{\hadd{\hexp_1}{\hexp_2}}
     }{
-      \aMove{\dChild}
+      \aMove{\dChildn{1}}
     }{
       \hadd{\zwsel{\hexp_1}}{\hexp_2}
+    }
+  }
+\end{equation}
+\begin{equation}
+  \inferrule{ }{
+    \performMove{
+      \zwsel{\hadd{\hexp_1}{\hexp_2}}
+    }{
+      \aMove{\dChildn{2}}
+    }{
+      \hadd{\hexp_1}{\zwsel{\hexp_2}}
     }
   }
 \end{equation}
@@ -516,17 +526,6 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
     }
   }
 \end{equation}
-\begin{equation}
-  \inferrule{ }{
-    \performMove{
-      \hadd{\zwsel{\hexp_1}}{\hexp_2}
-    }{
-      \aMove{\dNext}
-    }{
-      \hadd{\hexp_1}{\zwsel{\hexp_2}}
-    }
-  }
-\end{equation}
 
 \paragraph{Non-Empty Hole}
 \begin{equation}
@@ -534,7 +533,7 @@ complete H-types, and $e$ rather than $\hexp$ for complete H-expressions.
   \performMove{
     \zwsel{\hhole{\hexp}}
   }{
-    \aMove{\dChild}
+    \aMove{\dChildn{1}}
   }{
     \hhole{\zwsel{\hexp}}
   }
