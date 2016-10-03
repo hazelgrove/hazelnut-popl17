@@ -80,8 +80,8 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \end{subequations}
 \caption{The statics of sums.}
 \label{fig:sum-statics}
-\vspace{15px}
-\judgbox{\performTyp{\ztau}{\alpha}{\ztau}}{(Additional type actions:)}\vspace{-5px}
+% \vspace{15px}
+\judgbox{\performTyp{\ztau}{\alpha}{\ztau'}}{(Additional type actions:)}\vspace{-5px}
 \begin{subequations}
 \begin{equation}\label{rule:construct-sum}
   \inferrule{ }
@@ -91,7 +91,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 }
 \end{equation}
 \noindent\begin{minipage}{.5\linewidth}
- \begin{equation}\label{rule:zipper-sum-left}
+ \vspace{-8px}\begin{equation}\label{rule:zipper-sum-left}
   \inferrule{
     \performTyp{\ztau}{\alpha}{\ztau'}
   }{
@@ -104,7 +104,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
     }
   }
 \end{equation}\end{minipage}\begin{minipage}{.5\linewidth}
-\begin{equation}\label{rule:zipper-sum-right}
+\vspace{-8px}\begin{equation}\label{rule:zipper-sum-right}
   \inferrule{
     \performTyp{\ztau}{\alpha}{\ztau'}
   }{
@@ -174,7 +174,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
   {\hGamma}
   {\removeSel{\zexp}}
   {\htau_0}
-  \\\\
+  \\
   \performSyn
   {\hGamma}
   {\zexp}
@@ -204,10 +204,10 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
   \hsyn{\hGamma}{\hexp}{\htau_{+}}
   \\
   \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}
-  \\\\
-  \performAna{\hGamma, x:\htau_1}{\zexp_1}{\htau}{\alpha}{\zexp_1'}
   \\
-  \hana{\hGamma, y:\htau_2}{\hexp_2}{\htau}
+  \performAna{\hGamma, x:\htau_1}{\zexp_1}{\htau}{\alpha}{\zexp_1'}
+  % \\
+  % \hana{\hGamma, y:\htau_2}{\hexp_2}{\htau}
 }{
   \performAna
   {\hGamma}
@@ -224,9 +224,9 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
   \hsyn{\hGamma}{\hexp}{\htau_{+}}
   \\
   \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}
-  \\\\
-  \hana{\hGamma, x:\htau_1}{\hexp_1}{\htau}
   \\
+  % \hana{\hGamma, x:\htau_1}{\hexp_1}{\htau}
+  % \\
   \performAna{\hGamma, y:\htau_2}{\zexp_2}{\htau}{\alpha}{\zexp_2'}
 }{
   \performAna
@@ -252,6 +252,32 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
   {\aConstruct{\finj{i}}}
   {\hinj{i}{{\hhole{}}} : \zwsel{\tehole} + \tehole}
   {\tehole + \tehole}
+}
+\end{equation}
+\begin{equation}\label{rule:performSyn-case-1}
+\inferrule{
+  \sumhasmatched{\htau}{\htau_1 + \htau_2}
+}{
+  \performSyn
+  {\hGamma}
+  {\zwsel{\hexp}}
+  {\htau}
+  {\aConstruct{\fcase{x}{y}}}
+  {\hcase{\hexp}{x}{\zwsel{\hhole{}}}{y}{\hhole{}} : \tehole}
+  {\tehole}
+}
+\end{equation}
+\begin{equation}\label{rule:performSyn-case-2}
+\inferrule{
+  \tincompat{\htau}{\htau_1 + \htau_2}
+}{
+  \performSyn
+  {\hGamma}
+  {\zwsel{\hexp}}
+  {\htau}
+  {\aConstruct{\fcase{x}{y}}}
+  {\hcase{\hhole{\zwsel{\hexp}}}{x}{{\hhole{}}}{y}{\hhole{}} : \tehole}
+  {\tehole}
 }
 \end{equation}
 \caption{The construction \& zipper action rules for sums.}
