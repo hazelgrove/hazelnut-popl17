@@ -241,6 +241,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \end{subequations}
 \judgbox{\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}}
 {(Additional synthetic actions:)}\vspace{-5px}
+\begin{subequations}
 \begin{equation}\label{rule:performSyn-inj}
 %% Case -- Editing second branch arm
 \inferrule
@@ -280,6 +281,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
   {\tehole}
 }
 \end{equation}
+\end{subequations}
 \caption{The construction \& zipper action rules for sums.}
 \label{fig:sum-action}
 }
