@@ -2,6 +2,14 @@
 The reader is encouraged to follow along with the examples that we will
 discuss in this section using the implementation.
 
+For concision, the right column in both Fig. \ref{ex1} and Fig \ref{ex2}
+lists only the rules that describe the edit \emph{at the cursor}. This
+omits both the rules needed to work down the tree structure of the
+{Z-expression} to the cursor and the rules to propagate the change back
+up. The missing rules are described in detail in
+Sec. \ref{sec:zipper-cases}, and these examples are included in full in the
+Agda mechanization described in Sec. \ref{sec:mech}.
+
 \subsection{Example 1: Constructing the Increment Function}
 
 Figure~\ref{fig:first-example} shows an edit sequence that constructs the
@@ -29,6 +37,7 @@ composition of the $\aMove{\dParent}$ and $\aMove{\dChildn{2}}$ actions
 move the cursor to the next hole.
 
 \begin{figure}[t!]
+  \label{ex1}
 \begin{center}
 $\arraycolsep=4px
 \begin{array}{|r||l|l||l|l|}
@@ -113,9 +122,11 @@ outer plus form. Luckily, the transient function bodies, $x$ and $x +
 \hhole{}$, could be checked against type $\tnum$ (as we will detail in
 Sec. \ref{sec:holes}.)
 
+
 \subsection{Example 2: Applying the Increment Function}
 
 \begin{figure}[t!]
+  \label{ex2}
 \begin{center}
 \colorbox{light-gray}{\hspace{53px} now assume $incr : \tarr{\tnum}{\tnum}$ \hspace{54px}}
 $\arraycolsep=4px
