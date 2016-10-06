@@ -434,7 +434,11 @@ acts much like a simple imperative command language. This suggests future
 expansion to, for example, a true tactic language. Alternatively, it may be
 more useful to develop the notion of an \emph{action macro}, whereby
 functional programs could themselves be lifted to the level of actions to
-compute non-trivial compound actions.
+compute non-trivial compound actions. Such compound actions would give a
+uniform description of transformations ranging from the simple -- like
+``move the cursor to the next hole to the right'' -- to quite complex whole
+program refactoring, while remaining subject to the core Hazelnut
+metatheory.
 
 \subsubsection{Views}
 Another research direction is in exploring how types can be used to control
