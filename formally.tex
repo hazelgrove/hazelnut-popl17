@@ -408,8 +408,8 @@ analyzes against the same H-type.
 \hspace{-3px}$\arraycolsep=3pt\begin{array}{llcllll}
 \mathsf{Action} & \alpha & ::= &
   \aMove{\delta} ~\vert~
-  \aDel ~\vert~
   \aConstruct{\psi} ~\vert~
+  \aDel ~\vert~
   \aFinish\\
 \mathsf{Dir} & \delta & ::= &
   \dChildnm{n} ~\vert~
@@ -900,36 +900,6 @@ check on our $\aMove{\dChildnm{n}}$ rules.
 Theorem \ref{thrm:reachability} follows by straightforward composition of
 these two lemmas.
 
-\subsubsection{Deletion} The $\aDel$ action inserts an empty hole at the
-cursor, deleting what was there before.
-
-The type action rule for $\aDel$ is self-explanatory:
-\begin{equation}
-  \inferrule{ }{
-    \performTyp{
-      \zwsel{\htau}
-    }{
-      \aDel
-    }{
-      \zwsel{\tehole}
-    }
-  }
-\end{equation}
-
-Deletion within a Z-expression is similarly straightforward:
-\begin{subequations}
-\begin{equation}
-  \inferrule{ }{
-    \performSyn{\hGamma}{\zwsel{\hexp}}{\htau}{\aDel}{\zwsel{\hehole}}{\tehole}
-  }
-\end{equation}
-\begin{equation}
-  \inferrule{ }{
-    \performAna{\hGamma}{\zwsel{\hexp}}{\htau}{\aDel}{\zwsel{\hehole}}
-  }
-\end{equation}
-\end{subequations}
-
 \subsubsection{Construction}\label{sec:construction} The construction
 actions, $\aConstruct{\psi}$, are used to construct terms of a shape
 indicated by $\psi$ at the cursor.
@@ -1213,6 +1183,40 @@ To check that we have defined ``enough'' construct actions, we need to establish
   \end{enumerate}
 \end{theorem}
 
+\subsubsection{Deletion} The $\aDel$ action inserts an empty hole at the
+cursor, deleting what was there before.
+
+The type action rule for $\aDel$ is self-explanatory:
+\begin{equation}
+  \inferrule{ }{
+    \performTyp{
+      \zwsel{\htau}
+    }{
+      \aDel
+    }{
+      \zwsel{\tehole}
+    }
+  }
+\end{equation}
+
+Deletion within a Z-expression is similarly straightforward:
+\begin{subequations}
+\begin{equation}
+  \inferrule{ }{
+    \performSyn{\hGamma}{\zwsel{\hexp}}{\htau}{\aDel}{\zwsel{\hehole}}{\tehole}
+  }
+\end{equation}
+\begin{equation}
+  \inferrule{ }{
+    \performAna{\hGamma}{\zwsel{\hexp}}{\htau}{\aDel}{\zwsel{\hehole}}
+  }
+\end{equation}
+\end{subequations}
+Unlike the relative movement and construction actions, there is no
+``checksum'' theorem for deletion. The rules do not inspect the structure
+of the expression in the cursor, so they both match our intuition and will
+be correct in any extension of the language without modification.
+
 \subsubsection{Finishing}
 The final action we need to consider is $\aFinish$, which finishes the
 non-empty hole under the cursor.
@@ -1252,6 +1256,9 @@ subsumption):
   }
 \end{equation}
 \end{subequations}
+Like deletion, there is no need for a ``checksum'' theorem for the
+finishing.
+
 
 \subsubsection{Zipper Cases}\label{sec:zipper-cases} The rules defined so
 far handle the base cases, i.e. the cases where the action has ``reached''
