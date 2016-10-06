@@ -738,16 +738,21 @@ Sec. \ref{sec:zipper-cases}.
 
 The rules above are numerous and fairly uninteresting. That makes them
 quite hazardous -- we might make a mistake absent-mindedly. One check
-against this is to prove a lemma that establishes that movement actions
-move the cursor but do not change the cursor erasure.
+against this is to prove that establishes that movement actions do not
+change the cursor erasure, as in Theorem \ref{lemma:movement-erasure}.
 
 \begin{theorem}[Movement Erasure Invariance]\label{lemma:movement-erasure} ~
   \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
   \item If $\performMove{\ztau}{\aMove{\delta}}{\ztau'}$ then
     $\removeSel{\ztau}=\removeSel{\ztau'}$.
 
-  \item If $\performMove{\zexp}{\aMove{\delta}}{\zexp'}$ then
-    $\removeSel{\zexp}=\removeSel{\zexp'}$.
+  \item If
+    $\performSyn{\hGamma}{\zexp}{\htau}{\aMove{\delta}}{\zexp'}{\htau}$
+    then $\removeSel{\zexp}=\removeSel{\zexp'}$.
+
+  \item If $\performAna{\hGamma}{\zexp}{\htau}{\aMove{\delta}}{\zexp'}$
+    then $\removeSel{\zexp}=\removeSel{\zexp'}$.
+
 \end{enumerate}
 \end{theorem}
 \noindent Theorem \ref{lemma:movement-erasure} is useful also in that the
