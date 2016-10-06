@@ -1483,3 +1483,39 @@ steps, so the proofs of the other ``check'' theorems, e.g. Reachability and
 Constructability, serve as a check that none of these rules have been
 missed.
 \end{subequations}
+
+\subsection{Determinism}
+A last useful property to consider is \emph{action determinism}, i.e. that
+performing an action produces a unique result. Formally, this would be
+established as follows:
+\begin{theorem}[Action Determinism]
+  \label{thrm:actdet} All of the following hold:
+  \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
+  \item If $\performTyp{\ztau}{\alpha}{\ztau'}$ and
+    $\performTyp{\ztau}{\alpha}{\ztau''}$ then $\ztau'=\ztau''$.
+  \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+    $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$ and
+    $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}{\htau''}$ then
+    $\zexp' = \zexp''$ and $\htau' = \htau''$.
+  \item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+    $\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}$ and
+    $\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}$ then $\zexp' =
+    \zexp''$.
+  \end{enumerate}
+\end{theorem}
+This is not a theorem of the system exactly as described so far. The reason
+is quite subtle: the semantics of two construction actions,
+$\aConstruct{\fasc}$ and $\aConstruct{\flam{x}}$, behave differently in the
+analytic case than they do in the synthetic case -- the difference has to
+do with what the generated ascription contains. Both cases can technically
+``fire'' due to action subsumption, but one corresponds to an over-eager
+use of subsumption: it's intended to be a rule of last resort.
+
+The mechanization defines a predicate on action derivations that bans
+exactly these over-eager uses of action subsumption, gives a mapping from
+any derivation into one that matches the source and action and satisfies
+the predicate, and proves determinism as stated above but only for
+derivations modulo that predicate. This fix is analogous to the difference
+between a chaining and focused logic in proof theory, which correspond
+closely with bidirectional type checking systems, and therefore is to be
+expected.\cite{Simmons11tr}
