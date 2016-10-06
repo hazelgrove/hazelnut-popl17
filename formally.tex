@@ -751,12 +751,13 @@ change the cursor erasure, as in Theorem \ref{lemma:movement-erasure}.
   \item If $\performMove{\ztau}{\aMove{\delta}}{\ztau'}$ then
     $\removeSel{\ztau}=\removeSel{\ztau'}$.
 
-  \item If
-    $\performSyn{\hGamma}{\zexp}{\htau}{\aMove{\delta}}{\zexp'}{\htau}$
-    then $\removeSel{\zexp}=\removeSel{\zexp'}$.
+  \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+    $\performSyn{\hGamma}{\zexp}{\htau}{\aMove{\delta}}{\zexp'}{\htau'}$
+    then $\removeSel{\zexp}=\removeSel{\zexp'}$ and $\htau=\htau'$.
 
-  \item If $\performAna{\hGamma}{\zexp}{\htau}{\aMove{\delta}}{\zexp'}$
-    then $\removeSel{\zexp}=\removeSel{\zexp'}$.
+  \item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+    $\performAna{\hGamma}{\zexp}{\htau}{\aMove{\delta}}{\zexp'}$ then
+    $\removeSel{\zexp}=\removeSel{\zexp'}$.
 
 \end{enumerate}
 \end{theorem}
