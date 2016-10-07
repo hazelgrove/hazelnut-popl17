@@ -420,7 +420,7 @@ analyzes against the same H-type.
   \fvar{x} ~\vert~
   \flam{x} ~\vert~
   \fap ~\vert~
-  \farg ~\vert~
+  % \farg ~\vert~
   \fnumlit{n} ~\vert~
   \fplus\\
 & & \vert &
@@ -1072,21 +1072,21 @@ maintain Theorem \ref{sec:holes}:
   }
 \end{equation}
 
-The $\aConstruct{\farg}$ action instead places the expression under the
-cursor in the argument position of an application form. Because the
-function position is always an empty hole in this situation, we need only a
-single rule:
-\begin{equation}
-  \inferrule{ }{
-    \performSyn
-      {\hGamma}
-      {\zwsel{\hexp}}
-      {\htau}
-      {\aConstruct{\farg}}
-      {\hap{\zwsel{\hehole}}{\hexp}}
-      {\tehole}
-  }
-\end{equation}
+% The $\aConstruct{\farg}$ action instead places the expression under the
+% cursor in the argument position of an application form. Because the
+% function position is always an empty hole in this situation, we need only a
+% single rule:
+% \begin{equation}
+%   \inferrule{ }{
+%     \performSyn
+%       {\hGamma}
+%       {\zwsel{\hexp}}
+%       {\htau}
+%       {\aConstruct{\farg}}
+%       {\hap{\zwsel{\hehole}}{\hexp}}
+%       {\tehole}
+%   }
+% \end{equation}
 
 \paragraph{Numbers} The $\aConstruct{\fnumlit{n}}$ action replaces an empty
 hole with the number expression $\hnum{n}$. If the empty hole is being
