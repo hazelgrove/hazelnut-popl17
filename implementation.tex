@@ -34,7 +34,7 @@ disables actions that are not well-defined (see below.)
 \end{figure}
 
 \subsection{HZ}
-We have developed a simple reference implementation, HZ, of Hazelnut.  In
+We have developed a simple reference implementation, HZ, of Hazelnut extended with sum types as described in Sec. \ref{sec:extending}.  In
 order to reach a wide audience, we decided to implement HZ in the web
 browser.  In order to take advantage of a mature implementation of the FRP
 model, we chose to implement HZ using
@@ -44,15 +44,13 @@ compiler and associated libraries
 and the OCaml React
 library\footnote{\url{http://erratique.ch/software/react}}.
 
-At the time of the writing, HZ's view computation renders the model as a
-string embedded into HTML that approximates our typeset notation in this
-paper. The action palette is a collection of buttons and text boxes, which
-are disabled when an action is not well-defined or an invalid action
-argument is entered. We determine this by simply attempting to perform the
-action internally and catching the exception that is raised when an action
-is undefined. This design, of course, is not meant to score marks for
+The core semantics have
+been implemented in a functional style that follows the presentation in this paper closely.
+
+The view computation renders the model (i.e. a Z-expression paired with a type) as nested HTML \texttt{div} elements matching the tree structure of the corresponding Z-expression. This tree is stylized separately using CSS. The action palette is a collection of buttons and text boxes which
+are disabled when the corresponding action cannot be performed. We determine this by simply attempting to perform the
+action internally and handling the exception that is raised when an action
+is undefined. Each action form also has a corresponding keyboard shortcut. This design is not, of course, meant to score marks for
 usability or performance. Instead, as a simple reference implementation, we
 expect its source code to be of use to others who are interested in
-layering a more fluid user interface atop the core semantics (which have
-been implemented in a style that follows the presentation in this paper
-closely), or extensions thereof.
+layering a more fluid user interface atop the core semantics, or extensions thereof. 
