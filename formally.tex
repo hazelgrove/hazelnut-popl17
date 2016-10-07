@@ -1487,13 +1487,14 @@ missed.
 
 \subsection{Determinism}
 A last useful property to consider is \emph{action determinism}, i.e. that
-performing an action produces a unique result. Formally, this would be
-established as follows:
-\begin{theorem}[Action Determinism]
-  \label{thrm:actdet} All of the following hold:
-  \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
-  \item If $\performTyp{\ztau}{\alpha}{\ztau'}$ and
+performing an action produces a unique result. The following theorem establishes determinism for type actions:
+\begin{theorem}[Type Action Determinism]
+\label{thrm:type-actdet} If $\performTyp{\ztau}{\alpha}{\ztau'}$ and
     $\performTyp{\ztau}{\alpha}{\ztau''}$ then $\ztau'=\ztau''$.
+\end{theorem}
+
+The corresponding theorem for expression actions would be stated as follows:
+  \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
   \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
     $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$ and
     $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}{\htau''}$ then
@@ -1503,20 +1504,28 @@ established as follows:
     $\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}$ then $\zexp' =
     \zexp''$.
   \end{enumerate}
-\end{theorem}
-This is not a theorem of the system exactly as described so far. The reason
-is quite subtle: the semantics of two construction actions,
-$\aConstruct{\fasc}$ and $\aConstruct{\flam{x}}$, behave differently in the
-analytic case than they do in the synthetic case -- the difference has to
-do with what the generated ascription contains. Both cases can technically
-``fire'' due to action subsumption, but one corresponds to an over-eager
-use of subsumption: it's intended to be a rule of last resort.
 
-The mechanization defines a predicate on action derivations that bans
-exactly these over-eager uses of action subsumption, gives a mapping from
-any derivation into one that matches the source and action and satisfies
-the predicate, and proves determinism as stated above but only for
-derivations modulo that predicate. This fix is analogous to the difference
-between a chaining and focused logic in proof theory, which correspond
-closely with bidirectional type checking systems, and therefore is to be
-expected.\cite{Simmons11tr}
+This is not a theorem of the system as described so far. The reason
+is somewhat subtle: two construction actions,
+$\aConstruct{\fasc}$ and $\aConstruct{\flam{x}}$, behave differently in the
+analytic case than they do in the synthetic case. The problem is that both rules can  
+``fire'' when considering a Z-expression in analytic position due to action subsumption. This is a technically valid but ``morally'' invalid use of action subsumption: subsumption is included in the system to be used as a rule of last resort, i.e. it should only be applied when no other analytic action rule can fire.
+
+There are several possible ways to address this problem. One approach would be to modify the judgement forms to internalize this notion of ``rule of last resort''. This approach is related to focusing from proof theory \cite{Simmons11tr}. However, this approach would substantially complicate our presentation of the system.
+
+The approach that we take leaves the system unchanged. Instead, we define predicates over \emph{derivations} of the expression action judgements that excludes those derivations that apply subsumption prematurely, i.e. when another rule could have been applied. We call such derivations \emph{subsumption-minimal derivations}. We can establish determinism for subsumption-minimal derivations.
+\begin{theorem}[Expression Action Determinism] ~
+  \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
+  \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+    $\mathcal{D}_1 : \performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$ and
+    $\mathcal{D}_2 : \performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}{\htau''}$ and $\subminsyn{\mathcal{D}_1}$ and $\subminsyn{\mathcal{D}_2}$ then
+    $\zexp' = \zexp''$ and $\htau' = \htau''$.
+  \item If $\hana{\hGamma}{\removeSel{\zexp}}{\htau}$ and
+    $\mathcal{D}_1 : \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}$ and
+    $\mathcal{D}_2 : \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp''}$ and $\subminana{\mathcal{D}_1}$ and $\subminana{\mathcal{D}_2}$ then $\zexp' =
+    \zexp''$.
+  \end{enumerate}
+\end{theorem}
+
+The mechanization, discussed next, defines the predicates $\subminsyn{\mathcal{D}}$ and $\subminana{\mathcal{D}}$. In addition, it defines a mapping from
+any derivation into a corresponding subsumption-minimal derivation. Implementors of Hazelnut are expected only to implement this subsumption-minimal fragment.

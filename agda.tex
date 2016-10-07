@@ -1,18 +1,15 @@
 % !TEX root = hazelnut-popl17.tex
-So far, we have given an overview of the most important judgements and
-rules in the semantics of Hazelnut, and stated the critical metatheorem,
-Sensibility, and several auxiliary ``checks''. In a few cases, we have
-informally sketched out why these metatheorems will hold. In order to
-formally establish that our design meets our stated objectives, we have
-mechanized the semantics of Hazelnut using the Agda proof
-assistant \cite{norell:thesis} (also see the Agda Wiki, hosted
-at \url{http://wiki.portal.chalmers.se/agda/}.)
+% So far, we have given an overview of the most important judgements and
+% rules in the semantics of Hazelnut, and stated the critical metatheorem,
+% Sensibility, and several auxiliary ``checks''. In a few cases, we have
+% informally sketched out why these metatheorems will hold. 
 
-This development is available in the supplemental material. It contains the
-full set of rules given in the paper, and proofs of all of the theorems
-described. It also contains the rules needed for the extension to the
-language described in Sec. \ref{sec:extending}, and extends the proofs to
-the constructs.
+In order to
+formally establish that our design meets our stated objectives, we have
+mechanized the semantics and metatheory of Hazelnut as described above (and more concisely in the appendix) using the Agda proof
+assistant \cite{norell:thesis} (also see the Agda Wiki, hosted
+at \url{http://wiki.portal.chalmers.se/agda/}.) This development is available in the supplemental material. The mechanization also includes the  extension to the
+language described in Sec. \ref{sec:extending}.
 
 The documentation includes a more detailed discussion of the technical
 representation decisions that we made. The main idea is standard: we encode
