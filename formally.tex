@@ -21,14 +21,10 @@ systematically introduce the following structures:
   edit state is well-typed after cursor erasure.
 \end{itemize}
 
-Our overview below omits certain ``uninteresting'' details. The supplement
+Our overview below omits certain ``uninteresting'' details. The appendix
 includes the complete collection of rules, in definitional order. These
-rules, along with the proofs of all of the metatheorems listed, have been
-mechanized in Agda \cite{norell:thesis}, also in the supplement. All the
-judgements that mention contexts described below enjoy the standard
-structural properties of weakening, contraction, and exchange, and this too
-is proven in the mechanization. We will summarize this effort in
-Sec. \ref{sec:mech}.
+rules, along with the proofs of all of the metatheorems discussed, have been
+mechanized in Agda \cite{norell:thesis} (see Sec. \ref{sec:mech}.) 
 
 \subsection{H-types and H-expressions}\label{sec:holes}
 Figure \ref{fig:hexp-syntax} defines the syntax of H-types, $\htau$, and
@@ -49,11 +45,9 @@ Types and expressions that contain no holes are \emph{complete types} and
 $\hcomplete{\htau}$ when $\htau$ is complete, and $\hcomplete{\hexp}$ when
 $\hexp$ is complete (see supplement.) We are not concerned here with
 defining a dynamic semantics for Hazelnut, but the dynamics for complete
-H-expressions would be entirely standard (in Sec. \ref{sec:rw} we discuss
+H-expressions would be entirely standard because complete expressions correspond  immediately to those of the typed lambda calculus with numbers (in Sec. \ref{sec:rw} we discuss
 the multi-dimensional design space around the question of evaluating
-incomplete H-expressions.) For completeness, a mapping from the
-bidirectional type system to a declarative one, and a proof of type safety
-for complete terms in that system, is included in the mechanization.
+incomplete H-expressions.)
 
 \begin{figure}[t]
 $\arraycolsep=4pt\begin{array}{lllllll}
@@ -78,25 +72,24 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 \noindent\fbox{$\tcompat{\htau}{\htau'}$}~~\text{$\tau$ and $\tau'$ are consistent}
 \begin{subequations}\label{eqns:consistency}
 \begin{mathpar}
-
 \inferrule{ }{
   \tcompat{\tehole}{\htau}
 }
-~~~~~~~~
+~~~~~
 \inferrule{ }{
   \tcompat{\htau}{\tehole}
 }
-~~~~~~~~
+~~~~~
 \inferrule{ }{
   \tcompat{\htau}{\htau}
 }
-~~~~~~~~
+~~~~~
 \inferrule{
   \tcompat{\htau_1}{\htau_1'}\\
   \tcompat{\htau_2}{\htau_2'}
 }{
   \tcompat{(\tarr{\htau_1}{\htau_2})}{(\tarr{\htau_1'}{\htau_2'})}
-}~~~~~~~~\text{(\ref*{eqns:consistency}a-d)}
+}~~~~\text{\hspace{-2px}(\ref*{eqns:consistency}a-d)}
 \end{mathpar}
 \end{subequations}
 \fbox{$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$}~~\text{$\tau$ has matched arrow type $\tarr{\htau_1}{\htau_2}$}
@@ -108,7 +101,7 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 }
 \end{equation}
 \end{minipage}
-\begin{minipage}{0.5\linewidth}
+\begin{minipage}{0.48\linewidth}
 \begin{equation}
 \inferrule{ }{
   \arrmatch{\tehole}{\tarr{\tehole}{\tehole}}
@@ -199,8 +192,8 @@ Hazelnut's static semantics is organized as a \emph{bidirectional type
 around the two mutually defined judgements in Figure
 \ref{fig:ana-syn}. Typing contexts, $\hGamma$, map each variable $x \in
 \domof{\hGamma}$ to a hypothesis $x : \htau$ in the usual manner. We
-identify the context up to exchange and adopt the standard identification
-convention for formal structures that differ only up to alpha-equivalence.
+identify the context up to exchange and contraction and adopt the standard identification
+convention for formal structures that differ only up to alpha-renaming of bound variables. All judgements that mention a context obey weakening.
 
 Derivations of the type analysis judgement, $\hana{\hGamma}{\hexp}{\htau}$,
 establish that $\hexp$ can appear where an expression of type $\htau$ is
@@ -210,7 +203,7 @@ necessary in positions where an expected type is not available (e.g. at the
 top level.) Algorithmically, the type is an ``input'' of the type analysis
 judgement, but an ``output'' of the type synthesis judgement.  Making a
 judgemental distinction between these two notions will be essential in our
-action semantics (Sec. \ref{sec:actions}.)
+action semantics (Sec. \ref{sec:actions}.) 
 
 \begin{subequations}\label{rules:syn-ana}
 Type synthesis is stronger than type analysis in that if an expression is
@@ -472,7 +465,7 @@ resulting cursor erasure is consistent with the type provided for analysis.
 The case involving Rule (\ref{rule:action-subsume}) in the proof of Theorem
 \ref{thrm:actsafe} goes through by induction and static subsumption,
 i.e. Rule (\ref{rule:ana-subsume}). Algorithmically, subsumption should be
-the rule of last resort.
+the rule of last resort (see Sec. \ref{sec:determinism}.)
 
 \subsubsection{Relative Movement}\label{sec:movement}
 The rules below define relative movement within Z-types. They should be
@@ -1485,7 +1478,7 @@ Constructability, serve as a check that none of these rules have been
 missed.
 \end{subequations}
 
-\subsection{Determinism}
+\subsection{Determinism}\label{sec:determinism}
 A last useful property to consider is \emph{action determinism}, i.e. that
 performing an action produces a unique result. The following theorem establishes determinism for type actions:
 \begin{theorem}[Type Action Determinism]
