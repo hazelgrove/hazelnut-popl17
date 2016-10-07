@@ -36,7 +36,7 @@ disables actions that are not well-defined (see below.)
 \subsection{HZ}
 We have developed a simple reference implementation, HZ, of Hazelnut extended with sum types as described in Sec. \ref{sec:extending}.  In
 order to reach a wide audience, we decided to implement HZ in the web
-browser.  In order to take advantage of a mature implementation of the FRP
+browser.  To take advantage of a mature implementation of the FRP
 model, we chose to implement HZ using
 OCaml\footnote{\url{https://ocaml.org/}}, the \texttt{js\_of\_ocaml}
 compiler and associated libraries
@@ -51,6 +51,5 @@ The view computation renders the model (i.e. a Z-expression paired with a type) 
 are disabled when the corresponding action cannot be performed. We determine this by simply attempting to perform the
 action internally and handling the exception that is raised when an action
 is undefined. Each action form also has a corresponding keyboard shortcut. This design is not, of course, meant to score marks for
-usability or performance. Instead, as a simple reference implementation, we
-expect its source code to be of use to others who are interested in
+usability or performance. Instead, as a simple reference implementation, it allows the reader to interact with the system presented in this paper, to aid in their understanding.  Additionally, we expect its source code to be of use to others who are interested in
 layering a more fluid user interface atop the core semantics, or extensions thereof. 
