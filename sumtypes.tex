@@ -29,8 +29,10 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 
 \begin{figure}
 {
-\judgbox{\tcompat{\htau_1}{\htau_2}}{(Additional type consistency rule:)}
-\begin{equation}
+\judgbox{\tcompat{\htau_1}{\htau_2}}{
+  %(Additional type consistency rule:)
+}
+\vspace{-14px}\begin{equation}
   \inferrule{
     \tcompat{\htau_1}{\htau_1'}
     \\
@@ -56,7 +58,9 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \end{subequations}
 
 \vspace{3px}
-\judgbox{\hana{\hGamma}{\hexp}{\htau}}{(Additional type analysis rules:)}
+\judgbox{\hana{\hGamma}{\hexp}{\htau}}{
+  %(Additional type analysis rules:)
+}
 \begin{subequations}
 \begin{equation}
 \inferrule{
@@ -81,7 +85,9 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \caption{The statics of sums.}
 \label{fig:sum-statics}
 % \vspace{15px}
-\judgbox{\performTyp{\ztau}{\alpha}{\ztau'}}{(Additional type actions:)}\vspace{-5px}
+\judgbox{\performTyp{\ztau}{\alpha}{\ztau'}}{
+  %(Additional type actions:)
+}\vspace{-19px}
 \begin{subequations}
 \begin{equation}\label{rule:construct-sum}
   \inferrule{ }
@@ -120,7 +126,9 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \end{minipage}
 \end{subequations}
 \judgbox{\performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}}
-{(Additional analytic actions:)}
+{
+%(Additional analytic actions:)
+}
 \begin{subequations}
 \begin{equation}\label{rule:performAna-inj-1}
   \inferrule{ \sumhasmatched{\htau_{+}}{\tsum{\htau_{1}}{\htau_{2}}} }
@@ -240,7 +248,9 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 % }
 \end{subequations}
 \judgbox{\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}}
-{(Additional synthetic actions:)}\vspace{-5px}
+{
+%(Additional synthetic actions:)
+}\vspace{-5px}
 \begin{subequations}
 \begin{equation}\label{rule:performSyn-inj}
 %% Case -- Editing second branch arm
