@@ -38,6 +38,10 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 \newenvironment{proof-sketch}{\noindent{\emph{Proof Sketch.}}}{\qed}
 \makeatletter
 
+\usepackage[firstpage]{draftwatermark}
+\SetWatermarkText{\hspace*{8in}\raisebox{6.5in}{\includegraphics[scale=0.1]{aec-badge-popl}}}
+\SetWatermarkAngle{0}
+
 \renewcommand\topfraction{0.85}
 \renewcommand\bottomfraction{0.85}
 \renewcommand\textfraction{0.1}
