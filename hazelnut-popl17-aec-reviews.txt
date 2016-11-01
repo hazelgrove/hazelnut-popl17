@@ -42,33 +42,37 @@ with the paper.
 
                        ===== Artifact summary =====
 
-The artifact consists of three components: the Agda mechanization of the paper's contents, an extension of the Agda implementation to have sum types, and an implementation of a simple UI for the structured editor calculus that runs in HTML and JavaScript. The Agda implementations contain no references to unsafe Agda features, and the Javascript UI works as expected.
+The artifact consists of three components: the Agda mechanization of the
+paper's contents, an extension of the Agda implementation to have sum
+types, and an implementation of a simple UI for the structured editor
+calculus that runs in HTML and JavaScript. The Agda implementations contain
+no references to unsafe Agda features, and the Javascript UI works as
+expected.
 
                  ===== Detailed artifact evaluation =====
 
-Reviewing the artifact was fairly easy, due to detailed
-instructions. A VM image with a working installation of Agda and OCaml
-would have been convenient, but I was able to install the appropriate
-versions of Agda, OCaml, etc. without any major issues.
+Reviewing the artifact was fairly easy, due to detailed instructions. A VM
+image with a working installation of Agda and OCaml would have been
+convenient, but I was able to install the appropriate versions of Agda,
+OCaml, etc. without any major issues.
 
-The Agda code was a joy to read. Unicode and mixfix were used
-tastefully to mirror the paper's notation without the over-the-top
-obscurantism that one sometimes sees. Comments and the associated
-README made it easy to associate the Agda implementation with the
-paper descriptions. One small thing that would have made it easier
-would be if the different uses of Nat were distinguished. For
-instance, one could write
+The Agda code was a joy to read. Unicode and mixfix were used tastefully to
+mirror the paper's notation without the over-the-top obscurantism that one
+sometimes sees. Comments and the associated README made it easy to
+associate the Agda implementation with the paper descriptions. One small
+thing that would have made it easier would be if the different uses of Nat
+were distinguished. For instance, one could write
 
 Var : Set
 Var = Nat
 
 and then use Var whenever it represents a variable, as opposed to a
-num. Alternatively, an isomorphic type could have been defined to make
-it incompatible with Nat.
+num. Alternatively, an isomorphic type could have been defined to make it
+incompatible with Nat.
 
 I only found one trivial issue. The Agda implementation of the proofs
-contains one shape that isn't in the paper: "arg". This shape isn't
-used anywhere, so it's probably an oversight from an earlier version.
+contains one shape that isn't in the paper: "arg". This shape isn't used
+anywhere, so it's probably an oversight from an earlier version.
 
 
 
@@ -149,7 +153,8 @@ I address each claim in turn.
 
 (d) This was present in the proof.
 
-(e) The documentation is excellent and the rules are implemented as described.
+(e) The documentation is excellent and the rules are implemented as
+    described.
 
 (f) All of the theorems are proved for the extended version, which is
     a compelling argument that the extension was successful.
@@ -189,19 +194,21 @@ to navigate.
 Both artifacts, the prototype OCaml implementation (using js_of_ocaml to
 translate to Javascript) and the Agda formalization compile and work as
 advertised. I used Agda 2.5.1.1 as stated in the documentation and no
-non-default features are used. The only axiom used is function extensionality.
+non-default features are used. The only axiom used is function
+extensionality.
 
                       Overall merit: 4. Exceeds expectations
 
                       ===== Brief paper summary =====
 
-The paper presents Hazelnut, a typed structure editor calculus.
-The key property of this calculus is that its edit operations ensure that the
-terms are always not just syntactically correct (modulo holes), but also well typed.
+The paper presents Hazelnut, a typed structure editor calculus.  The key
+property of this calculus is that its edit operations ensure that the terms
+are always not just syntactically correct (modulo holes), but also well
+typed.
 
-The authors define the calculus, describe a type-checking algorithm for it and
-prove key meta-theoretic properties of the type system and of the edit
-operations. 
+The authors define the calculus, describe a type-checking algorithm for it
+and prove key meta-theoretic properties of the type system and of the edit
+operations.
 
 A large portion of the paper is also devoted to examples, explanations and
 motivations for the different rules of the calculus.
@@ -210,39 +217,43 @@ motivations for the different rules of the calculus.
 
 The artifact consists of two parts.
 
-    - An OCaml implementation of (an extended version) of a structure editor
-      based on the calculus described in the paper. The authors use js_of_ocaml
-      to generate Javascript code and a html page which contains the editor.
-    - Agda formalization of the calculus which includes proofs of all theorems
-      contained in the paper. The formalization does not use any non-standard
-      features of Agda 2.5.1.1 and is almost axiom free, apart from function extensionality.
+    - An OCaml implementation of (an extended version) of a structure
+      editor based on the calculus described in the paper. The authors use
+      js_of_ocaml to generate Javascript code and a html page which
+      contains the editor.
+
+    - Agda formalization of the calculus which includes proofs of all
+      theorems contained in the paper. The formalization does not use any
+      non-standard features of Agda 2.5.1.1 and is almost axiom free, apart
+      from function extensionality.
 
                  ===== Detailed artifact evaluation =====
 
-The artifact is in two parts which I will evaluate separately. The README files
-describing the artifacts are clear and exhaustive.
+The artifact is in two parts which I will evaluate separately. The README
+files describing the artifacts are clear and exhaustive.
 
 1. A prototype structure editor based on the calculus.
 
-   This is very well done and easy to use. I found it very easy to replay the
-   examples provided in the paper. This is good work.
+   This is very well done and easy to use. I found it very easy to replay
+   the examples provided in the paper. This is good work.
 
 2. Agda formalization of the calculus.
 
-   First, the README file describing the formalization is extensive and provides
-   a mapping between theorems in the paper to their formalization. There is also
-   a discussion of the (small) differences between the calculus presented in the
-   paper and the one formalized. The differences are minor and to do with
-   treatment of variables, an always tedious part of any formalization of
-   languages with binders. And second, the Agda code is well-structured and
-   readable. The only axiom used is function extensionality, and that seems to
-   have to do with a peculiar choice for representing contexts which I comment
-   on below. No non-standard features of Agda are used.
-   
+   First, the README file describing the formalization is extensive and
+   provides a mapping between theorems in the paper to their
+   formalization. There is also a discussion of the (small) differences
+   between the calculus presented in the paper and the one formalized. The
+   differences are minor and to do with treatment of variables, an always
+   tedious part of any formalization of languages with binders. And second,
+   the Agda code is well-structured and readable. The only axiom used is
+   function extensionality, and that seems to have to do with a peculiar
+   choice for representing contexts which I comment on below. No
+   non-standard features of Agda are used.
+
    Overall I think this is an exemplary formalization. The Agda code is
    commented enough so that it is possible to follow what is going on, and
-   combined with the README file it is easy to find theorems from the paper and
-   check they state the same thing.
+   combined with the README file it is easy to find theorems from the paper
+   and check they state the same thing.
 
    I have one issue with the formalization, and that is the treatment of
    contexts. The authors say in the README file:
@@ -256,7 +267,7 @@ describing the artifacts are clear and exhaustive.
    the axiom of choice.
 
    I also don't understand why the non-standard choice was been made for
-   representing contexts. There are many formalizations of different calculi
-   with binders which use various approaches to representing free and bound
-   variables. De Bruijn is popular. Why wasn't one of these chosen?
-
+   representing contexts. There are many formalizations of different
+   calculi with binders which use various approaches to representing free
+   and bound variables. De Bruijn is popular. Why wasn't one of these
+   chosen?
