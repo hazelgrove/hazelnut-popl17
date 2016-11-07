@@ -1,58 +1,60 @@
 % !TEX root = hazelnut-popl17.tex
 
-Programmers typically construct and manipulate well-typed expressions only
+Programmers typically interact with meaningful programs only
 indirectly, by editing text that is first parsed according to a textual
 syntax and then typechecked according to a static semantics. This
 indirection has practical benefits, to be sure -- text editors and other
-text-based tools benefit from decades of development effort -- but it also
+text-based tools benefit from decades of development effort. However, this indirection through text also
 introduces some fundamental complexity into the programming process.
 
 First, it requires that programmers learn the subtleties of the textual
-syntax (e.g. the precedence of the various forms.) This can be particularly
-challenging for novices \cite{Altadmri:2015:MCI:2676723.2677258}.
+syntax (e.g. operator precedence.) This is particularly 
+challenging for novices \cite{Altadmri:2015:MCI:2676723.2677258,stefik2013empirical}, and even experienced programmers frequently make mistakes \cite{7548903,jones2006developer}.
 
-The fact that not every sequence of characters corresponds to a meaningful
-program also complicates matters for tool designers. In particular, program
-editors must contend with meaningless text on a regular basis. In a dataset
-analyzed by Yoon and Myers consisting of 1460 hours of edit logs, 44.2\% of
-edit states were syntactically malformed \cite{6883030}. Some additional
-percentage of edit states were well-formed but ill-typed (the dataset did
-not contain enough information to determine the exact percentage.)  Some of
-these meaningless edit states arose because the programmer was in the midst
-of a sequence of edits that left the edit state transiently meaningless,
-while others arose because the programmer made a logical mistake. Because
-the language definition is silent about these edit states, it is difficult
-to design useful editor services, e.g. syntax
+Second, the fact that many sequences of characters do not correspond to a meaningful
+program complicates the design of program editors and other interactive programming tools. 
+%In particular, program
+%editors must contend with meaningless text on a regular basis. 
+In a dataset  
+gathered by Yoon and Myers consisting of 1460 hours of Eclipse edit logs  \cite{6883030}, 44.2\% of
+edit states were syntactically malformed. Some additional
+percentage of edit states were well-formed but ill-typed (the dataset was
+not complete enough to determine the exact percentage.) Collectively, we refer to these edit states as \emph{meaningless edit states}, because they are not given static or dynamic meaning by the language definition. 
+%Some of
+%these meaningless edit states arose because the programmer was in the midst
+%of a sequence of edits that left the edit state transiently meaningless,
+%while others arose because the programmer made a logical mistake. 
+As a consequence, it is difficult
+to design useful language-aware editor services, e.g. syntax
 highlighting~\cite{sarkar2015impact}, type-aware code
 completion~\cite{Mooty:2010:CCC:1915084.1916348,Omar:2012:ACC:2337223.2337324},
 and refactoring support \cite{mens2004survey}. Editors must either disable
 these editor services when they encounter meaningless edit states or
-develop \emph{ad hoc} heuristics, which can be misleading.
+deploy \emph{ad hoc} heuristics, e.g. by using whitespace to guess the programmer's intent \cite{DBLP:conf/oopsla/KatsJNV09,DBLP:conf/sle/JongeNKV09}.
 
 These complications have motivated a long line of research
 into \emph{structure editors}, i.e. program editors where every edit state
-is a program structure.
+corresponds to a program structure \cite{teitelbaum_cornell_1981}.\footnote{Structure editors are also variously known as \emph{structured editors}, \emph{structural editors}, \emph{syntax-directed editors} and \emph{projectional editors} (esp. when the user interface presents rich views of the program structure.)}
 
 Most structure editors are \emph{syntactic structure editors}, i.e. the
-edit state is a syntax tree with \emph{holes} that stand for branches of
+edit state corresponds to a syntax tree with \emph{holes} that stand for branches of
 the tree that have yet to be constructed, and the edit actions are
 context-free tree transformations. For example, Scratch is a syntactic
 structure editor that has achieved success as a tool for teaching children
-how to program \cite{Resnick:2009:SP:1592761.1592779}.
+how to program \cite{Resnick:2009:SP:1592761.1592779}. %Every well-formed edit state is meaningful according to the semantics of Scratch (in particular, it dynamically continues past erroneous terms.)
 
-The Scratch language has a trivial static semantics, but researchers have
-also designed syntactic structure editors for languages with a non-trivial
-static semantics. For example, \texttt{mbeddr} is an editor for a C-like
-language \cite{voelter_mbeddr:_2012}, TouchDevelop is an editor for an
-object-oriented language \cite{tillmann_touchdevelop:_2011} and Lamdu is an
+% Scratch does not impose any static requirements , i.e. every well-formed edit state is trivially statically meaningful. 
+Researchers have also 
+ designed  syntactic structure editors for more sophisticated languages with non-trivial  
+static type systems. Contemporary examples include \texttt{mbeddr}, a structure editor for a C-like
+language \cite{voelter_mbeddr:_2012}, TouchDevelop, a structure editor for an
+object-oriented language \cite{tillmann_touchdevelop:_2011}, and Lamdu, a structure 
 editor for a functional language similar to Haskell \cite{lamdu}. Each of
 these editors presents an innovative user interface, but the non-trivial
 type and binding structure of the underlying language complicates its
-design. The reason is that a syntactic structure editor does not guarantee
-that every edit state is statically meaningful -- only that it is
-syntactically well-formed. As in textual program editors, these syntactic
-structure editors must either disable key editor services when they
-encounter meaningless edit states or deploy \emph{ad hoc} heuristics.
+design. The reason is that syntactic structure editors do not assign static meaning to every edit state -- they guarantee only that every edit state corresponds to  a 
+syntactically well-formed tree. These editors must also either disable editor services that require an understanding of the semantics of the program or deploy \emph{ad hoc} heuristics when they
+encounter these meaningless edit states.
 
 
 This paper develops a principled solution to this problem. We introduce
@@ -61,12 +63,12 @@ lambda calculus extended to assign static meaning to expressions and types
 with {holes}, which we call \textbf{H-expressions}
 and \textbf{H-types}. Hazelnut's formal \emph{action semantics} maintains
 the invariant that every edit state is a statically meaningful
-(i.e. well-typed) H-expression with a single superimposed \emph{cursor}. We
+(i.e. well-H-typed) H-expression with a single superimposed \emph{cursor}. We
 call H-expressions and H-types with a cursor \textbf{Z-expressions}
 and \textbf{Z-types} (so prefixed because our encoding follows
 Huet's \emph{zipper} pattern \cite{JFP::Huet1997}.)
 
-Na\"ively, enforcing an injunction on ill-typed edit states would force
+Na\"ively, enforcing an injunction on ill-H-typed edit states would force
 programmers to construct programs in a rigid ``outside-in'' manner. For
 example, the programmer would often need to construct the outer function
 application form before identifying the intended function. To address this
@@ -83,32 +85,34 @@ The remainder of this paper is organized as follows:
     sequences to develop the reader's intuitions.
 
   \item We then give a detailed overview of Hazelnut's semantics and
-  metatheory, and our mechanization in the Agda proof assistant, in
+  metatheory, which has been mechanized using the Agda proof assistant, in
   Sec.  \ref{sec:hazel}.
 
   \item Hazelnut is a {foundational} calculus, i.e. a calculus that
   language and editor designers are expected to extend with higher level
-  constructs. We extend Hazelnut with simple sum types in
+  constructs. We extend Hazelnut with binary sum types in
   Sec.  \ref{sec:extending} to demonstrate how Hazelnut's rich metatheory
-  guides such a development.
+  guides one such extension.
 
   \item In Sec.  \ref{sec:impl}, we briefly describe how Hazelnut's action
   semantics lends itself to efficient implementation as a functional
   reactive program. Our reference implementation is written
-  using \lstinline{js_of_ocaml} and the OCaml \lstinline{React} library.
+  using the OCaml \lstinline{React} library and \lstinline{js_of_ocaml}.
 
   \item In Sec.  \ref{sec:rw}, we summarize related work. In particular,
   much of the technical machinery needed to handle type holes coincides
-  with machinery developed in the study of gradual type systems. Similarly,
+  with machinery developed for gradual type systems. Similarly,
   expression holes can be interpreted as the closures of contextual modal
   type theory, which, by its correspondence with contextual modal logic,
-  lays logical foundations beneath our work.
+  suggests logical foundations for the system.
 
   \item We conclude in Sec.  \ref{sec:future} by summarizing our vision of
   a principled science of structure editor design rooted in type theory,
   and suggest a number of future directions.
 \end{itemize}
-The supplemental material includes 1) a typeset listing of Hazelnut's rules
-in definitional order; 2) the formalization of Hazelnut in Agda; and 3) our
-reference implementation of Hazelnut, both in source form and pre-compiled
-to JavaScript for use in a web browser.
+The supplemental material can be accessed from:
+\[\text{\url{http://cs.cmu.edu/~comar/hazelnut-popl17/}} \]
+% 1) a typeset listing of Hazelnut's rules
+%in definitional order; 2) the formalization of Hazelnut in Agda; and 3) our
+%reference implementation of Hazelnut, both in source form and pre-compiled
+%to JavaScript for use in a web browser.\todo{how are we going to distribute supplemental material? maybe a GitHub URL like the one for AE?}

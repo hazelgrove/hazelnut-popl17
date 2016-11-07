@@ -1,7 +1,8 @@
 \def\OPTIONConf{1}%
 \newif\iftr\trtrue
 \RequirePackage{etex}
-\documentclass[preprint,9pt]{sigplanconf}
+\documentclass[9pt]{sigplanconf}
+\toappear{}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -18,7 +19,7 @@
 \setulcolor{red}
 \usepackage{mathpazo}
 \usepackage{colortab}
-\usepackage{url}
+\usepackage[lowtilde]{url}
 \usepackage{todonotes}
 \usepackage{listings}
 \lstset{tabsize=2,
@@ -61,7 +62,7 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 \setlength{\skip\footins}{3pt plus 1px minus 5px}
 
 % known bug: http://tex.stackexchange.com/questions/1522/pdfendlink-ended-up-in-different-nesting-level-than-pdfstartlink
-\usepackage[colorlinks=true,allcolors=blue,breaklinks,draft=false]{hyperref}
+\usepackage[hidelinks,breaklinks,draft=false]{hyperref}
 
 
 \usepackage{enumitem}
@@ -95,11 +96,11 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
         \and Matthew A. Hammer$^3$
 }
 {
- $^1$~Carnegie Mellon University
+ $^1$~Carnegie Mellon University (USA)
  \and
- $^2$~Oregon State University
+ $^2$~Oregon State University (USA)
  \and
- $^3$~University of Colorado Boulder\vspace{-10px}
+ $^3$~University of Colorado Boulder (USA)\vspace{-10px}
 }
 {
 %\email{comar@cs.cmu.edu}\\
@@ -115,39 +116,33 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 
 \emph{Structure editors} allow programmers to edit the tree structure of
 a program directly. This can have cognitive benefits, particularly for
-novice and end-user programmers (as evidenced by the popularity of
-structure editors like Scratch.) It also simplifies matters for tool
+novice and end-user programmers. It also simplifies matters for tool
 designers, because they do not need to contend with malformed program text.
 
-This paper defines Hazelnut, a {structure editor} based on a small
+This paper introduces Hazelnut, a {structure editor} based on a small
 bidirectionally typed lambda calculus extended with \emph{holes} and
-a \emph{cursor} (\emph{\`{a} la} Huet's zipper.) Hazelnut goes one step beyond
+a \emph{cursor}. Hazelnut goes one step beyond
 syntactic well-formedness: its {edit actions} operate over statically
-meaningful (i.e. well-typed) terms.  Na\"ively, this prohibition on
-ill-typed edit states would force the programmer to construct terms in a
+meaningful incomplete terms.  Na\"ively, this would force the programmer to construct terms in a 
 rigid ``outside-in'' manner. To avoid this problem, the {action semantics}
 automatically places terms assigned a type that is inconsistent with the
-expected type {inside} a {hole}. This safely defers the type consistency
+expected type \emph{inside} a {hole}. This meaningfully defers the type consistency
 check until the term inside the hole is \emph{finished}.
 
-Hazelnut is a foundational type-theoretic account of typed structure
-editing, rather than an end-user tool itself. To that end, we describe how
-Hazelnut's rich metatheory, which we have mechanized in Agda, guides the
-definition of an extension to the calculus. We also discuss various
-plausible evaluation strategies for terms with holes, and in so doing
+Hazelnut is not intended as an end-user tool itself. Instead, it serves as a foundational account of typed structure
+editing. To that end, we describe how
+Hazelnut's rich metatheory, which we have mechanized using the Agda proof assistant, serves as a guide when we extend the calculus to include binary sum types. We also discuss various interpretations of holes, and in so doing
 reveal connections with gradual typing and contextual modal type theory
 (the Curry-Howard interpretation of contextual modal logic.) Finally, we
-discuss how Hazelnut's semantics lends itself to implementation as a
-functional reactive program. Our reference implementation is written
-using \lstinline{js_of_ocaml}.
+discuss how Hazelnut's semantics lends itself to implementation as an event-based functional reactive program. Our simple reference implementation is written in OCaml and compiled using \lstinline{js_of_ocaml}.
 
 \end{abstract}
 
-%\category{D.3.2}{Programming Languages}{Language Classifications}[Extensible Languages]
-%\category{D.3.4}{Programming Languages}{Processors}[Compilers]
+\category{D.3.1}{Programming Languages}{Formal Definitions and Theory}
+\category{D.2.3}{Software Engineering}{Coding Tools and Techniques}[Program Editors]
 %\category{F.3.1}{Logics \& Meanings of Programs}{Specifying and Verifying and Reasoning about Programs}[Specification Techniques]
-%\keywords
-%extensible languages; module systems; type abstraction; typed compilation; type-level computation
+\keywords
+structure editors, bidirectional type systems, gradual typing, mechanized metatheory
 
 \section{Introduction}\label{sec:introduction}
 \input{intro}
@@ -171,6 +166,7 @@ using \lstinline{js_of_ocaml}.
 \input{implementation}
 
 \section{Related Work and Discussion}\label{sec:rw}
+\todo{move into own file}
 \subsection{Structure Editors}
 Syntactic structure editors have a long history -- the Cornell Program
 Synthesizer~\cite{teitelbaum_cornell_1981} was first introduced in
