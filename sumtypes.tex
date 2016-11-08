@@ -1,6 +1,6 @@
 % !TEX root = hazelnut-popl17.tex
 \newcounter{sumtypedef}
-\stepcounter{equation}
+% \stepcounter{equation}
 \renewcommand{\thesumtypedef}{\theequation\alph{sumtypedef}}
 
 \newcommand{\Define}[1]{(\refstepcounter{sumtypedef}\thesumtypedef\label{#1})}
@@ -22,8 +22,8 @@ with the familiar forms \cite{pfpl}:\vspace{-3px}
 \bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
 \end{grammar}\vspace{-3px}
 Recall that binary sum types introduce a new type-level connective,
-$\htau_1 + \htau_2$. The introductory forms are the \emph{injections},
-$\hinj{i}{\hexp}$; here, we consider only binary sums, so $i\in\{1,2\}$.
+$\tsum{\htau_1}{\htau_2}$. The introductory forms are the \emph{injections},
+$\hinj{i}{\hexp}$; here, we consider only binary sums, so $i\in\{\mathsf{L}, \mathsf{R}\}$.
 The elimination form is case
 analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 
@@ -38,21 +38,21 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
     \\
     \tcompat{\htau_2}{\htau_2'}
     }
-   {\tcompat{\htau_1 + \htau_2}{\htau_1' + \htau_2'}}
+   {\tcompat{\tsum{\htau_1}{\htau_2}}{\htau_1' + \htau_2'}}
 \end{equation}
 
 \judgbox{\sumhasmatched{\htau}{\htau_1+\htau_2}}{$\htau$ has matched sum type $\htau_1+\htau_2$}
 \begin{subequations}
-\begin{minipage}{.5\linewidth}
-\begin{equation}
-\inferrule{ }
-{\sumhasmatched{\htau_1 + \htau_2}{\htau_1 + \htau_2}}
-\end{equation}
-\end{minipage}
-\begin{minipage}{.5\linewidth}
+\begin{minipage}{.448\linewidth}
 \begin{equation}
 \inferrule{ }
 {\sumhasmatched{\hehole}{\hehole + \hehole}}
+\end{equation}
+\end{minipage}
+\begin{minipage}{.55\linewidth}
+\begin{equation}
+\inferrule{ }
+{\sumhasmatched{\tsum{\htau_1}{\htau_2}}{\tsum{\htau_1}{\htau_2}}}
 \end{equation}
 \end{minipage}
 \end{subequations}
@@ -64,10 +64,10 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \begin{subequations}
 \begin{equation}
 \inferrule{
-  \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}\\
+  \sumhasmatched{\htau_{+}}{\tsum{\htau_{\mathsf{L}}}{\htau_\mathsf{R}}}\\
   \hana{ \hGamma }{ \hexp }{ \htau_i }
 }
-{ \hana{ \hGamma }{ \hinj{i}{\hexp} }{ \htau_{+} } }~\text{$(i \in \{1, 2\})$}
+{ \hana{ \hGamma }{ \hinj{i}{\hexp} }{ \htau_{+} } }~\text{$(i \in \{\mathsf{L}, \mathsf{R}\})$}
 \end{equation}
 \begin{equation}
 \inferrule%{\Define{ana-case}}
@@ -82,9 +82,10 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 { \hana{ \hGamma }{ \hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2} }{ \htau } }
 \end{equation}
 \end{subequations}
+\vspace{-4px}
 \caption{The statics of sums.}
 \label{fig:sum-statics}
-% \vspace{15px}
+\vspace{8px}
 \judgbox{\performTyp{\ztau}{\alpha}{\ztau'}}{
   %(Additional type actions:)
 }\vspace{-19px}
@@ -102,11 +103,11 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
     \performTyp{\ztau}{\alpha}{\ztau'}
   }{
     \performTyp{
-      {\ztau} + {\htau}
+      \tsum{\ztau}{\htau}
     }{
       \alpha
     }{
-      {\ztau'} + {\htau}
+      \tsum{\ztau'}{\htau}
     }
   }
 \end{equation}\end{minipage}\begin{minipage}{.5\linewidth}
@@ -115,11 +116,11 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
     \performTyp{\ztau}{\alpha}{\ztau'}
   }{
     \performTyp{
-      {\htau} + {\ztau}
+      \tsum{\htau}{\ztau}
     }{
       \alpha
     }{
-      {\htau} + {\ztau'}
+      \tsum{\htau}{\ztau'}
     }
   }
 \end{equation}
@@ -147,7 +148,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
               {\aConstruct{\finj{i}}}
               {\hhole{
                   \hinj{i}{\hehole}
-                  : \zwsel{\hehole} + \hehole
+                  : \tsum{\zwsel{\hehole}}{\hehole}
               }}
         }
 \end{equation}
@@ -163,7 +164,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 %% Inj -- Editing injected expression
 \inferrule
 {
-  \sumhasmatched{\htau_{+}}{\htau_1+\htau_2}\\
+  \sumhasmatched{\htau_{+}}{\tsum{\htau_{\mathsf{L}}}{\htau_{\mathsf{R}}}}\\
   \performAna{\hGamma}{\zexp}{\htau_i}{\alpha}{\zexp'}
 }{
   \performAna
@@ -172,7 +173,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
   {\htau_{+}}
   {\alpha}
   {\hinj{i}{\zexp' }}
-}~\text{$(i\in\{1,2\})$}
+}~\text{$(i\in\{\mathsf{L}, \mathsf{R}\})$}
 \end{equation}
 \begin{equation}\label{rule:zipper-case-1}
 %% Case -- Editing scrutinee
@@ -191,7 +192,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
   {\zexp'}
   {\htau_{+}}
   \\
-  \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}
+  \sumhasmatched{\htau_{+}}{\tsum{\htau_1}{\htau_2}}
   \\\\
   \hana{\hGamma, x:\htau_1}{\hexp_1}{\htau}
   \\
@@ -211,7 +212,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 {
   \hsyn{\hGamma}{\hexp}{\htau_{+}}
   \\
-  \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}
+  \sumhasmatched{\htau_{+}}{\tsum{\htau_1}{\htau_2}}
   \\
   \performAna{\hGamma, x:\htau_1}{\zexp_1}{\htau}{\alpha}{\zexp_1'}
   % \\
@@ -231,7 +232,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 {
   \hsyn{\hGamma}{\hexp}{\htau_{+}}
   \\
-  \sumhasmatched{\htau_{+}}{\htau_1 + \htau_2}
+  \sumhasmatched{\htau_{+}}{\tsum{\htau_1}{\htau_2}}
   \\
   % \hana{\hGamma, x:\htau_1}{\hexp_1}{\htau}
   % \\
@@ -255,38 +256,42 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \begin{equation}\label{rule:performSyn-inj}
 %% Case -- Editing second branch arm
 \inferrule
-{ }{
+{
+  \alpha = \aConstruct{\finj{i}}
+}{
   \performSyn
   {\hGamma}
   {\zwsel{\hhole{}}}
   {\htau}
-  {\aConstruct{\finj{i}}}
-  {\hinj{i}{{\hhole{}}} : \zwsel{\tehole} + \tehole}
+  {\alpha}
+  {\hinj{i}{{\hhole{}}} : \tsum{\zwsel{\tehole}}{\tehole}}
   {\tehole + \tehole}
 }
 \end{equation}
 \begin{equation}\label{rule:performSyn-case-1}
 \inferrule{
-  \sumhasmatched{\htau}{\htau_1 + \htau_2}
+  \alpha = \aConstruct{\fcase{x}{y}}\\
+  \sumhasmatched{\htau}{\tsum{\htau_1}{\htau_2}}
 }{
   \performSyn
   {\hGamma}
   {\zwsel{\hexp}}
   {\htau}
-  {\aConstruct{\fcase{x}{y}}}
+  {\alpha}
   {\hcase{\hexp}{x}{\zwsel{\hhole{}}}{y}{\hhole{}} : \tehole}
   {\tehole}
 }
 \end{equation}
 \begin{equation}\label{rule:performSyn-case-2}
 \inferrule{
-  \tincompat{\htau}{\tehole + \tehole}
+  \alpha = \aConstruct{\fcase{x}{y}}\\
+  \tincompat{\htau}{\tsum{\tehole}{\tehole}}
 }{
   \performSyn
   {\hGamma}
   {\zwsel{\hexp}}
   {\htau}
-  {\aConstruct{\fcase{x}{y}}}
+  {\alpha}
   {\hcase{\hhole{\zwsel{\hexp}}}{x}{{\hhole{}}}{y}{\hhole{}} : \tehole}
   {\tehole}
 }
@@ -298,7 +303,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \end{figure}
 
 \begin{figure}
-\judgbox{\performMove{\ztau}{\aMove{\delta}}{\ztau'}}{(Additional type movement rules:)}
+\judgbox{\performMove{\ztau}{\aMove{\delta}}{\ztau'}}{\hspace{0.6\linewidth}(25a-d)}
 \begin{displaymath}
 \begin{array}{@{}rcl}
   \TABperformMove
@@ -323,7 +328,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
   \\[2mm]
 \end{array}
 \end{displaymath}
-\judgbox{\performMove{\zexp}{\aMove{\delta}}{\zexp'}}{(Additional expression movement rules:)}
+\judgbox{\performMove{\zexp}{\aMove{\delta}}{\zexp'}}{\hspace{0.61\linewidth}(26a-h)}
 \begin{displaymath}
 \begin{array}{@{}rcl}
   \TABperformMove
@@ -372,7 +377,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \end{figure}
 
 Next, we must correspondingly extend the syntax of Z-types and
-Z-expressions, following Huet's zipper pattern \cite{JFP::Huet1997}:
+Z-expressions, following Huet's zipper pattern \cite{JFP::Huet1997}:\vspace{-11px}
 \begin{grammar}
 \textsf{ZTyp} & $\ztau$ & \bnfas & $\cdots \bnfalt \tsum{\ztau}{\htau} \bnfalt \tsum{\htau}{\ztau}$
 \\
@@ -388,8 +393,8 @@ $n$ corresponding Z-type or Z-expression forms, each of which has a single
 ``hatted'' subterm. The remaining subterms are ``dotted''. We must also
 extend the definition of cursor erasure, e.g. for types:
 \begin{align*}
-\removeSel{(\ztau + \htau)} & = \removeSel{\ztau} + \htau\\
-\removeSel{(\htau + \ztau)} & = \htau + \removeSel{\ztau}
+\removeSel{\tsum{\ztau}{\htau}} & = \tsum{\removeSel{\ztau}}{\htau}\\
+\removeSel{\tsum{\htau}{\ztau}} & = \tsum{\htau}{\removeSel{\ztau}}
 \end{align*}
 The rules for Z-expressions are analogous:
 \begin{align*}
@@ -418,12 +423,12 @@ First, we must extend the type consistency relation as shown in
 Figure \ref{fig:sum-statics}, following the example of covariant type
 consistency rule for arrow types in
 Figure \ref{fig:type-consistency}. Similarly, we need a notion of
-a \emph{matched sum type} spiritually analogous to the notion of a matched
+a \emph{matched sum type} analogous to the notion of a matched
 arrow type defined in Figure \ref{fig:type-consistency}.
 
 The type analysis rules shown in Figure \ref{fig:sum-statics} are
 essentially standard, differing only in that instead of immediately
-requiring that a type be of the form $\htau_1 + \htau_2$, we use the
+requiring that a type be of the form $\tsum{\htau_1}{\htau_2}$, we use the
 matched sum type judgement. We combine the two injection rules for
 concision and define only a type analysis rule for the case form for
 simplicity (see \cite{DBLP:conf/popl/CiminiS16} for additional machinery

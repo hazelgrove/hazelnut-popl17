@@ -9,10 +9,10 @@ introduces some fundamental complexity into the programming process.
 
 First, it requires that programmers learn the subtleties of the textual
 syntax (e.g. operator precedence.) This is particularly 
-challenging for novices \cite{Altadmri:2015:MCI:2676723.2677258,stefik2013empirical}, and even experienced programmers frequently make mistakes \cite{7548903,jones2006developer}.
+challenging for novices \cite{Altadmri:2015:MCI:2676723.2677258,stefik2013empirical,Marceau:2011:VGT:2016911.2016921}, and even experienced programmers frequently make mistakes \cite{7548903,jones2006developer,Marceau:2011:VGT:2016911.2016921}.
 
-Second, the fact that many sequences of characters do not correspond to a meaningful
-program complicates the design of program editors and other interactive programming tools. 
+Second, many sequences of characters do not correspond to meaningful
+programs. This complicates the design of program editors and other interactive programming tools. 
 %In particular, program
 %editors must contend with meaningless text on a regular basis. 
 In a dataset  
@@ -28,13 +28,13 @@ As a consequence, it is difficult
 to design useful language-aware editor services, e.g. syntax
 highlighting~\cite{sarkar2015impact}, type-aware code
 completion~\cite{Mooty:2010:CCC:1915084.1916348,Omar:2012:ACC:2337223.2337324},
-and refactoring support \cite{mens2004survey}. Editors must either disable
+and refactoring services \cite{mens2004survey}. Editors must either disable
 these editor services when they encounter meaningless edit states or
-deploy \emph{ad hoc} heuristics, e.g. by using whitespace to guess the programmer's intent \cite{DBLP:conf/oopsla/KatsJNV09,DBLP:conf/sle/JongeNKV09}.
+deploy \emph{ad hoc} heuristics, e.g. by using whitespace to guess the intent \cite{DBLP:conf/oopsla/KatsJNV09,DBLP:conf/sle/JongeNKV09}.
 
 These complications have motivated a long line of research
 into \emph{structure editors}, i.e. program editors where every edit state
-corresponds to a program structure \cite{teitelbaum_cornell_1981}.\footnote{Structure editors are also variously known as \emph{structured editors}, \emph{structural editors}, \emph{syntax-directed editors} and \emph{projectional editors} (esp. when the user interface presents rich views of the program structure.)}
+corresponds to a program structure \cite{teitelbaum_cornell_1981}.\footnote{Structure editors are also variously known as \emph{structured editors}, \emph{structural editors}, \emph{syntax-directed editors} and \emph{projectional editors}.}
 
 Most structure editors are \emph{syntactic structure editors}, i.e. the
 edit state corresponds to a syntax tree with \emph{holes} that stand for branches of
@@ -52,9 +52,8 @@ object-oriented language \cite{tillmann_touchdevelop:_2011}, and Lamdu, a struct
 editor for a functional language similar to Haskell \cite{lamdu}. Each of
 these editors presents an innovative user interface, but the non-trivial
 type and binding structure of the underlying language complicates its
-design. The reason is that syntactic structure editors do not assign static meaning to every edit state -- they guarantee only that every edit state corresponds to  a 
-syntactically well-formed tree. These editors must also either disable editor services that require an understanding of the semantics of the program or deploy \emph{ad hoc} heuristics when they
-encounter these meaningless edit states.
+design. The problem is that syntactic structure editors do not assign static meaning to every edit state -- they guarantee only that every edit state corresponds to  a 
+syntactically well-formed tree. These editors must also either selectively disable editor services that require an understanding of the semantics of the program being written, or deploy \emph{ad hoc} heuristics.
 
 
 This paper develops a principled solution to this problem. We introduce
