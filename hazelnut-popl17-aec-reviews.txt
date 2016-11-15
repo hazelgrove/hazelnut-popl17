@@ -1,0 +1,273 @@
+===========================================================================
+                          POPL '17 AE Review #8A
+---------------------------------------------------------------------------
+   Paper #8: Hazelnut: A Bidirectionally Typed Structure Editor Calculus
+---------------------------------------------------------------------------
+
+                    ===== Does it build/install? =====
+
+It worked fine.
+
+                      Overall merit: 5. Greatly exceeds expectations
+
+                      ===== Brief paper summary =====
+
+Hazelnut is a core calculus describing well-typed structured editing
+of a simply-typed programming language. Well-typed structure editing
+differs from ordinary structured editing in that only well-typed
+program states are constructible in the editor. This development makes
+use of a number of tools:
+
+ 1. Huet's zipper is used to represent syntax trees containing holes
+
+ 2. Bidirectional typing is used to propagate typing constraints with
+    a minimum of annotation overhead
+
+ 3. Gradual typing is used to represent programs whose types contain
+    holes
+
+The paper is a compelling description of type-preserving structured
+editing. All of the details are worked out, and all the key properties
+are proved. However, the presentation includes a very large number of
+rules, which makes it difficult to check that they are all correct and
+that none are redundant or missing. In short, the system is an
+excellent candidate for mechanization, and the authors did just that.
+
+The authors claim to have implemented three artifacts: (1) a
+mechanization of Hazelnut's metatheory in Agda, in which all theorems
+in the paper are proved, (2) an extension of the mechanized metatheory
+to add sum types, following the methodology described in the paper,
+and (3) an implementation of Hazelnut, with which one can follow along
+with the paper.
+
+                       ===== Artifact summary =====
+
+The artifact consists of three components: the Agda mechanization of the
+paper's contents, an extension of the Agda implementation to have sum
+types, and an implementation of a simple UI for the structured editor
+calculus that runs in HTML and JavaScript. The Agda implementations contain
+no references to unsafe Agda features, and the Javascript UI works as
+expected.
+
+                 ===== Detailed artifact evaluation =====
+
+Reviewing the artifact was fairly easy, due to detailed instructions. A VM
+image with a working installation of Agda and OCaml would have been
+convenient, but I was able to install the appropriate versions of Agda,
+OCaml, etc. without any major issues.
+
+The Agda code was a joy to read. Unicode and mixfix were used tastefully to
+mirror the paper's notation without the over-the-top obscurantism that one
+sometimes sees. Comments and the associated README made it easy to
+associate the Agda implementation with the paper descriptions. One small
+thing that would have made it easier would be if the different uses of Nat
+were distinguished. For instance, one could write
+
+Var : Set
+Var = Nat
+
+and then use Var whenever it represents a variable, as opposed to a
+num. Alternatively, an isomorphic type could have been defined to make it
+incompatible with Nat.
+
+I only found one trivial issue. The Agda implementation of the proofs
+contains one shape that isn't in the paper: "arg". This shape isn't used
+anywhere, so it's probably an oversight from an earlier version.
+
+
+
+In the paper, the following substantive claims are made about the Agda
+mechanization of the metatheory:
+
+(a) The beginning of Section 3 (p. 3) states that all of Hazelnut's
+    rules as well as the metatheorems are mechanized in Agda.
+
+(b) In Section 3.3.2, it is stated that the mechanization proves that
+    the judgmental definition of type inconsistency is the negation of
+    type consistency (p. 5).
+
+(c) Section 3.3.3 makes a claim about the structure of the proof of
+    Theorem 1, which should be checked against the mechanization of
+    the proof (p. 5).
+
+(d) Section 3.3.4 states that Theorem 3 is by composing Lemma 4 and
+    Lemma 5. This should be checked against the mechanization (p. 6).
+
+(e) Section 3.5 describes various aspects of the mechanization that
+    should be checked against the artifact. In particular, it states
+    that there is documentation explaining the technical
+    representation decisions, that each judgment is a dependent type
+    (by which I assume the authors mean an inductive family) where the
+    constructors of the inductive family implement the rules by which
+    we make the judgment, and that derivations are Agda terms of the
+    appropriate type. Additionally, it states that no proof automation
+    is used and that Barendregt's variable convention is assumed.
+
+No major new substantive claims are made about the extension of the
+metatheory with sums with regards to the mechanization. However, since
+the metatheory is intended to guide extensions, and the fact that all
+the theorems still hold is presented as evidence that the extension is
+sensible, it is appropriate to check all of the above claims relative
+to the extended collection of rules, as (f).
+
+Finally, the following substantive claims are made about the prototype
+implementation of Hazelnut:
+
+(g) The introduction (p. 2) states that Section 5 briefly describes
+    how the action semantics lends itself to efficient implementation
+    with FRP.
+
+(h) The first paragraph of Section 2 (p. 2) states that the reader
+    will be able to follow along with the example in the section using
+    the implementation.
+
+(i) The first paragraph of Section 5.2 (p. 10) states that HZ is
+    written in OCaml, using js_of_ocaml, associated libraries and
+    React.
+
+(j) The second paragraph of Section 5.2 (p. 10) states that the
+    implementation is written in a functional style that follows the
+    paper closely.
+
+(k) The third paragraph of Section 5.2 (p. 10) states that a nested
+    collection of div elements corresponding to the structure of the
+    program being analyzed is generated.
+
+(l) The second paragraph of Section 5.2 (p. 10) states that actions
+    are provided in a palette, with activated buttons being those for
+    which the implementation would allow the movement, and that there
+    are keyboard shortcuts for each action.
+
+
+I address each claim in turn.
+
+(a) I have verified that each rule and each theorem exist in the
+    mechanization, and I don't see any missing side conditions due to
+    the Barendregt convention---it seems that each new binder has the
+    # condition.
+
+(b) The mechanization indeed proves the judgmental type inconsistency
+    holds when the negation of type consistency holds.
+
+(c) This was present in the proof.
+
+(d) This was present in the proof.
+
+(e) The documentation is excellent and the rules are implemented as
+    described.
+
+(f) All of the theorems are proved for the extended version, which is
+    a compelling argument that the extension was successful.
+
+(g) The connection to event-based FRP is made clear.
+
+(h) I was able to follow along with Figure 1 in the implementation,
+    but I could not figure out how to add incr to the global
+    environment to follow along with Figure 2. However, I am convinced
+    that the implementation demonstrates the ideas correctly, and I
+    experimented with getting it into an invalid state and was unable
+    to.
+
+(i) This is true.
+
+(j) This is manifestly the case. The code is annotated with references
+    to the rules in the paper, and it is very similar to the formal
+    model.
+
+(k) The divs are indeed present, revealed using Firefox's developer
+    tools.
+
+(l) This is manifestly the case when using it.
+
+All in all, this artifact was a pleasure to review. It clearly lives
+up to the expectations set by the paper, and it is readable and easy
+to navigate.
+
+===========================================================================
+                          POPL '17 AE Review #8B
+---------------------------------------------------------------------------
+   Paper #8: Hazelnut: A Bidirectionally Typed Structure Editor Calculus
+---------------------------------------------------------------------------
+
+                    ===== Does it build/install? =====
+
+Both artifacts, the prototype OCaml implementation (using js_of_ocaml to
+translate to Javascript) and the Agda formalization compile and work as
+advertised. I used Agda 2.5.1.1 as stated in the documentation and no
+non-default features are used. The only axiom used is function
+extensionality.
+
+                      Overall merit: 4. Exceeds expectations
+
+                      ===== Brief paper summary =====
+
+The paper presents Hazelnut, a typed structure editor calculus.  The key
+property of this calculus is that its edit operations ensure that the terms
+are always not just syntactically correct (modulo holes), but also well
+typed.
+
+The authors define the calculus, describe a type-checking algorithm for it
+and prove key meta-theoretic properties of the type system and of the edit
+operations.
+
+A large portion of the paper is also devoted to examples, explanations and
+motivations for the different rules of the calculus.
+
+                       ===== Artifact summary =====
+
+The artifact consists of two parts.
+
+    - An OCaml implementation of (an extended version) of a structure
+      editor based on the calculus described in the paper. The authors use
+      js_of_ocaml to generate Javascript code and a html page which
+      contains the editor.
+
+    - Agda formalization of the calculus which includes proofs of all
+      theorems contained in the paper. The formalization does not use any
+      non-standard features of Agda 2.5.1.1 and is almost axiom free, apart
+      from function extensionality.
+
+                 ===== Detailed artifact evaluation =====
+
+The artifact is in two parts which I will evaluate separately. The README
+files describing the artifacts are clear and exhaustive.
+
+1. A prototype structure editor based on the calculus.
+
+   This is very well done and easy to use. I found it very easy to replay
+   the examples provided in the paper. This is good work.
+
+2. Agda formalization of the calculus.
+
+   First, the README file describing the formalization is extensive and
+   provides a mapping between theorems in the paper to their
+   formalization. There is also a discussion of the (small) differences
+   between the calculus presented in the paper and the one formalized. The
+   differences are minor and to do with treatment of variables, an always
+   tedious part of any formalization of languages with binders. And second,
+   the Agda code is well-structured and readable. The only axiom used is
+   function extensionality, and that seems to have to do with a peculiar
+   choice for representing contexts which I comment on below. No
+   non-standard features of Agda are used.
+
+   Overall I think this is an exemplary formalization. The Agda code is
+   commented enough so that it is possible to follow what is going on, and
+   combined with the README file it is easy to find theorems from the paper
+   and check they state the same thing.
+
+   I have one issue with the formalization, and that is the treatment of
+   contexts. The authors say in the README file:
+
+   > One concern with this representation is whether or not it's really
+   > constructive: there are some theorems about contexts that are only about
+   > this representation if you have function extensionality, which amounts to
+   > the Axiom of Choice.
+
+   I do not understand this paragraph. Function extensionality is nothing like
+   the axiom of choice.
+
+   I also don't understand why the non-standard choice was been made for
+   representing contexts. There are many formalizations of different
+   calculi with binders which use various approaches to representing free
+   and bound variables. De Bruijn is popular. Why wasn't one of these
+   chosen?

@@ -9,21 +9,22 @@
 
 % HTyp
 \newcommand{\htau}{\dot{\tau}}
-\newcommand{\tarr}[2]{#1 \rightarrow #2}
+\newcommand{\tarr}[2]{\inparens{#1 \rightarrow #2}}
+\newcommand{\tarrnp}[2]{#1 \rightarrow #2}
 \newcommand{\tnum}{\texttt{num}}
 \newcommand{\tehole}{\llparenthesiscolor\rrparenthesiscolor}
-\newcommand{\tsum}[2]{{#1} + {#2}}
+\newcommand{\tsum}[2]{\inparens{{#1} + {#2}}}
 
 \newcommand{\tcompat}[2]{#1 \sim #2}
 \newcommand{\tincompat}[2]{#1 \nsim #2}
 
 % HExp
 \newcommand{\hexp}{\dot{e}}
-\newcommand{\hlam}[2]{\lambda #1.#2}
+\newcommand{\hlam}[2]{\inparens{\lambda #1.#2}}
 \newcommand{\hap}[2]{#1(#2)}
 \newcommand{\hapP}[2]{(#1)~(#2)} % Extra paren around function term
 \newcommand{\hnum}[1]{\underline{#1}}
-\newcommand{\hadd}[2]{#1 + #2}
+\newcommand{\hadd}[2]{\inparens{#1 + #2}}
 \newcommand{\hehole}{\llparenthesiscolor\rrparenthesiscolor}
 \newcommand{\hhole}[1]{\llparenthesiscolor#1\rrparenthesiscolor}
 \newcommand{\hindet}[1]{\lceil#1\rceil}
@@ -115,3 +116,6 @@
 
 \newcommand{\subminsyn}[1]{\mathsf{submin}_{\Rightarrow}(#1)}
 \newcommand{\subminana}[1]{\mathsf{submin}_{\Leftarrow}(#1)}
+
+
+\newcommand{\inparens}[1]{{\color{gray}(}#1{\color{gray})}}

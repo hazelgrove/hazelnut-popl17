@@ -1,7 +1,7 @@
 % !TEX root = hazelnut-popl17.tex
 
 The previous section introduced Hazelnut by example. In this section, we
-systematically introduce the following structures:
+systematically define the following structures:
 \begin{itemize}[itemsep=0px,partopsep=2px,topsep=2px]
 \item \textbf{H-types} and \textbf{H-expressions} (Sec. \ref{sec:holes}),
   which are types and expressions with {holes}. H-types classify
@@ -21,10 +21,10 @@ systematically introduce the following structures:
   edit state is well-typed after cursor erasure.
 \end{itemize}
 
-Our overview below omits certain ``uninteresting'' details. The appendix
+Our overview below omits certain ``uninteresting'' details. The supplement 
 includes the complete collection of rules, in definitional order. These
-rules, along with the proofs of all of the metatheorems discussed, have been
-mechanized in Agda \cite{norell:thesis} (see Sec. \ref{sec:mech}.) 
+rules, along with the proofs of all of the metatheorems discussed in this section (and several omitted auxiliary lemmas), have been
+mechanized using the Agda proof assistant \cite{norell:thesis} (discussed in Sec. \ref{sec:mech}.) 
 
 \subsection{H-types and H-expressions}\label{sec:holes}
 Figure \ref{fig:hexp-syntax} defines the syntax of H-types, $\htau$, and
@@ -33,21 +33,15 @@ simply typed lambda calculus (STLC) extended with a single base type,
 $\tnum$, of numbers (cf. \cite{pfpl}.) The number expression corresponding
 to the mathematical number $n$ is drawn $\hnum{n}$, and for simplicity, we
 define only a single arithmetic operation, $\hadd{\hexp}{\hexp}$. The form
-$\hexp : \htau$ is an explicit \emph{type ascription}.
-
-In addition to these standard forms, \emph{type holes} and \emph{empty
+$\hexp : \htau$ is an explicit \emph{type ascription}. In addition to these standard forms, \emph{type holes} and \emph{empty
   expression holes} are both drawn $\hehole$ and \emph{non-empty expression
-  holes} are drawn $\hhole{\hexp}$. We do not need non-empty type holes
-because every H-type is a valid classifier of H-expressions.
-
+  holes} are drawn $\hhole{\hexp}$. 
 Types and expressions that contain no holes are \emph{complete types} and
-\emph{complete expressions}, respectively. Formally, we can derive
-$\hcomplete{\htau}$ when $\htau$ is complete, and $\hcomplete{\hexp}$ when
-$\hexp$ is complete (see supplement.) We are not concerned here with
-defining a dynamic semantics for Hazelnut, but the dynamics for complete
-H-expressions would be entirely standard because complete expressions correspond  immediately to those of the typed lambda calculus with numbers (in Sec. \ref{sec:rw} we discuss
-the multi-dimensional design space around the question of evaluating
-incomplete H-expressions.)
+\emph{complete expressions}, respectively. 
+%We do not, therefore, need to separately define the dynamics of complete expressions here (see, e.g., Harper \cite{pfpl}.) We will not develop a dynamics for incomplete expressions (but see Sec. \ref{sec:rw} for a discussion of this intriguing idea.) 
+%Formally, we can derive
+%$\hcomplete{\htau}$ when $\htau$ is complete, and $\hcomplete{\hexp}$ when
+%$\hexp$ is complete (see supplement.) 
 
 \begin{figure}[t]
 $\arraycolsep=4pt\begin{array}{lllllll}
@@ -56,20 +50,94 @@ $\arraycolsep=4pt\begin{array}{lllllll}
   \tnum ~\vert~
   \tehole\\
 \mathsf{HExp} & \hexp & ::= &
-  \hexp : \htau ~\vert~
   x ~\vert~
-  \hlam{x}{\hexp} ~\vert~
+  {\hlam{x}{\hexp}} ~\vert~
   \hap{\hexp}{\hexp} ~\vert~
   \hnum{n} ~\vert~
   \hadd{\hexp}{\hexp} ~\vert~
+  \hexp : \htau ~\vert~
   \hehole ~\vert~
   \hhole{\hexp}
 \end{array}$
 \caption{Syntax of H-types and H-expressions. Metavariable $x$ ranges over variables and $n$ ranges over numerals.}
 \label{fig:hexp-syntax}
 \end{figure}
+
+
 \begin{figure}
-\noindent\fbox{$\tcompat{\htau}{\htau'}$}~~\text{$\tau$ and $\tau'$ are consistent}
+\fbox{$\hsyn{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ synthesizes $\htau$}
+\begin{subequations}
+\begin{equation}\label{rule:syn-var}
+\inferrule{ }{
+  \hsyn{\hGamma, x : \htau}{x}{\htau}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-ap}
+\inferrule{
+  \hsyn{\hGamma}{\hexp_1}{\htau_1}\\
+  \arrmatch{\htau_1}{\tarr{\htau_2}{\htau}}\\
+  \hana{\hGamma}{\hexp_2}{\htau_2}
+}{
+  \hsyn{\hGamma}{\hap{\hexp_1}{\hexp_2}}{\htau}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-num}
+\inferrule{ }{
+  \hsyn{\hGamma}{\hnum{n}}{\tnum}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-plus}
+\inferrule{
+  \hana{\hGamma}{\hexp_1}{\tnum}\\
+  \hana{\hGamma}{\hexp_2}{\tnum}
+}{
+  \hsyn{\hGamma}{\hadd{\hexp_1}{\hexp_2}}{\tnum}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-asc}
+\inferrule{
+  \hana{\hGamma}{\hexp}{\htau}
+}{
+  \hsyn{\hGamma}{\hexp : \htau}{\htau}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-ehole}
+\inferrule{ }{
+  \hsyn{\hGamma}{\hehole}{\tehole}
+}
+\end{equation}
+\begin{equation}\label{rule:syn-hole}
+\inferrule{
+  \hsyn{\hGamma}{\hexp}{\htau}
+}{
+  \hsyn{\hGamma}{\hhole{\hexp}}{\tehole}
+}
+\end{equation}
+\end{subequations}
+\fbox{$\hana{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ analyzes against $\htau$}
+\begin{subequations}
+\begin{equation}\label{rule:syn-lam}
+\inferrule{
+  \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
+  \hana{\hGamma, x : \htau_1}{\hexp}{\htau_2}
+}{
+  \hana{\hGamma}{\hlam{x}{\hexp}}{\htau}
+}
+\end{equation}
+\begin{equation}\label{rule:ana-subsume}
+\inferrule{
+  \hsyn{\hGamma}{\hexp}{\htau'}\\
+  \tcompat{\htau}{\htau'}
+}{
+  \hana{\hGamma}{\hexp}{\htau}
+}
+\end{equation}
+\end{subequations}
+\caption{H-type synthesis and analysis.}
+\label{fig:ana-syn}
+\end{figure}
+\begin{figure}
+\vspace{-1px}\noindent\fbox{$\tcompat{\htau}{\htau'}$}~~\text{$\htau$ and $\htau'$ are consistent}\vspace{-4px}
 \begin{subequations}\label{eqns:consistency}
 \begin{mathpar}
 \inferrule{ }{
@@ -88,23 +156,24 @@ $\arraycolsep=4pt\begin{array}{lllllll}
   \tcompat{\htau_1}{\htau_1'}\\
   \tcompat{\htau_2}{\htau_2'}
 }{
-  \tcompat{(\tarr{\htau_1}{\htau_2})}{(\tarr{\htau_1'}{\htau_2'})}
+  \tcompat{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1'}{\htau_2'}}
 }~~~~\text{\hspace{-2px}(\ref*{eqns:consistency}a-d)}
 \end{mathpar}
 \end{subequations}
-\fbox{$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$}~~\text{$\tau$ has matched arrow type $\tarr{\htau_1}{\htau_2}$}
+\noindent\fbox{$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$}~~\text{$\htau$ has matched arrow type $\tarr{\htau_1}{\htau_2}$}\vspace{-4px}
+
 \begin{subequations}
-\begin{minipage}{0.5\linewidth}
-\begin{equation}
-\inferrule{ }{
-  \arrmatch{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1}{\htau_2}}
-}
-\end{equation}
-\end{minipage}
-\begin{minipage}{0.48\linewidth}
+\begin{minipage}{0.43\linewidth}
 \begin{equation}
 \inferrule{ }{
   \arrmatch{\tehole}{\tarr{\tehole}{\tehole}}
+}
+\end{equation}
+\end{minipage}
+\begin{minipage}{0.55\linewidth}
+\begin{equation}
+\inferrule{ }{
+  \arrmatch{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_1}{\htau_2}}
 }
 \end{equation}
 \end{minipage}
@@ -113,103 +182,24 @@ $\arraycolsep=4pt\begin{array}{lllllll}
 \label{fig:type-consistency}
 \end{figure}
 
-\begin{figure}
-\fbox{$\hsyn{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ synthesizes $\htau$}
-\begin{subequations}
-\begin{equation}\label{rule:syn-asc}
-\inferrule{
-  \hana{\hGamma}{\hexp}{\htau}
-}{
-  \hsyn{\hGamma}{\hexp : \htau}{\htau}
-}
-\end{equation}
-\begin{equation}\label{rule:syn-var}
-\inferrule{ }{
-  \hsyn{\hGamma, x : \htau}{x}{\htau}
-}
-\end{equation}
-\begin{equation}\label{rule:syn-ap}
-\inferrule{
-  \hsyn{\hGamma}{\hexp_1}{\htau}\\
-  \arrmatch{\htau}{\tarr{\htau_2}{\htau'}}\\
-  \hana{\hGamma}{\hexp_2}{\htau_2}
-}{
-  \hsyn{\hGamma}{\hap{\hexp_1}{\hexp_2}}{\htau'}
-}
-\end{equation}
-\begin{equation}\label{rule:syn-num}
-\inferrule{ }{
-  \hsyn{\hGamma}{\hnum{n}}{\tnum}
-}
-\end{equation}
-\begin{equation}\label{rule:syn-plus}
-\inferrule{
-  \hana{\hGamma}{\hexp_1}{\tnum}\\
-  \hana{\hGamma}{\hexp_2}{\tnum}
-}{
-  \hsyn{\hGamma}{\hadd{\hexp_1}{\hexp_2}}{\tnum}
-}
-\end{equation}
-\begin{equation}\label{rule:syn-ehole}
-\inferrule{ }{
-  \hsyn{\hGamma}{\hehole}{\tehole}
-}
-\end{equation}
-\begin{equation}\label{rule:syn-hole}
-\inferrule{
-  \hsyn{\hGamma}{\hexp}{\htau}
-}{
-  \hsyn{\hGamma}{\hhole{\hexp}}{\tehole}
-}
-\end{equation}
-\end{subequations}
-\fbox{$\hana{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ analyzes against $\htau$}
-\begin{subequations}
-\begin{equation}\label{rule:ana-subsume}
-\inferrule{
-  \hsyn{\hGamma}{\hexp}{\htau'}\\
-  \tcompat{\htau}{\htau'}
-}{
-  \hana{\hGamma}{\hexp}{\htau}
-}
-\end{equation}
-\begin{equation}\label{rule:syn-lam}
-\inferrule{
-  \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
-  \hana{\hGamma, x : \htau_1}{\hexp}{\htau_2}
-}{
-  \hana{\hGamma}{\hlam{x}{\hexp}}{\htau}
-}
-\end{equation}
-\end{subequations}
-\caption{Synthesis and analysis.}
-\label{fig:ana-syn}
-\end{figure}
-
 Hazelnut's static semantics is organized as a \emph{bidirectional type
   system}
 \cite{Pierce:2000:LTI:345099.345100,DBLP:conf/icfp/DaviesP00,DBLP:conf/tldi/ChlipalaPH05,bidi-tutorial}
 around the two mutually defined judgements in Figure
-\ref{fig:ana-syn}. Typing contexts, $\hGamma$, map each variable $x \in
-\domof{\hGamma}$ to a hypothesis $x : \htau$ in the usual manner. We
-identify the context up to exchange and contraction and adopt the standard identification
-convention for formal structures that differ only up to alpha-renaming of bound variables. All judgements that mention a context obey weakening.
-
-Derivations of the type analysis judgement, $\hana{\hGamma}{\hexp}{\htau}$,
+\ref{fig:ana-syn}. Derivations of the type analysis judgement, $\hana{\hGamma}{\hexp}{\htau}$,
 establish that $\hexp$ can appear where an expression of type $\htau$ is
 expected. Derivations of the type synthesis judgement,
-$\hsyn{\hGamma}{\hexp}{\htau}$, infer a type from $\hexp$, which is
+$\hsyn{\hGamma}{\hexp}{\htau}$, synthesize (a.k.a. \emph{locally infer} \cite{Pierce:2000:LTI:345099.345100}) a type from $\hexp$. Type synthesis is
 necessary in positions where an expected type is not available (e.g. at the
 top level.) Algorithmically, the type is an ``input'' of the type analysis
 judgement, but an ``output'' of the type synthesis judgement.  Making a
 judgemental distinction between these two notions will be essential in our
 action semantics (Sec. \ref{sec:actions}.) 
 
-\begin{subequations}\label{rules:syn-ana}
-Type synthesis is stronger than type analysis in that if an expression is
+If an expression is 
 able to synthesize a type, it can also be analyzed against that type, or
 any other \emph{consistent} type, according to the \emph{subsumption rule},
-Rule (\ref{rule:ana-subsume}).
+Rule (\ref{rule:ana-subsume}).% Type analysis of every form other than the lambda form goes through subsumption.
 
 The \emph{H-type consistency judgement}, $\tcompat{\htau}{\htau'}$, that
 appears as a premise in the subsumption rule is a reflexive and symmetric
@@ -222,13 +212,18 @@ coincides with the notion of type consistency that Siek and Taha discovered
 in their foundational work on gradual type systems, if we interpret the
 type hole as the $?$ (i.e. unknown) type \cite{Siek06a}.
 
+Typing contexts, $\hGamma$, map each variable $x \in
+\domof{\hGamma}$ to an hypothesis $x : \htau$. We
+identify contexts up to exchange and contraction and adopt the standard identification
+convention for structures that differ only up to alpha-renaming of bound variables. All hypothetical judgements obey a standard weakening lemma. Rule (\ref{rule:syn-var}) establishes that variable expressions synthesize the hypothesized H-type, in the standard manner.
+
 Rule (\ref{rule:syn-lam}) defines analysis for lambda abstractions,
 $\hlam{x}{\hexp}$. There is no type synthesis rule that applies to this
 form, so lambda abstractions can appear only in analytic position,
 i.e. where an expected type is known.\footnote{It is possible to also
   define a ``half-annotated'' synthetic lambda form, $\lambda x{:}\tau.e$,
   but for simplicity, we leave it out \cite{DBLP:conf/tldi/ChlipalaPH05}.}
-Rule (\ref{rule:syn-lam}) is not quite the standard rule, reproduced below:
+Rule (\ref{rule:syn-lam}) is not quite the standard rule, as reproduced below:
 \begin{equation*}
 \inferrule{
   \hana{\hGamma, x : \htau_1}{\hexp}{\htau_2}
@@ -254,71 +249,66 @@ $\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$, defined in Figure
 \ref{fig:type-consistency}. This judgement leaves arrow types alone and
 assigns the type hole the matched arrow type $\tarr{\tehole}{\tehole}$. It
 is easy to see that the two rules above are admissible by appeal to Rule
-(\ref{rule:syn-lam}) and the matched arrow type judgement. Encouragingly,
-this judgement also arises in the study of gradual type systems
+(\ref{rule:syn-lam}) and the matched arrow type judgement.  Encouragingly,
+the matched arrow type judgement also arises in gradual type systems
 \cite{DBLP:conf/popl/CiminiS16,DBLP:conf/popl/GarciaC15,DBLP:conf/popl/RastogiCH12}.
-
-Rule (\ref{rule:syn-asc}) defines type synthesis of expressions of
-ascription form, $\hexp : \htau$. This allows the user to explicitly state
-a type for the ascribed expression to be analyzed against.
-
-Rule (\ref{rule:syn-var}) is the standard rule for variables.
 
 Rule (\ref{rule:syn-ap}) is again nearly the standard rule for function
 application. It also makes use of the matched function type judgement to
 combine what would otherwise need to be two rules for function application
 -- one for when $e_1$ synthesizes an arrow type, and another for when $e_1$
-synthesizes the type hole. Indeed, Siek and Taha needed two application
-rules for the same fundamental reason \cite{Siek06a}. Later work on gradual
-typing introduced this notion of type matching to resolve this redundancy.
+synthesizes $\tehole$.
 
 Rule (\ref{rule:syn-num}) states that numbers synthesize the $\tnum$
 type. Rule (\ref{rule:syn-plus}) states that $\hexp_1 + \hexp_2$ behaves
 like a function over numbers.
 
+Rule (\ref{rule:syn-asc}) defines type synthesis of expressions of
+ascription form, $\hexp : \htau$. This allows the programmer to explicitly state
+a type for the ascribed expression to be analyzed against.
+
+
+
 The rules described so far are sufficient to type complete
 H-expressions. The two remaining rules give H-expressions with holes a
-well-defined static semantics.
+well-defined static semantics. 
 
 Rule (\ref{rule:syn-ehole}) states that the empty expression hole
-synthesizes the type hole.
+synthesizes the type hole. Non-empty holes, which contain an H-expression that is ``under construction'' 
+as described in Sec. \ref{sec:example}, also synthesize the hole type. According to Rule
+(\ref{rule:syn-hole}), the enveloped expression must synthesize some (arbitrary) type. (We do not need non-empty type holes because every H-type is a valid classifier of H-expressions.)
 
-A non-empty hole contains an H-expression that is ``under construction'',
-as described in Sec. \ref{sec:example}. According to Rule
-(\ref{rule:syn-hole}), this inner expression must synthesize some type,
-but, like the empty hole, non-empty holes synthesize the type hole.
-
-Given these rules, it is instructive to derive the following (by subsumption):
+Because the hole type is consistent with every type, expression holes can be analyzed against any type by subsumption. For example, it is instructive to derive the following:
 \[\hana{incr : \tarr{\tnum}{\tnum}}{\hhole{incr}}{\tnum}\]
 
-\end{subequations}
+
 \subsection{Z-types and Z-expressions}\label{sec:cursors}
 \newcommand{\cvert}{{\,{\vert}\,}}
 \begin{figure}[t]
-\hspace{-3px}$\arraycolsep=2pt\begin{array}{lllllll}
+$\arraycolsep=2pt\begin{array}{lllllll}
 \mathsf{ZTyp} & \ztau & ::= &
   \zwsel{\htau} \cvert
   \tarr{\ztau}{\htau} \cvert
   \tarr{\htau}{\ztau} \\
 \mathsf{ZExp} & \zexp & ::= &
   \zwsel{\hexp} \cvert
-  \zexp : \htau \cvert
-  \hexp : \ztau \cvert
   \hlam{x}{\zexp} \cvert
   \hap{\zexp}{\hexp} \cvert
   \hap{\hexp}{\zexp} \cvert
   \hadd{\zexp}{\hexp} \cvert
-  \hadd{\hexp}{\zexp} \cvert
+  \hadd{\hexp}{\zexp} \\
+& & \cvert & 
+    \zexp : \htau \cvert
+  \hexp : \ztau \cvert
   \hhole{\zexp}
 \end{array}$
 \caption{Syntax of Z-types and Z-expressions.}
 \label{fig:zexp-syntax}
 \end{figure}
 
-Hazelnut's action semantics operates over Z-types, $\ztau$, and
-Z-expressions, $\zexp$. Figure \ref{fig:zexp-syntax} defines the syntax of
-Z-types and Z-expressions. A Z-type (resp. Z-expression) represents an
-H-type (resp. H-expression) with a single superimposed \emph{cursor}.
+Figure \ref{fig:zexp-syntax} defines the syntax of
+Z-types, $\ztau$, and Z-expressions, $\zexp$. A Z-type (resp. Z-expression) represents an
+H-type (resp. H-expression) with a single superimposed \emph{cursor}. 
 
 The only base cases in these inductive grammars are $\zwsel{\htau}$ and
 $\zwsel{\hexp}$, which identify the H-type or H-expression that the cursor
@@ -336,15 +326,15 @@ We write $\removeSel{\ztau}$ for the H-type constructed by erasing the
 cursor from $\ztau$, which we refer to as the \emph{cursor erasure} of
 $\ztau$. This straightforward metafunction is defined as follows:
 \begin{align*}
-\removeSel{(\zwsel{\htau})} & = \htau\\
-\removeSel{(\tarr{\ztau}{\htau})} & = \tarr{\removeSel{\ztau}}{\htau}\\
-\removeSel{(\tarr{\htau}{\ztau})} & = \tarr{\htau}{\removeSel{\ztau}}
+\removeSel{\zwsel{\htau}} & = \htau\\
+\removeSel{\tarr{\ztau}{\htau}} & = \tarr{\removeSel{\ztau}}{\htau}\\
+\removeSel{\tarr{\htau}{\ztau}} & = \tarr{\htau}{\removeSel{\ztau}}
 \end{align*}
 
-Similarly, we write $\removeSel{\zexp}$ for the H-expression constructed by
-erasing the cursor from the Z-expression $\zexp$, i.e. the cursor erasure
-of $\zexp$. The definition of this metafunction is analogous, so we omit it
-for concision (see supplement.)
+Similarly, we write $\removeSel{\zexp}$ for cursor erasure of $\zexp$. The definition of this metafunction is analogous, so we omit it
+for concision.
+
+This zipper structure is not the only way to model a cursor, though we have found it to be the most elegant for our present purposes. Another plausible strategy would be to formalize the notion of a relative path into an H-expression. This would then require defining the notion of consistency between a relative path and an H-expression, so we avoid it.
 
 \subsection{Actions}\label{sec:actions}
 
@@ -364,8 +354,7 @@ and 2) \emph{the analytic action judgement}:
 \]
 
 In some Z-expressions, the cursor is in a type ascription, so we also need
-a \emph{type action judgement}, pronounced ``performing $\alpha$ on $\ztau$
-results in $\ztau'$'':
+a \emph{type action judgement}:
 \[
 \performTyp{\ztau}{\alpha}{\ztau'}
 \]
@@ -373,14 +362,10 @@ results in $\ztau'$'':
 \subsubsection{Sensibility}
 
 
-Before giving the rules for these judgements, let us state the key
-metatheorem: \emph{sensibility}. This metatheorem deeply informs the design
-of the rules, given starting in Sec. \ref{sec:action-subsumption}. Its
-proof, which is mechanized in Agda, is by straightforward induction, so the
-reader is encouraged to think about the relevant cases of these proofs as
-we present the rules.
+These judgements are governed by a critical 
+metatheorem, \emph{action sensibility} (or simply \emph{sensibility}): 
 \begin{theorem}[Action Sensibility]
-  \label{thrm:actsafe} Both of the following hold:
+  \label{thrm:actsafe} ~
   \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
   \item If $\hsyn{\hGamma}{\removeSel{\zexp}}{\htau}$ and
     $\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$ then
@@ -390,18 +375,25 @@ we present the rules.
     $\hana{\hGamma}{\removeSel{\zexp'}}{\htau}$.
   \end{enumerate}
 \end{theorem}
-\noindent In other words, if an edit state (i.e. a Z-expression) is
+\noindent In other words, if a Z-expression is
 statically meaningful, i.e. its cursor erasure is well-typed, then
-performing an action on it leaves the resulting edit state statically
-meaningful. In particular, the first clause of Theorem \ref{thrm:actsafe}
-establishes that when an action is performed on an edit state whose cursor
-erasure synthesizes an H-type, the result is an edit state whose cursor
+performing an action on it leaves the resulting Z-expression statically
+meaningful. More specifically, the first clause of Theorem \ref{thrm:actsafe}
+establishes that when an action is performed on a Z-expression whose cursor
+erasure synthesizes an H-type, the result is a Z-expression whose cursor
 erasure also synthesizes some (possibly different) H-type. The second
 clause establishes that when an action is performed using the analytic
 action judgement on an edit state whose cursor erasure analyzes against
 some H-type, the result is a Z-expression whose cursor erasure also
 analyzes against the same H-type.
 
+This metatheorem deeply informs the design
+of the rules, given starting in Sec. \ref{sec:action-subsumption}. Its
+proof is by straightforward induction, so the
+reader is encouraged to think about the relevant proof case when considering each action rule below.
+
+No sensibility theorem is needed for the type action judgement because every syntactically well-formed type is meaningful in Hazelnut. (Adding type variables to the language would require defining both a type-level sensibility theorem and 
+type-level non-empty holes.)
 \begin{figure}[t]
 \hspace{-3px}$\arraycolsep=3pt\begin{array}{llcllll}
 \mathsf{Action} & \alpha & ::= &
@@ -434,16 +426,16 @@ analyzes against the same H-type.
 In some of the rules below, we will need to supplement our definition of
 type consistency from Figure \ref{fig:type-consistency} with a definition
 of \emph{type inconsistency}, written $\tincompat{\htau}{\htau'}$. One can
-define this notion either directly as the metatheoretic negation of type
-consistency, or as a separate inductively defined judgement. The supplement
-does the latter. The key rule establishes that arrow types are inconsistent
+define this notion either directly as the constructive negation of type
+consistency, or as a separate inductively defined judgement with the following
+key rule, which establishes that arrow types are inconsistent
 with $\tnum$:
   \begin{equation*}
     \inferrule{ }{
       \tincompat{\tnum}{\tarr{\htau_1}{\htau_2}}
     }
   \end{equation*}
-The mechanization proves that this judgemental definition of type
+The mechanization proves that the judgemental definition of type
 inconsistency is indeed the negation of type consistency.
 
 \subsubsection{Action Subsumption}\label{sec:action-subsumption}
@@ -459,13 +451,12 @@ rule, Rule (\ref{rule:ana-subsume}), in the statics:
     \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}
   }
 \end{equation}
-In other words, if the cursor erasure of the edit state synthesizes a type,
-then we defer to the synthetic action judgement, as long as the type of the
-resulting cursor erasure is consistent with the type provided for analysis.
-The case involving Rule (\ref{rule:action-subsume}) in the proof of Theorem
+In other words, if the cursor erasure of the edit state synthesizes a type, $\htau'$, 
+then we defer to the synthetic action judgement. The cursor erasure of the Z-expression resulting from performing the action $\alpha$ synthetically could have a different type, $\htau''$, so we must check that it is consistent with the type provided for analysis, $\htau$.
+The case for Rule (\ref{rule:action-subsume}) in the proof of Theorem
 \ref{thrm:actsafe} goes through by induction and static subsumption,
 i.e. Rule (\ref{rule:ana-subsume}). Algorithmically, subsumption should be
-the rule of last resort (see Sec. \ref{sec:determinism}.)
+the rule of last resort (see Sec. \ref{sec:determinism} for further discussion.)
 
 \subsubsection{Relative Movement}\label{sec:movement}
 The rules below define relative movement within Z-types. They should be
@@ -735,8 +726,8 @@ Sec. \ref{sec:zipper-cases}.
 \end{subequations}
 
 The rules above are numerous and fairly uninteresting. That makes them
-quite hazardous -- we might make a mistake absent-mindedly. One check
-against this is to prove that establishes that movement actions do not
+quite hazardous -- we might make a typo or forget a rule absent-mindedly. One check
+against this is to establish that movement actions do not
 change the cursor erasure, as in Theorem \ref{lemma:movement-erasure}.
 
 \begin{theorem}[Movement Erasure Invariance]\label{lemma:movement-erasure} ~
@@ -902,7 +893,8 @@ check on our $\aMove{\dChildnm{n}}$ rules.
   \end{enumerate}
 \end{lemma}
 Theorem \ref{thrm:reachability} follows by straightforward composition of
-these two lemmas.
+these two lemmas. (Of course, the witness produced is not usually the most efficient way
+to move between two locations.)
 
 \subsubsection{Construction}\label{sec:construction} The construction
 actions, $\aConstruct{\psi}$, are used to construct terms of a shape
@@ -925,6 +917,7 @@ is placed on an empty return type hole:
     }
   }
 \end{equation}
+This choice is formally arbitrary -- it would have also been sensible to use the type under the cursor as the return type, for example. Indeed, we could consider defining both of these using different shapes. We avoid this for the sake of simplicity.
 
 The $\aConstruct{\fnum}$ action replaces an empty type hole under the
 cursor with the $\tnum$ type:
@@ -983,27 +976,30 @@ hypothesized type, $x$ is placed inside a hole:
     \performAna{\hGamma, x : \htau'}{\zwsel{\hehole}}{\htau}{\aConstruct{\fvar{x}}}{\hhole{\zwsel{x}}}
   }
 \end{equation}
-The rule above featured on Line 15 of Figure \ref{fig:second-example}.
+The rule above featured on Line 16 of Figure \ref{fig:second-example}.
 
 \paragraph{Lambdas} The $\aConstruct{\flam{x}}$ action places a lambda
 abstraction binding $x$ into an empty hole. If the empty hole is being
 asked to synthesize a type, then the result of the action is a lambda
 ascribed the type $\tarr{\tehole}{\tehole}$, with the cursor on the
-argument type hole:
+argument type hole (again, arbitrarily):
 \begin{equation}
   \label{r:conelamhole}
-  \inferrule{ }{
+  \inferrule{\alpha=\aConstruct{\flam{x}}}{
     \performSyn
       {\hGamma}
       {\zwsel{\hehole}}
       {\tehole}
-      {\aConstruct{\flam{x}}}
+      {\alpha}
       {\hlam{x}{\hehole} : \tarr{\zwsel{\tehole}}{\tehole}}
       {\tarr{\tehole}{\tehole}}
   }
 \end{equation}
 The type ascription is necessary because lambda expressions do not
-synthesize a type. If the empty hole is being analyzed against a type with
+synthesize a type. (Type-annotated function definitions often
+arise as a single syntactic construct in full-scale languages like ML.)
+
+If the empty hole is being analyzed against a type with
 matched arrow type, then no ascription is necessary:
 \begin{equation}\label{rule:performAna-lam-1}
   \inferrule{
@@ -1119,7 +1115,7 @@ with $\tnum$, then we must place the number expression inside the hole:
 \end{equation}
 
 The $\aConstruct{\fplus}$ action constructs a plus expression with the
-expression under the cursor as its first argument. If that expression
+expression under the cursor as its first argument (again, arbitrarily.) If that expression
 synthesizes a type consistent with $\tnum$, then the rule is
 straightforward:
 \begin{equation}\label{rule:construct-plus-compat}
@@ -1165,10 +1161,13 @@ places the expression under the cursor inside a hole:
 \end{equation}\end{subequations}
 
 The $\fnehole$ shape is grayed out in Figure \ref{fig:action-syntax}
-because we do not expect the programmer to perform it explicitly -- other
+because we do not generally expect the programmer to perform it explicitly -- other
 actions automatically insert holes when a type inconsistency would
-arise. Its inclusion is mainly to make it easier to state another
-``checksum'' theorem: \emph{constructability}
+arise. 
+% Occasionally, it is useful to insert a non-empty hole explicitly 
+%to avoid multiple automatically inserted non-empty holes that would otherwise arise over a sequence of actions. 
+The inclusion of this rule 
+simplifies the statement of the constructability theorem, discussed next.
 
 \paragraph{Constructability}
 To check that we have defined ``enough'' construct actions, we need to establish that we can start from an empty hole and arrive at any well-typed expression with, for simplicity, the cursor on the outside (Lemma \ref{lemma:reach-down} allows us to then move the cursor anywhere else.) As with reachability, we rely on the iterated action judgements defined in Figure \ref{fig:multistep}.
@@ -1186,6 +1185,7 @@ To check that we have defined ``enough'' construct actions, we need to establish
     that: $$\performAnaI{\hGamma}{\zwsel{\hhole{}}}{\htau}{\bar\alpha}{\zwsel{\hexp}}$$
   \end{enumerate}
 \end{theorem}
+Without the $\fnehole$ shape, this theorem as stated would not hold. For example, it is not possible to construct well-typed H-expressions where non-empty holes appear superfluously without the $\fnehole$ shape. Note also that although none of the shapes that we have defined can be dropped without losing this theorem, some construction rules could be dropped. In particular, rules that insert non-empty holes automatically could be dropped because the $\aConstruct{\fnehole}$ action can always be used instead. We included them because we are interested in the mechanics of automatic non-empty hole insertion. 
 
 \subsubsection{Deletion} The $\aDel$ action inserts an empty hole at the
 cursor, deleting what was there before.
@@ -1261,7 +1261,7 @@ subsumption):
 \end{equation}
 \end{subequations}
 Like deletion, there is no need for a ``checksum'' theorem for the
-finishing.
+finishing action.
 
 
 \subsubsection{Zipper Cases}\label{sec:zipper-cases} The rules defined so
@@ -1323,45 +1323,6 @@ zipper case mirrors Rule (\ref{rule:syn-lam}):
 }
 \end{equation}
 
-When the cursor is in the expression position of an ascription, we use the
-analytic  judgement, mirroring Rule (\ref{rule:syn-asc}):
-\begin{equation}
-\inferrule{
-  \performAna
-    {\hGamma}
-    {\zexp}
-    {\htau}
-    {\alpha}
-    {\zexp'}
-}{
-  \performSyn
-    {\hGamma}
-    {\zexp : \htau}
-    {\htau}
-    {\alpha}
-    {\zexp' : \htau}
-    {\htau}
-}
-\end{equation}
-
-When the cursor is in the type position of an ascription, we must re-check
-the ascribed expression because the cursor erasure might have changed (in
-practice, one would optimize this check to only occur if the cursor erasure
-did change):
-\begin{equation}\label{rule:zipper-asc}
-\inferrule{
-  \performTyp{\ztau}{\alpha}{\ztau'}\\
-  \hana{\hGamma}{\hexp}{\removeSel{\ztau'}}
-}{
-  \performSyn
-    {\hGamma}
-    {\hexp : \ztau}
-    {\removeSel{\ztau}}
-    {\alpha}
-    {\hexp : \ztau'}
-    {\removeSel{\ztau'}}
-}
-\end{equation}
 
 When the cursor is in the function position of an application, the rule
 mirrors Rule (\ref{rule:syn-ap}):
@@ -1446,6 +1407,46 @@ The rules for the addition operator mirror Rule (\ref{rule:syn-plus}):
       {\hadd{\hexp}{\zexp'}}
       {\tnum}
   }
+\end{equation}
+
+When the cursor is in the expression position of an ascription, we use the
+analytic  judgement, mirroring Rule (\ref{rule:syn-asc}):
+\begin{equation}
+\inferrule{
+  \performAna
+    {\hGamma}
+    {\zexp}
+    {\htau}
+    {\alpha}
+    {\zexp'}
+}{
+  \performSyn
+    {\hGamma}
+    {\zexp : \htau}
+    {\htau}
+    {\alpha}
+    {\zexp' : \htau}
+    {\htau}
+}
+\end{equation}
+
+When the cursor is in the type position of an ascription, we must re-check
+the ascribed expression because the cursor erasure might have changed (in
+practice, one would optimize this check to only occur if the cursor erasure
+did change):
+\begin{equation}\label{rule:zipper-asc}
+\inferrule{
+  \performTyp{\ztau}{\alpha}{\ztau'}\\
+  \hana{\hGamma}{\hexp}{\removeSel{\ztau'}}
+}{
+  \performSyn
+    {\hGamma}
+    {\hexp : \ztau}
+    {\removeSel{\ztau}}
+    {\alpha}
+    {\hexp : \ztau'}
+    {\removeSel{\ztau'}}
+}
 \end{equation}
 
 Finally, if the cursor is inside a non-empty hole, the relevant zipper rule
