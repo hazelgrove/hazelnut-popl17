@@ -13,14 +13,14 @@ efforts.
 \paragraph{Syntax.}
 %
 The first step is to extend the syntax of H-types and H-expressions
-with the familiar forms \cite{pfpl}:\vspace{-3px}
+with the familiar forms \cite{pfpl}:\vspace{-2px}
 \begin{grammar}
 $\mathsf{HTyp}$ & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
 \\
 $\mathsf{HExp}$ & $\hexp$ & \bnfas & $\cdots
 \bnfalt \hinj{i}{\hexp}
 \bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
-\end{grammar}\vspace{-3px}
+\end{grammar}\vspace{-2px}
 Recall that binary sum types introduce a new type-level connective,
 $\tsum{\htau_1}{\htau_2}$. The introductory forms are the \emph{injections},
 $\hinj{i}{\hexp}$; here, we consider only binary sums, so $i\in\{\mathsf{L}, \mathsf{R}\}$.
@@ -379,7 +379,7 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 \end{figure}
 
 Next, we must correspondingly extend the syntax of Z-types and
-Z-expressions, following Huet's zipper pattern \cite{JFP::Huet1997}:\vspace{-11px}
+Z-expressions, following Huet's zipper pattern \cite{JFP::Huet1997}:\vspace{-3px}
 \begin{grammar}
 $\mathsf{ZTyp}$ & $\ztau$ & \bnfas & $\cdots \bnfalt \tsum{\ztau}{\htau} \bnfalt \tsum{\htau}{\ztau}$
 \\
