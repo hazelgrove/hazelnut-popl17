@@ -32,8 +32,12 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 \renewcommand{\MathparLineskip}{\lineskiplimit=.3\baselineskip\lineskip=.3\baselineskip plus .2\baselineskip}
 
 \usepackage{joshuadunfield}
-\usepackage{times}
-\usepackage{newtxtt}
+\iftr 
+
+\else
+	\usepackage{times}
+\fi
+% \usepackage{newtxtt}
 \usepackage{llproof}
 \usepackage{rulelinks}
 \newtheorem{theorem}{Theorem}
@@ -95,7 +99,6 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 
 \title{Hazelnut: A Bidirectionally Typed \\ Structure Editor
  Calculus}
-\iftr
 \authorinfo{
         Cyrus Omar$^1$
         \and Ian Voysey$^1$
@@ -122,9 +125,6 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 {
  % \vspace{-12px}
 }
-\else
-\authorinfo{~}{~}{~}
-\fi
 
 \maketitle
 \begin{abstract}
