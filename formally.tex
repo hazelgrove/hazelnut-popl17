@@ -1174,7 +1174,13 @@ The inclusion of this rule
 simplifies the statement of the constructability theorem, discussed next.
 
 \paragraph{Constructability}
-To check that we have defined ``enough'' construct actions, we need to establish that we can start from an empty hole and arrive at any well-typed expression with, for simplicity, the cursor on the outside (Lemma \ref{lemma:reach-down} allows us to then move the cursor anywhere else.) As with reachability, we rely on the iterated action judgements defined in Figure \ref{fig:multistep}.
+To check that we have defined ``enough'' construct actions, we need to
+establish that we can start from an empty hole and arrive at any well-typed
+expression with the cursor on the outside. This simpler statement is
+sufficiently because Lemma \ref{lemma:reach-down} allows us to then move
+the cursor anywhere else inside the constructed term. As with reachability,
+we rely on the iterated action judgements defined in Figure
+\ref{fig:multistep}.
 \begin{theorem}[Constructability]\label{thrm:constructability} ~
   \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
   \item For every $\htau$ there exists $\bar\alpha$ such that
