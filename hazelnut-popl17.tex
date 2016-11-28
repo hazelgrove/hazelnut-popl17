@@ -309,7 +309,7 @@ concepts -- types with holes -- rather than sets of constraints.
 
 
 An intermediate approach would be to 
-layer unification-based type generation features atop the bidirectional system. This would amount to  interpretting type holes as unification
+layer unification-based type generation features atop the bidirectional system. This would amount to  interpreting type holes as unification
 variables. For a simple calculus,
 e.g. the STLC upon which Hazelnut is based, type inference for complete expressions is known to be
 decidable, so type holes could be instantiated automatically once the expression that they appear within has been constructed. It would also be possible to flag expressions for which there does not exist any way to fill the type holes. In more complex settings, e.g. in a 
@@ -385,7 +385,7 @@ substitution. This would allow us to evaluate expressions with holes such
 that the closure ``accumulates'' substitutions explicitly. When evaluation
 gets ``stuck'' (as it can, for CMTT does not define a dynamics equipped
 with a notion of progress under a non-empty modal context), it would then
-be possible for the programmer to choose holes from amongst the visible
+be possible for the programmer to choose a hole from the visible
 holes (which may have been duplicated) to edit in their original
 context. Once finished, the CMTT hole instantiation operation, together
 with a metatheorem that establishes that reduction commutes with
@@ -493,7 +493,7 @@ could one day help unify document editing with program editing.
 \subsubsection{Collaborative Programming}
 Finally, we did not consider any aspects of \emph{collaborative
 programming}, such as a packaging system, a differencing algorithm for use
-in a source control system, support for multiple simultaneous focii for
+in a source control system, support for multiple simultaneous cursors for
 different users, and so on. These are all interesting avenues for future
 work.
 
