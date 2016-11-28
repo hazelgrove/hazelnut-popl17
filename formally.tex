@@ -21,10 +21,10 @@ systematically define the following structures:
   edit state is well-typed after cursor erasure.
 \end{itemize}
 
-Our overview below omits certain ``uninteresting'' details. The supplement 
+Our overview below omits certain ``uninteresting'' details. The supplement
 includes the complete collection of rules, in definitional order. These
 rules, along with the proofs of all of the metatheorems discussed in this section (and several omitted auxiliary lemmas), have been
-mechanized using the Agda proof assistant \cite{norell:thesis} (discussed in Sec. \ref{sec:mech}.) 
+mechanized using the Agda proof assistant \cite{norell:thesis} (discussed in Sec. \ref{sec:mech}.)
 
 \subsection{H-types and H-expressions}\label{sec:holes}
 Figure \ref{fig:hexp-syntax} defines the syntax of H-types, $\htau$, and
@@ -35,13 +35,13 @@ to the mathematical number $n$ is drawn $\hnum{n}$, and for simplicity, we
 define only a single arithmetic operation, $\hadd{\hexp}{\hexp}$. The form
 $\hexp : \htau$ is an explicit \emph{type ascription}. In addition to these standard forms, \emph{type holes} and \emph{empty
   expression holes} are both drawn $\hehole$ and \emph{non-empty expression
-  holes} are drawn $\hhole{\hexp}$. 
+  holes} are drawn $\hhole{\hexp}$.
 Types and expressions that contain no holes are \emph{complete types} and
-\emph{complete expressions}, respectively. 
-%We do not, therefore, need to separately define the dynamics of complete expressions here (see, e.g., Harper \cite{pfpl}.) We will not develop a dynamics for incomplete expressions (but see Sec. \ref{sec:rw} for a discussion of this intriguing idea.) 
+\emph{complete expressions}, respectively.
+%We do not, therefore, need to separately define the dynamics of complete expressions here (see, e.g., Harper \cite{pfpl}.) We will not develop a dynamics for incomplete expressions (but see Sec. \ref{sec:rw} for a discussion of this intriguing idea.)
 %Formally, we can derive
 %$\hcomplete{\htau}$ when $\htau$ is complete, and $\hcomplete{\hexp}$ when
-%$\hexp$ is complete (see supplement.) 
+%$\hexp$ is complete (see supplement.)
 
 \begin{figure}[t]
 $\arraycolsep=4pt\begin{array}{lllllll}
@@ -194,9 +194,9 @@ necessary in positions where an expected type is not available (e.g. at the
 top level.) Algorithmically, the type is an ``input'' of the type analysis
 judgement, but an ``output'' of the type synthesis judgement.  Making a
 judgemental distinction between these two notions will be essential in our
-action semantics (Sec. \ref{sec:actions}.) 
+action semantics (Sec. \ref{sec:actions}.)
 
-If an expression is 
+If an expression is
 able to synthesize a type, it can also be analyzed against that type, or
 any other \emph{consistent} type, according to the \emph{subsumption rule},
 Rule (\ref{rule:ana-subsume}).% Type analysis of every form other than the lambda form goes through subsumption.
@@ -271,10 +271,10 @@ a type for the ascribed expression to be analyzed against.
 
 The rules described so far are sufficient to type complete
 H-expressions. The two remaining rules give H-expressions with holes a
-well-defined static semantics. 
+well-defined static semantics.
 
 Rule (\ref{rule:syn-ehole}) states that the empty expression hole
-synthesizes the type hole. Non-empty holes, which contain an H-expression that is ``under construction'' 
+synthesizes the type hole. Non-empty holes, which contain an H-expression that is ``under construction''
 as described in Sec. \ref{sec:example}, also synthesize the hole type. According to Rule
 (\ref{rule:syn-hole}), the enveloped expression must synthesize some (arbitrary) type. (We do not need non-empty type holes because every H-type is a valid classifier of H-expressions.)
 
@@ -297,7 +297,7 @@ $\arraycolsep=2pt\begin{array}{lllllll}
   \hap{\hexp}{\zexp} \cvert
   \hadd{\zexp}{\hexp} \cvert
   \hadd{\hexp}{\zexp} \\
-& & \cvert & 
+& & \cvert &
     \zexp : \htau \cvert
   \hexp : \ztau \cvert
   \hhole{\zexp}
@@ -308,7 +308,7 @@ $\arraycolsep=2pt\begin{array}{lllllll}
 
 Figure \ref{fig:zexp-syntax} defines the syntax of
 Z-types, $\ztau$, and Z-expressions, $\zexp$. A Z-type (resp. Z-expression) represents an
-H-type (resp. H-expression) with a single superimposed \emph{cursor}. 
+H-type (resp. H-expression) with a single superimposed \emph{cursor}.
 
 The only base cases in these inductive grammars are $\zwsel{\htau}$ and
 $\zwsel{\hexp}$, which identify the H-type or H-expression that the cursor
@@ -362,8 +362,8 @@ a \emph{type action judgement}:
 \subsubsection{Sensibility}
 
 
-These judgements are governed by a critical 
-metatheorem, \emph{action sensibility} (or simply \emph{sensibility}): 
+These judgements are governed by a critical
+metatheorem, \emph{action sensibility} (or simply \emph{sensibility}):
 \begin{theorem}[Action Sensibility]
   \label{thrm:actsafe} ~
   \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
@@ -392,7 +392,7 @@ of the rules, given starting in Sec. \ref{sec:action-subsumption}. Its
 proof is by straightforward induction, so the
 reader is encouraged to think about the relevant proof case when considering each action rule below.
 
-No sensibility theorem is needed for the type action judgement because every syntactically well-formed type is meaningful in Hazelnut. (Adding type variables to the language would require defining both a type-level sensibility theorem and 
+No sensibility theorem is needed for the type action judgement because every syntactically well-formed type is meaningful in Hazelnut. (Adding type variables to the language would require defining both a type-level sensibility theorem and
 type-level non-empty holes.)
 \begin{figure}[t]
 \hspace{-3px}$\arraycolsep=3pt\begin{array}{llcllll}
@@ -451,7 +451,7 @@ rule, Rule (\ref{rule:ana-subsume}), in the statics:
     \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}
   }
 \end{equation}
-In other words, if the cursor erasure of the edit state synthesizes a type, $\htau'$, 
+In other words, if the cursor erasure of the edit state synthesizes a type, $\htau'$,
 then we defer to the synthetic action judgement. The cursor erasure of the Z-expression resulting from performing the action $\alpha$ synthetically could have a different type, $\htau''$, so we must check that it is consistent with the type provided for analysis, $\htau$.
 The case for Rule (\ref{rule:action-subsume}) in the proof of Theorem
 \ref{thrm:actsafe} goes through by induction and static subsumption,
@@ -826,9 +826,12 @@ check on our $\aMove{\dChildnm{n}}$ rules.
   \end{enumerate}
 \end{lemma}
 Theorem \ref{thrm:reachability} follows by straightforward composition of
-these two lemmas. (Of course, the witness produced is not usually the most efficient way
-to move between two locations.)
-
+these two lemmas. The proofs we give of these three theorems in the
+mechanization do not produce the shortest sequence of actions to witness
+reachability, which would resemble something like a lowest common ancestor
+computation. In future versions of Hazelnut that use the produced witnesses
+for automatic tool support it may make sense to engineer these proofs
+differently; here we are only concerned with whether the theorems are true.
 
 \begin{figure}
 $\mathsf{ActionList}$~~$\bar{\alpha} ::= \cdot ~\vert~ \alpha; \bar{\alpha}$\vspace{4px}\\
@@ -1164,10 +1167,10 @@ places the expression under the cursor inside a hole:
 The $\fnehole$ shape is grayed out in Figure \ref{fig:action-syntax}
 because we do not generally expect the programmer to perform it explicitly -- other
 actions automatically insert holes when a type inconsistency would
-arise. 
-% Occasionally, it is useful to insert a non-empty hole explicitly 
-%to avoid multiple automatically inserted non-empty holes that would otherwise arise over a sequence of actions. 
-The inclusion of this rule 
+arise.
+% Occasionally, it is useful to insert a non-empty hole explicitly
+%to avoid multiple automatically inserted non-empty holes that would otherwise arise over a sequence of actions.
+The inclusion of this rule
 simplifies the statement of the constructability theorem, discussed next.
 
 \paragraph{Constructability}
@@ -1186,7 +1189,7 @@ To check that we have defined ``enough'' construct actions, we need to establish
     that: $$\performAnaI{\hGamma}{\zwsel{\hhole{}}}{\htau}{\bar\alpha}{\zwsel{\hexp}}$$
   \end{enumerate}
 \end{theorem}
-Without the $\fnehole$ shape, this theorem as stated would not hold. For example, it is not possible to construct well-typed H-expressions where non-empty holes appear superfluously without the $\fnehole$ shape. Note also that although none of the shapes that we have defined can be dropped without losing this theorem, some construction rules could be dropped. In particular, rules that insert non-empty holes automatically could be dropped because the $\aConstruct{\fnehole}$ action can always be used instead. We included them because we are interested in the mechanics of automatic non-empty hole insertion. 
+Without the $\fnehole$ shape, this theorem as stated would not hold. For example, it is not possible to construct well-typed H-expressions where non-empty holes appear superfluously without the $\fnehole$ shape. Note also that although none of the shapes that we have defined can be dropped without losing this theorem, some construction rules could be dropped. In particular, rules that insert non-empty holes automatically could be dropped because the $\aConstruct{\fnehole}$ action can always be used instead. We included them because we are interested in the mechanics of automatic non-empty hole insertion.
 
 \subsubsection{Deletion} The $\aDel$ action inserts an empty hole at the
 cursor, deleting what was there before.
@@ -1503,7 +1506,7 @@ The corresponding theorem for expression actions would be stated as follows:
 This is not a theorem of the system as described so far. The reason
 is somewhat subtle: two construction actions,
 $\aConstruct{\fasc}$ and $\aConstruct{\flam{x}}$, behave differently in the
-analytic case than they do in the synthetic case. The problem is that both rules can  
+analytic case than they do in the synthetic case. The problem is that both rules can
 ``fire'' when considering a Z-expression in analytic position due to action subsumption. This is a technically valid but ``morally'' invalid use of action subsumption: subsumption is included in the system to be used as a rule of last resort, i.e. it should only be applied when no other analytic action rule can fire.
 
 There are several possible ways to address this problem. One approach would be to modify the judgement forms to internalize this notion of ``rule of last resort''. This approach is related to focusing from proof theory \cite{Simmons11tr}. However, this approach would substantially complicate our presentation of the system.
