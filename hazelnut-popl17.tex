@@ -51,9 +51,9 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 \renewcommand\floatpagefraction{0.85}
 
 \AtBeginDocument{%
- \abovedisplayskip=2pt
+ \abovedisplayskip=2pt plus 4pt
  \abovedisplayshortskip=0pt
- \belowdisplayskip=2pt
+ \belowdisplayskip=2pt plus 4pt
  \belowdisplayshortskip=0pt
 }
 
@@ -61,9 +61,9 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 \setlength{\textfloatsep}{12pt}
 
 \usepackage[compact]{titlesec}
-\titlespacing*{\section}{0pt}{4pt}{2pt}
-\titlespacing*{\subsection}{0pt}{4pt}{2pt}
-\titlespacing*{\subsubsection}{0pt}{4pt}{2pt}
+\titlespacing*{\section}{0pt plus 3pt}{4pt plus 3pt}{2pt plus 3pt}
+\titlespacing*{\subsection}{0pt plus 3pt}{4pt plus 3pt}{2pt plus 3pt}
+\titlespacing*{\subsubsection}{0pt plus 3pt}{4pt plus 3pt}{2pt plus 3pt}
 \titlespacing*{\paragraph}{0pt}{4pt}{3pt}
 \setlength{\skip\footins}{3pt plus 1px minus 5px}
 
@@ -474,7 +474,7 @@ uniform description of transformations ranging from the simple -- like
 ``move the cursor to the next hole to the right'' -- to quite complex whole
 program refactoring, while remaining subject to the core Hazelnut
 metatheory. Techniques like those in advanced tactic systems, e.g. Mtac, might be useful 
-in proving these action macros correct \cite{Ziliani:2013:MMT:2544174.2500579}.
+in proving these action macros correct \cite{ziliani2015mtac}.
 
 \subsubsection{Views}
 Another research direction is in exploring how types can be used to control
