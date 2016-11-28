@@ -15,9 +15,9 @@ efforts.
 The first step is to extend the syntax of H-types and H-expressions
 with the familiar forms \cite{pfpl}:\vspace{-3px}
 \begin{grammar}
-\textsf{HTyp} & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
+$\mathsf{HTyp}$ & $\htau$ & \bnfas & $\cdots \bnfalt \tsum{\htau}{\htau}$
 \\
-\textsf{HExp} & $\hexp$ & \bnfas & $\cdots
+$\mathsf{HExp}$ & $\hexp$ & \bnfas & $\cdots
 \bnfalt \hinj{i}{\hexp}
 \bnfalt \hcase{\hexp}{x}{\hexp}{y}{\hexp}$
 \end{grammar}\vspace{-3px}
@@ -379,9 +379,9 @@ analysis,~$\hcase{\hexp}{x}{\hexp_1}{y}{\hexp_2}$.
 Next, we must correspondingly extend the syntax of Z-types and
 Z-expressions, following Huet's zipper pattern \cite{JFP::Huet1997}:\vspace{-11px}
 \begin{grammar}
-\textsf{ZTyp} & $\ztau$ & \bnfas & $\cdots \bnfalt \tsum{\ztau}{\htau} \bnfalt \tsum{\htau}{\ztau}$
+$\mathsf{ZTyp}$ & $\ztau$ & \bnfas & $\cdots \bnfalt \tsum{\ztau}{\htau} \bnfalt \tsum{\htau}{\ztau}$
 \\
-\textsf{ZExp} & $\zexp$ & \bnfas & $\cdots
+$\mathsf{ZExp}$ & $\zexp$ & \bnfas & $\cdots
 \bnfalt \hinj{i}{\zexp}
 \bnfalt \hcase{\zexp}{x}{\hexp}{y}{\hexp}$
 \\
@@ -406,7 +406,7 @@ The rules for Z-expressions are analogous:
 
 Finally, we must extend the syntax of shapes:
 \begin{grammar}
-\textsf{Shape} & $\psi$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
+$\mathsf{Shape}$ & $\psi$ & \bnfas & $\cdots \bnfalt \fsum \bnfalt \finj{i} \bnfalt \fcase{x}{y}$
 \end{grammar}
 Notice that for each H-type or H-expression form, there is a corresponding
 shape. The injection form had a formal parameter, $i$, so the corresponding

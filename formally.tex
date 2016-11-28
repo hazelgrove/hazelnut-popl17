@@ -760,8 +760,7 @@ define a syntax for lists of actions, $\bar{\alpha}$, together with
 iterated action judgements. To keep the core of the action semantics small,
 we take the latter approach in Figure \ref{fig:multistep}.
 
-A simple auxiliary judgement, $\bar\alpha~\mathsf{movements}$, defined in
-the supplement, establishes that $\bar\alpha$ consists only of actions of
+A simple auxiliary judgement, $\bar\alpha~\mathsf{movements}$ (not shown) establishes that $\bar\alpha$ consists only of actions of
 the form $\aMove{\delta}$.
 
 With these definitions, we can state reachability as follows:
@@ -783,6 +782,53 @@ With these definitions, we can state reachability as follows:
     $\performAnaI{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}$.
   \end{enumerate}
 \end{theorem}
+
+
+The simplest way to prove Theorem \ref{thrm:reachability} is to break it
+into two lemmas. Lemma \ref{lemma:reach-up} establishes that you can always
+move the cursor to the outermost position in an expression. This serves as
+a check on our $\aMove{\dParent}$ rules.
+\begin{lemma}[Reach Up]\label{lemma:reach-up} ~
+  \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
+  \item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$
+    such that $\bar\alpha~\mathsf{movements}$ and
+    $\performTypI{\ztau}{\bar\alpha}{\zwsel{\htau}}$.
+
+  \item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$
+    then there exists some $\bar\alpha$ such that
+    $\bar\alpha~\mathsf{movements}$ and
+    $\performSynI{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}{\htau}$.
+
+  \item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$
+    then there exists some $\bar\alpha$ such that
+    $\bar\alpha~\mathsf{movements}$ and
+    $\performAnaI{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}$.
+  \end{enumerate}
+\end{lemma}
+Lemma \ref{lemma:reach-down} establishes that you can always move the
+cursor from the outermost position to any other position. This serves as a
+check on our $\aMove{\dChildnm{n}}$ rules.
+\begin{lemma}[Reach Down]\label{lemma:reach-down} ~
+  \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
+  \item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$
+    such that $\bar\alpha~\mathsf{movements}$ and
+    $\performTypI{\zwsel{\htau}}{\bar\alpha}{\ztau}$.
+
+  \item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$
+    then there exists some $\bar\alpha$ such that
+    $\bar\alpha~\mathsf{movements}$ nand
+    $\performSynI{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}{\htau}$.
+
+  \item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$
+    then there exists some $\bar\alpha$ such that
+    $\bar\alpha~\mathsf{movements}$ and
+    $\performAnaI{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}$.
+  \end{enumerate}
+\end{lemma}
+Theorem \ref{thrm:reachability} follows by straightforward composition of
+these two lemmas. (Of course, the witness produced is not usually the most efficient way
+to move between two locations.)
+
 
 \begin{figure}
 $\mathsf{ActionList}$~~$\bar{\alpha} ::= \cdot ~\vert~ \alpha; \bar{\alpha}$\vspace{4px}\\
@@ -850,52 +896,6 @@ $\mathsf{ActionList}$~~$\bar{\alpha} ::= \cdot ~\vert~ \alpha; \bar{\alpha}$\vsp
 \caption{Iterated Action Judgements}
 \label{fig:multistep}
 \end{figure}
-
-The simplest way to prove Theorem \ref{thrm:reachability} is to break it
-into two lemmas. Lemma \ref{lemma:reach-up} establishes that you can always
-move the cursor to the outermost position in an expression. This serves as
-a check on our $\aMove{\dParent}$ rules.
-\begin{lemma}[Reach Up]\label{lemma:reach-up} ~
-  \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
-  \item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$
-    such that $\bar\alpha~\mathsf{movements}$ and
-    $\performTypI{\ztau}{\bar\alpha}{\zwsel{\htau}}$.
-
-  \item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$
-    then there exists some $\bar\alpha$ such that
-    $\bar\alpha~\mathsf{movements}$ and
-    $\performSynI{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}{\htau}$.
-
-  \item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$
-    then there exists some $\bar\alpha$ such that
-    $\bar\alpha~\mathsf{movements}$ and
-    $\performAnaI{\hGamma}{\zexp}{\htau}{\bar\alpha}{\zwsel{\hexp}}$.
-  \end{enumerate}
-\end{lemma}
-Lemma \ref{lemma:reach-down} establishes that you can always move the
-cursor from the outermost position to any other position. This serves as a
-check on our $\aMove{\dChildnm{n}}$ rules.
-\begin{lemma}[Reach Down]\label{lemma:reach-down} ~
-  \begin{enumerate}[itemsep=0px,partopsep=0px,topsep=0px]
-  \item If $\removeSel{\ztau}=\htau$ then there exists some $\bar\alpha$
-    such that $\bar\alpha~\mathsf{movements}$ and
-    $\performTypI{\zwsel{\htau}}{\bar\alpha}{\ztau}$.
-
-  \item If $\hsyn{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$
-    then there exists some $\bar\alpha$ such that
-    $\bar\alpha~\mathsf{movements}$ nand
-    $\performSynI{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}{\htau}$.
-
-  \item If $\hana{\hGamma}{\hexp}{\htau}$ and $\removeSel{\zexp}=\hexp$
-    then there exists some $\bar\alpha$ such that
-    $\bar\alpha~\mathsf{movements}$ and
-    $\performAnaI{\hGamma}{\zwsel{\hexp}}{\htau}{\bar\alpha}{\zexp}$.
-  \end{enumerate}
-\end{lemma}
-Theorem \ref{thrm:reachability} follows by straightforward composition of
-these two lemmas. (Of course, the witness produced is not usually the most efficient way
-to move between two locations.)
-
 \subsubsection{Construction}\label{sec:construction} The construction
 actions, $\aConstruct{\psi}$, are used to construct terms of a shape
 indicated by $\psi$ at the cursor.
@@ -963,6 +963,7 @@ a type, then the result synthesizes the hypothesized type:
     \performSyn{\hGamma, x : \htau}{\zwsel{\hehole}}{\tehole}{\aConstruct{\fvar{x}}}{\zwsel{x}}{\htau}
   }
 \end{equation}
+
 If the hole is being analyzed against a type that is consistent with the
 hypothesized type, then the action semantics goes through the {action
   subsumption rule} described in Sec. \ref{sec:action-subsumption}. If the
