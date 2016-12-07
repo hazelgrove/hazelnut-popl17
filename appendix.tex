@@ -410,6 +410,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
 \begin{subequations}
   \paragraph{Ascription}
   \begin{equation}
+    \tag{\rname{EMAscChild1}}
     \inferrule{ }{
       \performTyp{
         \zwsel{\hexp : \htau}
@@ -421,6 +422,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{EMAscChild2}}
     \inferrule{ }{
       \performTyp{
         \zwsel{\hexp : \htau}
@@ -432,6 +434,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{EMAscParent1}}
     \inferrule{ }{
       \performTyp{
         \zwsel{\hexp} : \htau
@@ -443,6 +446,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{EMAscParent2}}
     \inferrule{ }{
       \performTyp{
         \hexp : \zwsel{\htau}
@@ -456,6 +460,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
 
   \paragraph{Lambda}
   \begin{equation}
+    \tag{\rname{EMLamChild1}}
     \inferrule{ }{
       \performMove{
         \zwsel{\hlam{x}{\hexp}}
@@ -467,6 +472,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{EMLamParent}}
     \inferrule{ }{
       \performMove{
         \hlam{x}{\zwsel{\hexp}}
@@ -474,57 +480,13 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
         \aMove{\dParent}
       }{
         \zwsel{\hlam{x}{\hexp}}
-      }
-    }
-  \end{equation}
-  \paragraph{Application}
-  \begin{equation}
-    \inferrule{ }{
-      \performMove{
-        \zwsel{\hap{\hexp_1}{\hexp_2}}
-      }{
-        \aMove{\dChildn{1}}
-      }{
-        \hap{\zwsel{\hexp_1}}{\hexp_2}
-      }
-    }
-  \end{equation}
-  \begin{equation}
-    \inferrule{ }{
-      \performMove{
-        \zwsel{\hap{\hexp_1}{\hexp_2}}
-      }{
-        \aMove{\dChildn{2}}
-      }{
-        \hap{\hexp_1}{\zwsel{\hexp_2}}
-      }
-    }
-  \end{equation}
-  \begin{equation}
-    \inferrule{ }{
-      \performMove{
-        \hap{\zwsel{\hexp_1}}{\hexp_2}
-      }{
-        \aMove{\dParent}
-      }{
-        \zwsel{\hap{\hexp_1}{\hexp_2}}
-      }
-    }
-  \end{equation}
-  \begin{equation}
-    \inferrule{ }{
-      \performMove{
-        \hap{{\hexp_1}}{\zwsel{\hexp_2}}
-      }{
-        \aMove{\dParent}
-      }{
-        \zwsel{\hap{\hexp_1}{\hexp_2}}
       }
     }
   \end{equation}
 
   \paragraph{Plus}
   \begin{equation}
+    \tag{\rname{EMPlusChild1}}
     \inferrule{ }{
       \performMove{
         \zwsel{\hadd{\hexp_1}{\hexp_2}}
@@ -536,6 +498,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{EMPlusChild2}}
     \inferrule{ }{
       \performMove{
         \zwsel{\hadd{\hexp_1}{\hexp_2}}
@@ -547,6 +510,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{EMPlusParent1}}
     \inferrule{ }{
       \performMove{
         \hadd{\zwsel{\hexp_1}}{\hexp_2}
@@ -558,6 +522,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{EMPlusParent2}}
     \inferrule{ }{
       \performMove{
         \hadd{{\hexp_1}}{\zwsel{\hexp_2}}
@@ -569,8 +534,59 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
     }
   \end{equation}
 
+  \paragraph{Application}
+  \begin{equation}
+    \tag{\rname{EMApChild1}}
+    \inferrule{ }{
+      \performMove{
+        \zwsel{\hap{\hexp_1}{\hexp_2}}
+      }{
+        \aMove{\dChildn{1}}
+      }{
+        \hap{\zwsel{\hexp_1}}{\hexp_2}
+      }
+    }
+  \end{equation}
+  \begin{equation}
+    \tag{\rname{EMApChild2}}
+    \inferrule{ }{
+      \performMove{
+        \zwsel{\hap{\hexp_1}{\hexp_2}}
+      }{
+        \aMove{\dChildn{2}}
+      }{
+        \hap{\hexp_1}{\zwsel{\hexp_2}}
+      }
+    }
+  \end{equation}
+  \begin{equation}
+    \tag{\rname{EMApParent1}}
+    \inferrule{ }{
+      \performMove{
+        \hap{\zwsel{\hexp_1}}{\hexp_2}
+      }{
+        \aMove{\dParent}
+      }{
+        \zwsel{\hap{\hexp_1}{\hexp_2}}
+      }
+    }
+  \end{equation}
+  \begin{equation}
+    \tag{\rname{EMApParent2}}
+    \inferrule{ }{
+      \performMove{
+        \hap{{\hexp_1}}{\zwsel{\hexp_2}}
+      }{
+        \aMove{\dParent}
+      }{
+        \zwsel{\hap{\hexp_1}{\hexp_2}}
+      }
+    }
+  \end{equation}
+
   \paragraph{Non-Empty Hole}
   \begin{equation}
+    \tag{\rname{EMNEHoleChild1}}
     \inferrule{ }{
       \performMove{
         \zwsel{\hhole{\hexp}}
@@ -582,6 +598,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{EMNEHoleParent}}
     \inferrule{ }{
       \performMove{
         \hhole{\zwsel{\hexp}}
@@ -604,6 +621,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
 \begin{subequations}\label{Arules:performSyn}
   \paragraph{Movement}
   \begin{equation}
+    \tag{\rname{SAMove}}
     \inferrule{
       \performMove{\zexp}{\aMove{\delta}}{\zexp'}
     }{
@@ -613,6 +631,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
 
   \paragraph{Deletion}
   \begin{equation}
+    \tag{\rname{SADel}}
     \inferrule{ }{
       \performSyn{\hGamma}{\zwsel{\hexp}}{\htau}{\aDel}{\zwsel{\hehole}}{\tehole}
     }
@@ -620,18 +639,21 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
 
   \paragraph{Construction}
   \begin{equation}
+    \tag{\rname{SAConAsc}}
     \inferrule{ }{
       \performSyn{\hGamma}{\zwsel{\hexp}}{\htau}{\aConstruct{\fasc}}{\hexp : \zwsel{\htau}}{\htau}
     }
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{SAConVar}}
     \inferrule{ }{
       \performSyn{\hGamma, x : \htau}{\zwsel{\hehole}}{\tehole}{\aConstruct{\fvar{x}}}{\zwsel{x}}{\htau}
     }
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{SAConLam}}
     \inferrule{ }{
       \performSyn
           {\hGamma}
@@ -644,6 +666,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{SAConApArr}}
     \inferrule{
       \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}
     }{
@@ -658,6 +681,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{SAConApOtw}}
     \inferrule{
       \tincompat{\htau}{\tarr{\tehole}{\tehole}}
     }{
@@ -671,19 +695,8 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
     }
   \end{equation}
 
-  % \begin{equation}
-  %   \inferrule{ }{
-  %     \performSyn
-  %       {\hGamma}
-  %       {\zwsel{\hexp}}
-  %       {\htau}
-  %       {\aConstruct{\farg}}
-  %       {\hap{\zwsel{\hehole}}{\hexp}}
-  %       {\tehole}
-  %   }
-  % \end{equation}
-
   \begin{equation}
+    \tag{\rname{SAConNumLit}}
     \inferrule{ }{
       \performSyn
           {\hGamma}
@@ -696,6 +709,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{SAConPlus1}}
     \inferrule{
       \tcompat{\htau}{\tnum}
     }{
@@ -710,6 +724,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{SAConPlus2}}
     \inferrule{
       \tincompat{\htau}{\tnum}
     }{
@@ -724,6 +739,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{SAConNEHole}}
     \inferrule{ }{
       \performSyn
           {\hGamma}
@@ -734,8 +750,10 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\tehole}
     }
   \end{equation}
+
   \paragraph{Finishing}
   \begin{equation}
+    \tag{\rname{SAFinish}}
     \inferrule{
       \hsyn{\hGamma}{\hexp}{\htau'}
     }{
@@ -749,9 +767,9 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
     }
   \end{equation}
 
-
   \paragraph{Zipper Cases}
   \begin{equation}
+    \tag{\rname{SAZipAsc1}}
     \inferrule{
       \performAna
           {\hGamma}
@@ -770,6 +788,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{SAZipAsc2}}
     \inferrule{
       \performTyp{\ztau}{\alpha}{\ztau'}\\
       \hana{\hGamma}{\hexp}{\removeSel{\ztau'}}
@@ -783,7 +802,9 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\removeSel{\ztau'}}
     }
   \end{equation}
+
   \begin{equation}
+    \tag{\rname{SAZipApArr}}
     \inferrule{
       \hsyn{\hGamma}{\removeSel{\zexp}}{\htau_2}\\
       \performSyn
@@ -806,6 +827,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{SAZipApAna}}
     \inferrule{
       \hsyn{\hGamma}{\hexp}{\htau_2}\\
       \arrmatch{\htau_2}{\tarr{\htau_3}{\htau_4}}\\
@@ -827,6 +849,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{SAZipPlus1}}
     \inferrule{
       \performAna
           {\hGamma}
@@ -846,6 +869,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{SAZipPlus2}}
     \inferrule{
       \performAna
           {\hGamma}
@@ -865,6 +889,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{SAZipHole}}
     \inferrule{
       \hsyn{\hGamma}{\removeSel{\zexp}}{\htau}\\
       \performSyn
@@ -890,6 +915,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
 \begin{subequations}\label{Arules:performAna}
   \paragraph{Subsumption}
   \begin{equation}
+    \tag{\rname{AASubsume}}
     \inferrule{
       \hsyn{\hGamma}{\removeSel{\zexp}}{\htau'}\\
       \performSyn{\hGamma}{\zexp}{\htau'}{\alpha}{\zexp'}{\htau''}\\
@@ -901,6 +927,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
 
   \paragraph{Movement}
   \begin{equation}
+    \tag{\rname{AAMove}}
     \inferrule{
       \performMove{\zexp}{\aMove{\delta}}{\zexp'}
     }{
@@ -910,6 +937,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
 
   \paragraph{Deletion}
   \begin{equation}
+    \tag{\rname{AADel}}
     \inferrule{ }{
       \performAna{\hGamma}{\zwsel{\hexp}}{\htau}{\aDel}{\zwsel{\hehole}}
     }
@@ -917,12 +945,14 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
 
   \paragraph{Construction}
   \begin{equation}
+    \tag{\rname{AAConAsc}}
     \inferrule{ }{
       \performAna{\hGamma}{\zwsel{\hexp}}{\htau}{\aConstruct{\fasc}}{\hexp : \zwsel{\htau}}
     }
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{AAConVar}}
     \inferrule{
       \tincompat{\htau}{\htau'}
     }{
@@ -931,6 +961,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{AAConLam1}}
     \inferrule{
       \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}
     }{
@@ -944,6 +975,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{AAConLam2}}
     \inferrule{
       \tincompat{\htau}{\tarr{\tehole}{\tehole}}
     }{
@@ -957,7 +989,9 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           }}
     }
   \end{equation}
+
   \begin{equation}
+    \tag{\rname{AAConNumLit}}
     \inferrule{
       \tincompat{\htau}{\tnum}
     }{
@@ -969,8 +1003,10 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\hhole{\zwsel{\hnum{n}}}}
     }
   \end{equation}
+
   \paragraph{Finishing}
   \begin{equation}
+    \tag{\rname{AAFinish}}
     \inferrule{
       \hana{\hGamma}{\hexp}{\htau}
     }{
@@ -985,6 +1021,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
 
   \paragraph{Zipper Cases}
   \begin{equation}
+    \tag{\rname{AAZipLam}}
     \inferrule{
       \arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}\\
       \performAna
@@ -1010,11 +1047,13 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
 \fbox{$\performTypI{\ztau}{\bar{\alpha}}{\ztau'}$}
 \begin{subequations}
   \begin{equation}
+    \tag{\rname{DoRefl}}
     \inferrule{ }{
       \performTypI{\ztau}{\cdot}{\ztau}
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{DoType}}
     \inferrule{
       \performTyp{\ztau}{\alpha}{\ztau'}\\
       \performTypI{\ztau'}{\bar{\alpha}}{\ztau''}
@@ -1023,14 +1062,18 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
     }
   \end{equation}
 \end{subequations}
+
 \begin{subequations}
   \fbox{$\performSynI{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}{\htau'}$}
   \begin{equation}
+    \tag{\rname{DoRefl}}
     \inferrule{ }{
       \performSynI{\hGamma}{\zexp}{\htau}{\cdot}{\zexp}{\htau}
     }
   \end{equation}
+
   \begin{equation}
+    \tag{\rname{DoSynth}}
     \inferrule{
       \performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}\\
       \performSynI{\hGamma}{\zexp'}{\htau'}{\bar{\alpha}}{\zexp''}{\htau''}
@@ -1039,14 +1082,17 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
     }
   \end{equation}
 \end{subequations}
+
 \begin{subequations}
   \fbox{$\performAnaI{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}$}
   \begin{equation}
+    \tag{\rname{DoRefl}}
     \inferrule{ }{
       \performAnaI{\hGamma}{\zexp}{\htau}{\cdot}{\zexp}
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{DoAna}}
     \inferrule{
       \performAna{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}\\
       \performAnaI{\hGamma}{\zexp'}{\htau}{\bar\alpha}{\zexp''}
@@ -1055,15 +1101,18 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
     }
   \end{equation}
 \end{subequations}
+
 \noindent \fbox{$\bar\alpha~\mathsf{movements}$}
 \begin{subequations}
   \begin{equation}
+    \tag{\rname{AM[]}}
     \inferrule{ }{
       \cdot~\mathsf{movements}
     }
   \end{equation}
 
   \begin{equation}
+    \tag{\rname{AM::}}
     \inferrule{
       \bar\alpha~\mathsf{movements}
     }{
