@@ -283,6 +283,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
 \paragraph{Type Movement}
 \begin{subequations}
   \begin{equation}
+    \tag{\rname{TMArrChild1}}
     \inferrule{ }{
       \performTyp{
         \zwsel{\tarr{\htau_1}{\htau_2}}
@@ -294,105 +295,113 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
     }
   \end{equation}
   \begin{equation}
+    \tag{\rname{TMArrChild2}}
     \inferrule{ }{
       \performTyp{
         \zwsel{\tarr{\htau_1}{\htau_2}}
       }{
-      \aMove{\dChildn{2}}
-    }{
-      \tarr{\htau_1}{\zwsel{\htau_2}}
+        \aMove{\dChildn{2}}
+      }{
+        \tarr{\htau_1}{\zwsel{\htau_2}}
+      }
     }
-  }
-\end{equation}
-\begin{equation}
-  \inferrule{ }{
-    \performTyp{
-      \tarr{\zwsel{\htau_1}}{\htau_2}
-    }{
-      \aMove{\dParent}
-    }{
-      \zwsel{\tarr{\htau_1}{\htau_2}}
+  \end{equation}
+  \begin{equation}
+    \tag{\rname{TMArrParent1}}
+    \inferrule{ }{
+      \performTyp{
+        \tarr{\zwsel{\htau_1}}{\htau_2}
+      }{
+        \aMove{\dParent}
+      }{
+        \zwsel{\tarr{\htau_1}{\htau_2}}
+      }
     }
-  }
-\end{equation}
-\begin{equation}
-  \inferrule{ }{
-    \performTyp{
-      \tarr{{\htau_1}}{\zwsel{\htau_2}}
-    }{
-      \aMove{\dParent}
-    }{
-      \zwsel{\tarr{\htau_1}{\htau_2}}
+  \end{equation}
+  \begin{equation}
+    \tag{\rname{TMArrParent2}}
+    \inferrule{ }{
+      \performTyp{
+        \tarr{{\htau_1}}{\zwsel{\htau_2}}
+      }{
+        \aMove{\dParent}
+      }{
+        \zwsel{\tarr{\htau_1}{\htau_2}}
+      }
     }
-  }
-\end{equation}
+  \end{equation}
 
-\paragraph{Type Deletion}
-\begin{equation}
-  \inferrule{ }{
-    \performTyp{
-      \zwsel{\htau}
-    }{
-      \aDel
-    }{
-      \zwsel{\tehole}
+  \paragraph{Type Deletion}
+  \begin{equation}
+    \tag{\rname{TMDel}}
+    \inferrule{ }{
+      \performTyp{
+        \zwsel{\htau}
+      }{
+        \aDel
+      }{
+        \zwsel{\tehole}
+      }
     }
-  }
-\end{equation}
+  \end{equation}
 
-\paragraph{Type Construction}
-\begin{equation}
-  \inferrule{ }{
-    \performTyp{
-      \zwsel{\htau}
-    }{
-      \aConstruct{\farr}
-    }{
-      \tarr{\htau}{\zwsel{\tehole}}
+  \paragraph{Type Construction}
+  \begin{equation}
+    \tag{\rname{TMConArrow}}
+    \inferrule{ }{
+      \performTyp{
+        \zwsel{\htau}
+      }{
+        \aConstruct{\farr}
+      }{
+        \tarr{\htau}{\zwsel{\tehole}}
+      }
     }
-  }
-\end{equation}
+  \end{equation}
 
   \begin{equation}
-  \inferrule{ }{
-    \performTyp{
-      \zwsel{\tehole}
-    }{
-      \aConstruct{\fnum}
-    }{
-      \zwsel{\tnum}
+    \tag{\rname{TMConNum}}
+    \inferrule{ }{
+      \performTyp{
+        \zwsel{\tehole}
+      }{
+        \aConstruct{\fnum}
+      }{
+        \zwsel{\tnum}
+      }
     }
-  }
-\end{equation}
+  \end{equation}
 
+  \paragraph{Zipper Cases}
+  \begin{equation}
+    \tag{\rname{TMArrZip1}}
+    \inferrule{
+      \performTyp{\ztau}{\alpha}{\ztau'}
+    }{
+      \performTyp{
+        \tarr{\ztau}{\htau}
+      }{
+        \alpha
+      }{
+        \tarr{\ztau'}{\htau}
+      }
+    }
+  \end{equation}
 
-\paragraph{Zipper Cases}
   \begin{equation}
-  \inferrule{
-    \performTyp{\ztau}{\alpha}{\ztau'}
-  }{
-    \performTyp{
-      \tarr{\ztau}{\htau}
+    \tag{\rname{TMArrZip2}}
+    \inferrule{
+      \performTyp{\ztau}{\alpha}{\ztau'}
     }{
-      \alpha
-    }{
-      \tarr{\ztau'}{\htau}
+      \performTyp{
+        \tarr{\htau}{\ztau}
+      }{
+        \alpha
+      }{
+        \tarr{\htau}{\ztau'}
+      }
     }
-  }
-\end{equation}
-  \begin{equation}
-  \inferrule{
-    \performTyp{\ztau}{\alpha}{\ztau'}
-  }{
-    \performTyp{
-      \tarr{\htau}{\ztau}
-    }{
-      \alpha
-    }{
-      \tarr{\htau}{\ztau'}
-    }
-  }
-\end{equation}
+  \end{equation}
 \end{subequations}
 
 \subsubsection{Expression Movement Actions}
