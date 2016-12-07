@@ -32,7 +32,7 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 \renewcommand{\MathparLineskip}{\lineskiplimit=.3\baselineskip\lineskip=.3\baselineskip plus .2\baselineskip}
 
 \usepackage{joshuadunfield}
-\iftr 
+\iftr
 
 \else
 	\usepackage{times}
@@ -99,7 +99,7 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
 
 \title{Hazelnut: A Bidirectionally Typed \\ Structure Editor
  Calculus}
-
+\iftr \subtitle{\vspace{-6px}Extended Version} \fi
 \authorinfo{
         Cyrus Omar$^1$
         \and Ian Voysey$^1$
@@ -112,11 +112,11 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
  	\begin{tabular}{c}
  $^1$Carnegie Mellon University, USA\\
  \textsf{\hphantom{$^1$}\{comar, iev, aldrich\}@cs.cmu.edu}
- \end{tabular} & 
+ \end{tabular} &
  \begin{tabular}{c}
  $^2$Oregon State University, USA\\
  \textsf{\hphantom{$^1$}hiltonm@eecs.oregonstate.edu}
- \end{tabular} & 
+ \end{tabular} &
   \begin{tabular}{c}
  $^3$University of Colorado Boulder, USA\\
  \textsf{\hphantom{$^1$}matthew.hammer@colorado.edu}
@@ -124,7 +124,7 @@ basicstyle=\ttfamily\fontsize{8pt}{1em}\selectfont}
  \end{tabular}
 }
 {
- % \vspace{-12px}
+ \vspace{-12px}
 }
 
 \maketitle
@@ -139,7 +139,7 @@ This paper introduces Hazelnut, a {structure editor} based on a small
 bidirectionally typed lambda calculus extended with \emph{holes} and
 a \emph{cursor}. Hazelnut goes one step beyond
 syntactic well-formedness: its {edit actions} operate over statically
-meaningful incomplete terms.  Na\"ively, this would force the programmer to construct terms in a 
+meaningful incomplete terms.  Na\"ively, this would force the programmer to construct terms in a
 rigid ``outside-in'' manner. To avoid this problem, the {action semantics}
 automatically places terms assigned a type that is inconsistent with the
 expected type \emph{inside} a {hole}. This meaningfully defers the type consistency
@@ -229,9 +229,9 @@ ML \cite{mthm97-for-dart,Harper00atype-theoretic,Lee:2007:TMM:1190216.1190245}. 
 that these lines of research will merge to produce a human-usable typed
 structure editor with sound formal foundations. Our contribution, then, is
 in defining and analyzing the theoretical properties of a small
-foundational calculus that could be extended to achieve this vision. 
-Our implementation resembles the minimal structure editor defined in 
-Haskell by Sufrin and De Moor \cite{sufrin1999modeless}. 
+foundational calculus that could be extended to achieve this vision.
+Our implementation resembles the minimal structure editor defined in
+Haskell by Sufrin and De Moor \cite{sufrin1999modeless}.
 
 
 Some structure editor \emph{generators} do operate on formal or semi-formal
@@ -245,21 +245,21 @@ structure editors \cite{ko_barista:_2006}. mbeddr is built on top of the
 commercial JetBrains MPS framework for constructing structure
 editors \cite{voelter2011language,DBLP:journals/software/VoelterWK15}. These
 systems do not give a semantics to the edit states of the structure editor
-itself, or maintain non-trivial edit invariants, as Hazelnut does. 
+itself, or maintain non-trivial edit invariants, as Hazelnut does.
 
 Related to structure editors are value editors, which operate directly on
 simple values (but not generally expressions or functions) of a programming
 language. For example, Eros is a typed value editor based in
 Haskell \cite{DBLP:conf/icfp/Elliott07}.
 
-Other work has attempted to integrate structure editing features into 
+Other work has attempted to integrate structure editing features into
 text editors. For example, recent work has used syntactic placeholders
-reminiscent of our expression holes to decrease the percentage of 
-edit states that are malformed \cite{Amorim:2016:PSC:2997364.2997374}. This work does not consider the semantics of placeholders. 
+reminiscent of our expression holes to decrease the percentage of
+edit states that are malformed \cite{Amorim:2016:PSC:2997364.2997374}. This work does not consider the semantics of placeholders.
 
-Prior work has also explored 
-formal definitions of text editor commands, e.g. using functional 
-combinators \cite{DBLP:journals/scp/Sufrin82}. 
+Prior work has also explored
+formal definitions of text editor commands, e.g. using functional
+combinators \cite{DBLP:journals/scp/Sufrin82}.
 
 \subsection{Gradual Type Systems}
 A significant contribution of this paper is the discovery of a clear
@@ -269,11 +269,11 @@ semantics to type holes -- i.e. type consistency and type matching --
 coincides with that developed in the study of gradual type systems for
 functional languages. The pioneering work of Siek and Taha \cite{Siek06a}
 introduced type consistency. Subsequent work developed the concept of type
-matching \cite{DBLP:conf/popl/RastogiCH12,DBLP:conf/popl/GarciaC15} and has further 
+matching \cite{DBLP:conf/popl/RastogiCH12,DBLP:conf/popl/GarciaC15} and has further
 studied the notion of type consistency \cite{Garcia:2016:AGT:2837614.2837670}. In
 retrospect, this relationship is perhaps unsurprising: gradual typing is,
 notionally, also motivated by the idea of iterated development of a program
-where every intermediate state is well-defined in some sense, albeit at 
+where every intermediate state is well-defined in some sense, albeit at
 different granularity.
 
 Recent work has discovered a systematic procedure for generating a
@@ -296,11 +296,11 @@ An aspect of gradual typing that we did not touch on directly here is its
 concern with assigning a dynamics to programs where type information is not
 known, by inserting dynamic type casts \cite{Siek06a} or deducing evidence for consistency during evaluation \cite{Garcia:2016:AGT:2837614.2837670}. This would correspond to assigning
 a dynamics to Hazelnut expressions with type holes such that a run-time
-error occurs when a type hole is found to be unfillable through evaluation. This 
+error occurs when a type hole is found to be unfillable through evaluation. This
 may be useful as an exploratory programming tool.
 
 \subsection{Bidirectional Type Systems}
-Hazelnut is bidirectionally typed \cite{Pierce:2000:LTI:345099.345100,DBLP:conf/icfp/DaviesP00,DBLP:conf/tldi/ChlipalaPH05,bidi-tutorial,odersky2001colored}. Bidirectional type systems are notable in 
+Hazelnut is bidirectionally typed \cite{Pierce:2000:LTI:345099.345100,DBLP:conf/icfp/DaviesP00,DBLP:conf/tldi/ChlipalaPH05,bidi-tutorial,odersky2001colored}. Bidirectional type systems are notable in
 that they are easy to define, easy to implement, produce simple error messages and support advanced language features \cite{dunfield2013complete}. For example, Scala \cite{odersky2001colored} and Agda \cite{norell:thesis} are both fundamentally bidirectionally typed languages.
 
 
@@ -311,11 +311,11 @@ dialog between the programmer and the system involving simple, familiar
 concepts -- types with holes -- rather than sets of constraints.
 
 
-An intermediate approach would be to 
+An intermediate approach would be to
 layer unification-based type generation features atop the bidirectional system. This would amount to  interpreting type holes as unification
 variables. For a simple calculus,
 e.g. the STLC upon which Hazelnut is based, type inference for complete expressions is known to be
-decidable, so type holes could be instantiated automatically once the expression that they appear within has been constructed. It would also be possible to flag expressions for which there does not exist any way to fill the type holes. In more complex settings, e.g. in a 
+decidable, so type holes could be instantiated automatically once the expression that they appear within has been constructed. It would also be possible to flag expressions for which there does not exist any way to fill the type holes. In more complex settings, e.g. in a
 dependently typed language, a partial decision procedure may still be
 useful in this regard, both at edit-time and (just prior to)
 run-time. Indeed, text editor modes for dependently typed proof assistants, e.g. for Agda,
@@ -324,12 +324,12 @@ succeed.)
 
 \subsection{Exceptions}
 Expression holes can be interpreted in several
-ways. One straightforward interpretation is to treat them 
+ways. One straightforward interpretation is to treat them
 like expressions that raise exceptions. Indeed,
 placing \textt{raise Unimplemented} or similar in portions of an expression
 that are under construction is a common practice across programming
-languages today. The GHC dialect of Haskell recently introduced an explicit notion of a 
-typed hole that behaves similarly \cite{GHC/holes}. 
+languages today. The GHC dialect of Haskell recently introduced an explicit notion of a
+typed hole that behaves similarly \cite{GHC/holes}.
 
 \subsection{Type-Directed Program Synthesis}
 Some text editor modes, e.g. those for proof assistants like
@@ -351,8 +351,8 @@ with a formal foundation upon which to build.
 
 \subsection{Tactics}
 
-Interactive proof refinement systems, e.g. those in LCF \cite{Gordon:1978:MIP:512760.512773}, and more recent typed tactic systems, e.g. Mtac for Coq \cite{ziliani2015mtac}, 
-support an explicit model of a ``current'' typed hole that serves as the 
+Interactive proof refinement systems, e.g. those in LCF \cite{Gordon:1978:MIP:512760.512773}, and more recent typed tactic systems, e.g. Mtac for Coq \cite{ziliani2015mtac},
+support an explicit model of a ``current'' typed hole that serves as the
 target of program synthesis. Hazelnut differs in that edits can occur anywhere within a term.
 
 
@@ -461,7 +461,7 @@ depending on their usage scenario. Many of these warrant further inquiry.
 There are various aspects of the editor model that we have not yet
 formalized. For example, our action model does not consider how actions are
 actually entered using, for example, key combinations or chords. In
-practice, we would want also to suggest sensible compound actions, and 
+practice, we would want also to suggest sensible compound actions, and
 to rank these suggested actions in some reasonable
 manner (perhaps based on usage data gathered from other users or code
 repositories.) Designing a action suggestion semantics and a rigorous typed probability model over actions is one avenue of research that we have started to
@@ -476,7 +476,7 @@ compute non-trivial compound actions. Such compound actions would give a
 uniform description of transformations ranging from the simple -- like
 ``move the cursor to the next hole to the right'' -- to quite complex whole
 program refactoring, while remaining subject to the core Hazelnut
-metatheory. Techniques like those in advanced tactic systems, e.g. Mtac, might be useful 
+metatheory. Techniques like those in advanced tactic systems, e.g. Mtac, might be useful
 in proving these action macros correct \cite{ziliani2015mtac}.
 
 \subsubsection{Views}
@@ -531,13 +531,13 @@ systems, for we will not forever stay confined to mere strings of symbols.}
 % The bibliography should be embedded for final submission.
 \bibliography{bibliography}
 
-% \iftr
-% \clearpage
-%\onecolumn
-% \appendix
-% \input{appendix}
-% \else
-% No Appendix Here
-% \fi
+\iftr
+\clearpage
+\onecolumn
+\appendix
+\input{appendix}
+\else
+No Appendix Here
+\fi
 
 \end{document}
