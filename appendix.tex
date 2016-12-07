@@ -16,18 +16,21 @@ constructors in the Agda formalization.
       \tcompat{\htau}{\htau}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{TCHole1}}
     \inferrule{ }{
       \tcompat{\htau}{\tehole}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{TCHole2}}
     \inferrule{ }{
       \tcompat{\tehole}{\htau}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{TCArr}}
     \inferrule{
@@ -47,12 +50,14 @@ constructors in the Agda formalization.
       \tincompat{\tnum}{\tarr{\htau_1}{\htau_2}}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{ICNumArr2}}
     \inferrule{ }{
       \tincompat{\tarr{\htau_1}{\htau_2}}{\tnum}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{ICArr1}}
     \inferrule{
@@ -61,6 +66,7 @@ constructors in the Agda formalization.
       \tincompat{\tarr{\htau_1}{\htau_2}}{\tarr{\htau_3}{\htau_4}}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{ICArr2}}
     \inferrule{
@@ -72,7 +78,6 @@ constructors in the Agda formalization.
 \end{subequations}
 
 \subsubsection{Function Type Matching}~
-
 \noindent
 \fbox{$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$}~~\text{$\tau$ has
   matched arrow type $\tarr{\htau_1}{\htau_2}$}
@@ -83,6 +88,7 @@ constructors in the Agda formalization.
       \arrmatch{\tehole}{\tarr{\tehole}{\tehole}}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{MAArr}}
     \inferrule{ }{
@@ -106,12 +112,14 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       \hsyn{\hGamma}{\hexp : \htau}{\htau}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{SVar}}
     \inferrule{ }{
       \hsyn{\hGamma, x : \htau}{x}{\htau}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{SAp}}
     \inferrule{
@@ -122,12 +130,14 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       \hsyn{\hGamma}{\hap{\hexp_1}{\hexp_2}}{\htau'}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{SNum}}
     \inferrule{ }{
       \hsyn{\hGamma}{\hnum{n}}{\tnum}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{SPlus}}
     \inferrule{
@@ -137,12 +147,14 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       \hsyn{\hGamma}{\hadd{\hexp_1}{\hexp_2}}{\tnum}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{SHole}}
     \inferrule{ }{
       \hsyn{\hGamma}{\hehole}{\tehole}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{SNEHole}}
     \inferrule{
@@ -163,6 +175,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       \hana{\hGamma}{\hexp}{\htau}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{ALam}}
     \inferrule{
@@ -294,6 +307,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{TMArrChild2}}
     \inferrule{ }{
@@ -306,6 +320,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{TMArrParent1}}
     \inferrule{ }{
@@ -318,6 +333,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{TMArrParent2}}
     \inferrule{ }{
@@ -358,7 +374,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{TMConNum}}
     \inferrule{ }{
@@ -387,7 +403,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{TMArrZip2}}
     \inferrule{
@@ -421,6 +437,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{EMAscChild2}}
     \inferrule{ }{
@@ -433,6 +450,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{EMAscParent1}}
     \inferrule{ }{
@@ -445,6 +463,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{EMAscParent2}}
     \inferrule{ }{
@@ -471,6 +490,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{EMLamParent}}
     \inferrule{ }{
@@ -497,6 +517,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{EMPlusChild2}}
     \inferrule{ }{
@@ -509,6 +530,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{EMPlusParent1}}
     \inferrule{ }{
@@ -521,6 +543,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{EMPlusParent2}}
     \inferrule{ }{
@@ -547,6 +570,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{EMApChild2}}
     \inferrule{ }{
@@ -559,6 +583,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{EMApParent1}}
     \inferrule{ }{
@@ -571,6 +596,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
       }
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{EMApParent2}}
     \inferrule{ }{
@@ -644,14 +670,14 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
       \performSyn{\hGamma}{\zwsel{\hexp}}{\htau}{\aConstruct{\fasc}}{\hexp : \zwsel{\htau}}{\htau}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{SAConVar}}
     \inferrule{ }{
       \performSyn{\hGamma, x : \htau}{\zwsel{\hehole}}{\tehole}{\aConstruct{\fvar{x}}}{\zwsel{x}}{\htau}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{SAConLam}}
     \inferrule{ }{
@@ -664,7 +690,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\tarr{\tehole}{\tehole}}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{SAConApArr}}
     \inferrule{
@@ -679,7 +705,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\htau_2}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{SAConApOtw}}
     \inferrule{
@@ -694,7 +720,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\tehole}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{SAConNumLit}}
     \inferrule{ }{
@@ -707,7 +733,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\tnum}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{SAConPlus1}}
     \inferrule{
@@ -722,7 +748,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\tnum}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{SAConPlus2}}
     \inferrule{
@@ -737,7 +763,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\tnum}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{SAConNEHole}}
     \inferrule{ }{
@@ -787,6 +813,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\htau}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{SAZipAsc2}}
     \inferrule{
@@ -802,7 +829,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\removeSel{\ztau'}}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{SAZipApArr}}
     \inferrule{
@@ -826,6 +853,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\htau_5}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{SAZipApAna}}
     \inferrule{
@@ -847,7 +875,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\htau_4}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{SAZipPlus1}}
     \inferrule{
@@ -867,7 +895,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\tnum}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{SAZipPlus2}}
     \inferrule{
@@ -887,7 +915,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\tnum}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{SAZipHole}}
     \inferrule{
@@ -950,7 +978,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
       \performAna{\hGamma}{\zwsel{\hexp}}{\htau}{\aConstruct{\fasc}}{\hexp : \zwsel{\htau}}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{AAConVar}}
     \inferrule{
@@ -959,7 +987,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
       \performAna{\hGamma, x : \htau'}{\zwsel{\hehole}}{\htau}{\aConstruct{\fvar{x}}}{\hhole{\zwsel{x}}}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{AAConLam1}}
     \inferrule{
@@ -973,7 +1001,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\hlam{x}{\zwsel{\hehole}}}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{AAConLam2}}
     \inferrule{
@@ -989,7 +1017,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           }}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{AAConNumLit}}
     \inferrule{
@@ -1039,7 +1067,6 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
           {\hlam{x}{\zexp'}}
     }
   \end{equation}
-
 \end{subequations}
 \subsubsection{Iterated Action Judgements} ~
 
@@ -1052,6 +1079,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
       \performTypI{\ztau}{\cdot}{\ztau}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{DoType}}
     \inferrule{
@@ -1071,7 +1099,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
       \performSynI{\hGamma}{\zexp}{\htau}{\cdot}{\zexp}{\htau}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{DoSynth}}
     \inferrule{
@@ -1091,6 +1119,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
       \performAnaI{\hGamma}{\zexp}{\htau}{\cdot}{\zexp}
     }
   \end{equation}
+  \gap{}
   \begin{equation}
     \tag{\rname{DoAna}}
     \inferrule{
@@ -1110,7 +1139,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
       \cdot~\mathsf{movements}
     }
   \end{equation}
-
+  \gap{}
   \begin{equation}
     \tag{\rname{AM::}}
     \inferrule{
