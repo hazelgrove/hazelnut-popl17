@@ -76,10 +76,9 @@ constructors in the Agda mechanization.
   \end{equation*}
 \end{subequations}
 
-\subsubsection{Function Type Matching}
-
-\noindent \fbox{$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$}~~\text{$\tau$
-  has matched arrow type $\tarr{\htau_1}{\htau_2}$}
+\subsubsection{Function Type Matching}~
+\noindent
+\fbox{$\arrmatch{\htau}{\tarr{\htau_1}{\htau_2}}$}
 \begin{subequations}
   \begin{equation*}
     \tag{\rname{MAHole}}
@@ -98,10 +97,9 @@ constructors in the Agda mechanization.
 
 \subsubsection{Synthesis and Analysis}
 The judgements $\hsyn{\hGamma}{\hexp}{\htau}$ and
-$\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
-(\ref{Arules:hsyn}) and Rules (\ref{Arules:hana}), respectively.
+$\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively.
 
-\noindent\fbox{$\hsyn{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ synthesizes $\htau$}
+\noindent\fbox{$\hsyn{\hGamma}{\hexp}{\htau}$}
 \begin{subequations}\label{Arules:hsyn}
   \begin{equation*}
     \tag{\rname{SAsc}}
@@ -163,7 +161,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
     }
   \end{equation*}
 \end{subequations}
-\noindent\fbox{$\hana{\hGamma}{\hexp}{\htau}$}~~\text{$\hexp$ analyzes against $\htau$}
+\noindent\fbox{$\hana{\hGamma}{\hexp}{\htau}$}
 \begin{subequations}\label{Arules:hana}
   \begin{equation*}
     \tag{\rname{ASubsume}}
@@ -575,8 +573,7 @@ $\hana{\hGamma}{\hexp}{\htau}$ are defined mutually inductively by Rules
 \end{subequations}
 \subsubsection{Synthetic and Analytic Expression Actions}
 The synthetic and analytic expression action performance judgements are
-defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
-(\ref{Arules:performAna}), respectively.
+defined mutually inductively.
 
 \noindent\fbox{$\performSyn{\hGamma}{\zexp}{\htau}{\alpha}{\zexp'}{\htau'}$}
 
@@ -1027,7 +1024,7 @@ defined mutually inductively by Rules (\ref{Arules:performSyn}) and Rules
   \end{equation*}
 \end{subequations}
 
-\noindent \fbox{$\performSynI{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}{\htau'}$}
+\noindent \fbox{$\performSynI{\hGamma}{\zexp}{\htau}{\bar{\alpha}}{\zexp'}{\htau'}
 \begin{subequations}
   \begin{equation*}
     \tag{\rname{DoRefl}}
